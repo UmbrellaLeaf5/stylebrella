@@ -1,0 +1,42 @@
+{
+  "ruff": {
+    "version": "0.15.12",
+    "file": "ruff-0.15.12-windows-x64.zip",
+    "url": "https://github.com/astral-sh/ruff/releases/download/0.15.12/ruff-x86_64-pc-windows-msvc.zip",
+    "sha256": "d378033392042377491ef2541457af47cc4652c4e984639c95413b0c4876b0f1"
+  },
+  "clang-format": {
+    "version": "22.1.8",
+    "file": "clang_format-22.1.8-py2.py3-none-win_amd64.whl",
+    "url": "https://files.pythonhosted.org/packages/08/60/c6783b3190a8f741107a44912a11c39c1a51e254e86a4c43cb0151cea0dd/clang_format-22.1.8-py2.py3-none-win_amd64.whl",
+    "sha256": "5fe6ad3e9399d589aff5ead432568a84cdcbbd621f1708340819efd74cbf8176"
+  },
+  "clang-tidy": {
+    "version": "22.1.8",
+    "file": "clang_tidy-22.1.8-py2.py3-none-win_amd64.whl",
+    "url": "https://files.pythonhosted.org/packages/54/af/0580f6145d8a0c218844208a6c90ce539a4bdf65a66b672e6b4604a81c0a/clang_tidy-22.1.8-py2.py3-none-win_amd64.whl",
+    "sha256": "df9bf841ecbf501d08b6fa34523be840f59b1a76d16b6ee5edb0e5c7c22b59c2"
+  },
+  "ktlint": {
+    "version": "1.8.0",
+    "file": "ktlint-1.8.0.jar",
+    "url": "https://github.com/ktlint/ktlint/releases/download/1.8.0/ktlint",
+    "sha256": "a3fd620207d5c40da6ca789b95e7f823c54e854b7fade7f613e91096a3706d75"
+  },
+  "java": {
+    "version": "21.0.13+9",
+    "file": "temurin-21.0.13_9-windows-x64.zip",
+    "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.13%2B9/OpenJDK21U-jre_x64_windows_hotspot_21.0.13_9.zip",
+    "sha256": "2332c0b4cff6bed722da3567c91d5e47568bcba863fa4945d0a8d6fc76158628"
+  },
+  "ruff-license": {
+    "file": "ruff-LICENSE.txt",
+    "url": "https://raw.githubusercontent.com/astral-sh/ruff/0.15.12/LICENSE",
+    "sha256": "2597d854122b77ddc71971564ca2350a37608575ce324adc5650a2b2051c8f18"
+  },
+  "ktlint-license": {
+    "file": "ktlint-LICENSE.txt",
+    "url": "https://raw.githubusercontent.com/ktlint/ktlint/1.8.0/LICENSE",
+    "sha256": "b45bdb3357e761d4b1300470833cf5e5e9fafc32a5f98efef214ba926b0120d5"
+  }
+}

@@ -5,13 +5,37 @@ It delegates standard formatting to established language-specific engines and
 adds checks for project-specific conventions. Its target requirements come
 from `python/CODE-STYLE.md`, `python/notebooks/CODE-STYLE.md`,
 `kotlin/CODE-STYLE.md`, and `cpp/CODE-STYLE.md` in
-`template_opencode_agented`. This repository currently contains the product
-specification; the commands described below have not been implemented yet.
+`template_opencode_agented`. The first Windows preview packages the style
+engines and a CLI scaffold; the style commands themselves are still stubs.
 
 The goal is to replace long instructions for _mechanically enforceable_ style
 with reproducible checks. Architectural conventions, development procedures,
 and requirements that depend on the meaning of code remain human-facing
 instructions unless they can be checked reliably.
+
+## Windows x64 preview
+
+Unpack the entire ZIP and run `stylebrella.exe --version --engines` to verify
+Ruff, clang-format, clang-tidy, and ktlint. `--version` alone prints only the
+CLI version. The style command stubs return exit code `2` and do not process
+files.
+
+To build the ZIP from source on Windows x64 with the
+`x86_64-pc-windows-gnu` Rust toolchain and a working linker:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File packaging/Package-Windows.ps1
+```
+
+The script verifies pinned downloads using `packaging/engines.windows-x64.json`
+and writes `dist/stylebrella-<version>-windows-x64.zip` after testing the extracted
+archive. It extracts the native LLVM binaries from wheels, so neither the build
+script nor the release needs Python. The Kotlin component uses its bundled Java
+runtime. Normal `cargo test --workspace --locked` runs without installed engines.
+
+Rust callers use `BundledEngines::command(engine)` from `stylebrella-core` to
+get a `std::process::Command` and configure its arguments and I/O. All engine
+paths are resolved from the installation, without a system `PATH` fallback.
 
 ## Principles
 

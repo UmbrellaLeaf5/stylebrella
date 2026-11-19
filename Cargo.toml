@@ -1,0 +1,11 @@
+[workspace]
+members = ["crates/stylebrella-cli", "crates/stylebrella-core"]
+resolver = "3"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "Unlicense"
+
+[workspace.dependencies]
+stylebrella-core = { path = "crates/stylebrella-core" }
