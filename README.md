@@ -2,11 +2,14 @@
 
 Stylebrella is a unified linter and formatter for Python, Kotlin, and C++.
 It delegates standard formatting to established language-specific engines and
-adds checks for project-specific conventions. Its target requirements come
-from `python/CODE-STYLE.md`, `python/notebooks/CODE-STYLE.md`,
-`kotlin/CODE-STYLE.md`, and `cpp/CODE-STYLE.md` in
-`template_opencode_agented`. The first Windows preview packages the style
-engines and a CLI scaffold; the style commands themselves are still stubs.
+adds checks for project-specific conventions. The
+[shared formatting](docs/en/code-style/formatting.md) and
+[shared linting](docs/en/code-style/linting.md) specifications link to the
+Python, Kotlin, and C++ rules that define the implementation target. Notebook
+rules are deferred. The specifications are also available in Russian:
+[formatting](docs/ru/code-style/formatting.md) and
+[linting](docs/ru/code-style/linting.md). The first Windows preview packages the style engines and
+a CLI scaffold; the style commands themselves are still stubs.
 
 The goal is to replace long instructions for _mechanically enforceable_ style
 with reproducible checks. Architectural conventions, development procedures,
@@ -114,20 +117,19 @@ stylebrella explain CPP-HEADER-PRAGMA-ONCE
 
 Ruff is the source of truth for standard formatting. The existing `ruff.toml`
 defines two-space indentation, a width of 100, double quotes, import sorting,
-and the chosen lint rules. The Stylebrella preset includes the original
-template settings; a project's local `ruff.toml` takes precedence. Any
+and the chosen lint rules. Stylebrella ships its own preset; a project's
+local `ruff.toml` takes precedence. Any
 postprocessing of `ruff format` output requires a convergence test: running
 Ruff again must not undo Stylebrella's edits.
 
 Ruff does not expose a third-party lint plugin API. Additional rules therefore
 run in a separate analyzer. Syntax-aware Python checks need a parser with
 source locations and access to comments or whitespace when those matter.
-Pyright is a separate type checker: whether it belongs in the mandatory
-`check` pipeline will be decided after a prototype and explicitly recorded in
-configuration, rather than hidden behind Ruff. If included, its runtime
-requirements must also ship in the release.
+Pyright is a planned separate engine. Once integrated, `basic` mode type
+errors will block Python `lint` and `check`; its runtime requirements must
+also ship in the release.
 
-Ruff handles `.ipynb`, but it does not enforce the template's requirements
+Ruff handles `.ipynb`, but it does not enforce notebook-specific requirements
 such as no `def`/`class` in cells, cell ordering, a maximum of 15 lines for
 section-level code cells, or meaningful markdown cells. A separate notebook
 JSON analyzer is needed. Executing notebooks with `nbconvert` checks
@@ -136,13 +138,11 @@ check because it executes user code and can require data or services.
 
 ### Kotlin
 
-The source template uses `.editorconfig` and IntelliJ formatting. Its config
-sets `indent_size = 2`, `max_line_length = 100`, wrapping, blank lines, and
-`else` placement, and disables selected ktlint rules. Neither ktlint nor
-ktfmt can be assumed to reproduce this without testing. First, collect
-golden code examples from the style guide and compare ktlint, ktfmt, and
-IntelliJ output. Then select **one** formatter. Running ktlint and ktfmt
-sequentially is not an acceptable formatting strategy.
+The [Kotlin formatting specification](docs/en/code-style/kotlin/formatting.md)
+defines the layout without requiring IntelliJ settings in the internal
+preset. Compare candidates such as ktlint and ktfmt against the
+specification's examples before selecting **one** formatter. Running ktlint
+and ktfmt sequentially is not an acceptable formatting strategy.
 
 The initial candidate is ktlint: it supports `.editorconfig`, automatic
 corrections, machine-readable reports, and custom Kotlin rulesets. Custom
@@ -207,8 +207,9 @@ documented optional heuristic.
 ## Configuration contract
 
 Stylebrella finds `stylebrella.toml` by searching from the source file toward
-the project root. The `template` preset captures mechanically enforceable
-rules from the original guides. Closer `ruff.toml`, `.editorconfig`, and
+the project root. The `template` preset applies the mechanically enforceable
+rules documented under `docs/en/code-style/` and `docs/ru/code-style/`.
+Closer `ruff.toml`, `.editorconfig`, and
 `.clang-format` files override their **own engine's** preset settings;
 their contents are not copied into `stylebrella.toml`. Exclusions are applied
 before launching engines. Project boundaries and precedence must behave
