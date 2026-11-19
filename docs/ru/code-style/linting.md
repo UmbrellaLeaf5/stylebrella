@@ -128,6 +128,9 @@ class Reader:
 
 ```python
 class Reader:
+  # MARK: Read value
+  # --------------------------------------------------
+
   def read(self, value: str) -> str:
     return self.copy(value)
 
@@ -546,14 +549,14 @@ void read();
   /**
    * Читает данные.
    */
-  private fun read() = Unit
+  private fun _read() = Unit
 ```
 
 **Нарушение**:
 
 ```kotlin
   // MARK: Private Helpers
-  private fun read() = Unit
+  private fun _read() = Unit
 ```
 
 **C++**
@@ -612,7 +615,7 @@ void read();
   // MARK: Read
   fun read() = Unit
   // MARK: Private Helpers
-  private fun helper() = Unit
+  private fun _helper() = Unit
 ```
 
 **Нарушение**:
@@ -620,7 +623,7 @@ void read();
 ```kotlin
   fun read() = Unit
   // MARK: Private Helpers
-  private fun helper() = Unit
+  private fun _helper() = Unit
 ```
 
 **C++**
@@ -678,13 +681,13 @@ void read();
 
 ```kotlin
   fun read() = Unit
-  private fun helper() = Unit
+  private fun _helper() = Unit
 ```
 
 **Нарушение**:
 
 ```kotlin
-  private fun helper() = Unit
+  private fun _helper() = Unit
   fun read() = Unit
 ```
 

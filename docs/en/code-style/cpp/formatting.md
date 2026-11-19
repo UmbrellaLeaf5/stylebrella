@@ -208,7 +208,7 @@ namespace n {
 void a();
 // --------------------------------------------------
 void b();
-}  // namespace n  // namespace n
+}  // namespace n
 ```
 
 **After**:
@@ -220,7 +220,7 @@ void a();
 // --------------------------------------------------
 
 void b();
-}  // namespace n  // namespace n
+}  // namespace n
 ```
 
 <a id="stylebrella-formatter-cpp-blank_lines-2"></a>

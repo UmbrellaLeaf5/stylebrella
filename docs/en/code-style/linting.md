@@ -128,6 +128,9 @@ class Reader:
 
 ```python
 class Reader:
+  # MARK: Read value
+  # --------------------------------------------------
+
   def read(self, value: str) -> str:
     return self.copy(value)
 
@@ -546,14 +549,14 @@ The structural header covers the first private method only. If that method is im
   /**
    * Читает данные.
    */
-  private fun read() = Unit
+  private fun _read() = Unit
 ```
 
 **Violation**:
 
 ```kotlin
   // MARK: Private Helpers
-  private fun read() = Unit
+  private fun _read() = Unit
 ```
 
 **C++**
@@ -612,7 +615,7 @@ A concrete class with both public and private methods needs a MARK attached to a
   // MARK: Read
   fun read() = Unit
   // MARK: Private Helpers
-  private fun helper() = Unit
+  private fun _helper() = Unit
 ```
 
 **Violation**:
@@ -620,7 +623,7 @@ A concrete class with both public and private methods needs a MARK attached to a
 ```kotlin
   fun read() = Unit
   // MARK: Private Helpers
-  private fun helper() = Unit
+  private fun _helper() = Unit
 ```
 
 **C++**
@@ -678,13 +681,13 @@ In an eligible class under [SB-L-G-M-6](#stylebrella-linter-general-mark-6), a p
 
 ```kotlin
   fun read() = Unit
-  private fun helper() = Unit
+  private fun _helper() = Unit
 ```
 
 **Violation**:
 
 ```kotlin
-  private fun helper() = Unit
+  private fun _helper() = Unit
   fun read() = Unit
 ```
 
