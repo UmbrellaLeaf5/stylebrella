@@ -5,7 +5,7 @@ use std::process::{Output, Stdio};
 use stylebrella_core::{BundledEngines, Engine};
 
 #[test]
-#[ignore = "needs an unpacked Windows release; run via packaging/Package-Windows.ps1"]
+#[ignore = "needs an unpacked Windows release; run via cargo xtask package"]
 fn bundled_engines_process_sources() {
     let root = std::env::var_os("STYLEBRELLA_TEST_INSTALL").expect("unpacked ZIP directory");
     let engines = BundledEngines::in_installation(root).unwrap();

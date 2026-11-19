@@ -23,15 +23,17 @@ files.
 To build the ZIP from source on Windows x64 with the
 `x86_64-pc-windows-gnu` Rust toolchain and a working linker:
 
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File packaging/Package-Windows.ps1
+```text
+cargo xtask package
 ```
 
-The script verifies pinned downloads using `packaging/engines.windows-x64.json`
-and writes `dist/stylebrella-<version>-windows-x64.zip` after testing the extracted
-archive. It extracts the native LLVM binaries from wheels, so neither the build
-script nor the release needs Python. The Kotlin component uses its bundled Java
-runtime. Normal `cargo test --workspace --locked` runs without installed engines.
+The Rust packaging tool verifies pinned downloads using
+`packaging/engines.windows-x64.json` and installs the bundled engines before it
+builds Stylebrella. It writes `dist/stylebrella-<version>-windows-x64.zip` after
+testing the extracted archive. It extracts the native LLVM binaries from wheels,
+so neither packaging nor the release needs Python. The Kotlin component uses
+its bundled Java runtime. Normal `cargo test --workspace --locked` runs without
+installed engines.
 
 Rust callers use `BundledEngines::command(engine)` from `stylebrella-core` to
 get a `std::process::Command` and configure its arguments and I/O. All engine
