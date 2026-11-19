@@ -2,102 +2,1014 @@
 
 [Русская версия](../../ru/code-style/linting.md)
 
-Target contract for the `template` preset. `lint` reports the rules here and in the language pages: [Python](python/linting.md), [Kotlin](kotlin/linting.md), [C++](cpp/linting.md). `check` also verifies [formatting](formatting.md). Examples isolate one rule; other diagnostics may apply to the same excerpt. **Review** requirements are normative but produce no diagnostic unless the stated condition is mechanically established. A rule's presence here does not mean it is implemented.
+Normative preview contract for `lint` and the linting part of `check`. Emit a finding only when the stated predicate is established. Missing resolution or required context is not a violation. These rules describe future behavior. A full ID is canonical; its short ID is an equivalent alias. Numbering starts at 1 per subsection, and assigned numbers are not reused.
 
-## Declaration names
+[Python](python/linting.md) · [Kotlin](kotlin/linting.md) · [C++](cpp/linting.md)
 
-Check names by declaration category, including local bindings, parameters, fields, routines, types, and constants, using the case rules in the language pages. Do not guess a symbol's purpose from the spelling alone. Prefer descriptive names, with units when relevant; name quality is a review requirement. Report the declaration, without auto-renaming it or changing external APIs.
+<a id="id-registry"></a>
 
-| Language | Pass                         | Report                      |
-| -------- | ---------------------------- | --------------------------- |
-| Python   | `total_count = count()`      | `totalCount = count()`      |
-| Kotlin   | `val totalCount = count()`   | `val total_count = count()` |
-| C++      | `int total_count = count();` | `int totalCount = count();` |
+## ID registry
 
-## JSON keys
+Canonical IDs use `Stylebrella-<kind>-<language>-<subsection>-<number>`; aliases use `SB-<kind>-<language>-<subsection>-<number>` with the tokens below.
 
-Check keys where a serialization field or JSON access is statically identifiable; use the language page's casing and declaration rules. Do not treat arbitrary strings as JSON keys or rewrite wire names. A separately valid schema key may still need a named constant at use sites.
+| Canonical token | Alias token |
+| --- | --- |
+| `formatter` / `linter` | `F` / `L` |
+| `general` | `G` |
+| `python` | `P` |
+| `kotlin` | `K` |
+| `cpp` | `C` |
+| `blank_lines` | `BL` |
+| `layout` | `LY` |
+| `mark` | `M` |
+| `separators` | `SP` |
+| `imports` | `I` |
+| `source` | `S` |
+| `expressions` | `E` |
+| `naming` | `N` |
+| `json` | `J` |
+| `comments` | `CM` |
+| `constants` | `C` |
+| `loops` | `LP` |
+| `types` | `T` |
+| `idioms` | `ID` |
+| `testing` | `TS` |
+| `documentation` | `D` |
+| `nulls` | `NU` |
+| `files` | `FI` |
+| `exceptions` | `EX` |
 
-| Language                    | Valid key                  | Report                    |
-| --------------------------- | -------------------------- | ------------------------- |
-| Python (snake-case project) | `"user_id"`                | `"User-ID"`               |
-| Kotlin                      | `@JsonProperty("user_id")` | `@JsonProperty("userId")` |
-| C++                         | `"user_id"`                | `"userId"`                |
+Examples isolate the rule being illustrated.
 
-## MARK text and importance
+## `naming`
 
-Use readable English text starting with a capital letter or in ALL CAPS. Reject empty/lowercase titles and titles that are merely a camelCase or PascalCase declaration identifier. Full prose quality is reviewed. For endpoints, the HTTP verb and path can be the title. A function is non-trivial if executable content spans multiple lines, has multiple executable statements, or contains nested control flow. Count executable lines after canonical formatting so line wrapping cannot be used to evade lint. A method/function is important if used at two or more distinct resolved project sites, even in one caller; exclude self-recursion, comments and unresolved occurrences. Require a descriptive MARK for non-trivial public routines and important routines; a valid group may cover them. Trivial, non-important routines can use a separator alone.
+<a id="stylebrella-linter-general-naming-1"></a>
 
-| Language | Pass (above the declaration) | Report if attached to the same declaration |
-| -------- | ---------------------------- | ------------------------------------------ |
-| Python   | `# MARK: Build response`     | `# MARK: buildResponse`                    |
-| Kotlin   | `// MARK: Build response`    | `// MARK: buildResponse`                   |
-| C++      | `// MARK: Build response`    | `// MARK: BuildResponse`                   |
+<a id="sb-l-g-n-1"></a>
 
-## MARK groups and adjacency
+### SB-L-G-N-1 — Naming by declaration kind
 
-Groups are optional. `MARK: <title> [group:N]` covers exactly the next `N` peer function/method declarations in the current scope, with `N` a decimal integer at least 2. Nested definitions and non-function declarations do not count. Report a group interrupted by another MARK, the end of the scope before the count is met, or an invalid count; the next declaration after `N` is outside the group. Reject consecutive MARKs at the same level with no intervening declaration or substantive statement; blank lines and separator comments do not break adjacency. `Private Helpers` is a structural header without a count: subsequent descriptive MARKs do not end that section. Do not stack a descriptive MARK immediately after the structural header; a single counted group cannot stand in for the distinct public marker and helpers section.
+`Stylebrella-linter-general-naming-1`
 
-The structural header satisfies the MARK requirement for the first private helper. If that helper is important, require its language's documentation block instead of a second MARK. A documentation block does not break MARK adjacency.
+Check declaration names by their syntactic kind and language-specific naming rules; report at the declared identifier. Never infer the kind from the name or rename it as a lint action.
 
-| Language | Pass                                                              | Report                                                        |
-| -------- | ----------------------------------------------------------------- | ------------------------------------------------------------- |
-| Python   | `# MARK: Load adapters [group:2]` followed by two peer functions  | same header followed by just one before the scope ends        |
-| Kotlin   | `// MARK: Load adapters [group:2]` followed by two peer methods   | same header followed by another MARK before the second method |
-| C++      | `// MARK: Load adapters [group:2]` followed by two peer functions | `// MARK: Load adapters [group:1]`                            |
+**Python**
 
-| Language | Pass for an important first helper                                       | Report                                                                        |
-| -------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
-| Python   | `# MARK: Private Helpers`, separator, `_read` with a multiline docstring | `_read` has no docstring, or `# MARK: Read input` is stacked under the header |
-| Kotlin   | `// MARK: Private Helpers`, separator, KDoc, `private fun readInput`     | missing KDoc or a stacked `// MARK: Read input`                               |
-| C++      | `// MARK: Private Helpers`, separator, Doxygen, private `_read`          | missing Doxygen or a stacked `// MARK: Read input`                            |
+**Allowed**:
 
-## Class section coverage
+```python
+total_count = count()
+```
 
-For an applicable concrete class with public methods and private helpers, require at least two MARKs: one associated with a public method (selected by the author if none is automatically important) and `MARK: Private Helpers`. A class with no private methods uses the formatter's placeholder instead; do not require an empty helpers MARK. Exempt interfaces and DTO-only declarations from the minimum.
+**Violation**:
 
-| Language | Pass, in member order                                                                  | Report                                               |
-| -------- | -------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| Python   | `# MARK: Read input`, `read`, `# MARK: Private Helpers`, `_read`                       | public `read` has only a separator in the same class |
-| Kotlin   | `// MARK: Read input`, `fun read`, `// MARK: Private Helpers`, `private fun readInput` | helpers header is the only MARK                      |
-| C++      | `// MARK: Read input`, public `read`, `// MARK: Private Helpers`, private `_read`      | both MARKs describe private methods                  |
+```python
+totalCount = count()
+```
 
-## Private method order
+**Kotlin**
 
-Private methods must come after all public methods in applicable classes. Determine visibility from syntax or language conventions; do not infer it from usage. Diagnose the out-of-order declaration. Do not move declarations automatically.
+**Allowed**:
 
-| Language | Pass                                    | Report                                  |
-| -------- | --------------------------------------- | --------------------------------------- |
-| Python   | `read` then `_read`                     | `_read` then `read`                     |
-| Kotlin   | `fun read` then `private fun readInput` | `private fun readInput` then `fun read` |
-| C++      | `public: read` then `private: _read`    | `private: _read` then `public: read`    |
+```kotlin
+val totalCount = count()
+```
 
-## Side comments and comment language
+**Violation**:
 
-Require side comments for fields listed by each language page, except the page's explicit self-explanatory names. A comment must explain meaning and units where relevant; check presence and leave good prose and correct units to review. MARK text is English. Ordinary comments may be English or Russian, with Russian preferred for new or modified comments. Language-specific rules govern docstrings, KDoc, and Doxygen.
+```kotlin
+val total_count = count()
+```
 
-| Language | Pass                                                | Report                                       |
-| -------- | --------------------------------------------------- | -------------------------------------------- |
-| Python   | `df_hz: float = 0.0  # offset from center, Hz`      | same dataclass field without its comment     |
-| Kotlin   | `val dfHz: Double = 0.0, // offset from center, Hz` | same data-class property without its comment |
-| C++      | `double df_hz = 0.0; // offset from center, Hz`     | same struct field without its comment        |
+**C++**
 
-## Constants and inline literals
+**Allowed**:
 
-Use one named definition per shared domain value in the language's designated constants container. Require a named value for otherwise unclassified inline data, including default domain values, paths, regexes, conversion factors, precision/sentinel values and test inputs. Permit `0`, `1`, and `""` for trivial initialization (including equivalent typed zero/one), and allow language booleans and null markers. Permit inline message **text** in resolved printing, logging and exception message positions, including interpolated text; that exemption does not extend to domain values supplied as arguments. Recognize only the explicitly documented syntax/schema/metadata exceptions, not arbitrary call names or strings. Diagnose the literal; do not extract it automatically or assume equal values have equal meanings.
+```cpp
+int total_count = count();
+```
 
-| Language | Pass                                                                          | Report           |
-| -------- | ----------------------------------------------------------------------------- | ---------------- |
-| Python   | `connect(Constants.Network.DEFAULT_PORT)`; `raise ValueError("Invalid port")` | `connect(8080)`  |
-| Kotlin   | `connect(Constants.Network.DEFAULT_PORT)`; `logger.warn("Invalid port")`      | `connect(8080)`  |
-| C++      | `connect(app::constants::network::DEFAULT_PORT);`                             | `connect(8080);` |
+**Violation**:
 
-## Loop intent
+```cpp
+int totalCount = count();
+```
 
-Prefer `for` for iteration over a known range or collection; use `while` for state-driven or complex termination. Report only recognizable counted loops equivalent to ordinary iteration; review cases where updates, side effects, or termination are unclear. A formatter never changes the loop kind.
+<a id="stylebrella-linter-general-naming-2"></a>
 
-| Language | Pass                                          | Candidate for a diagnostic                                                                         |
-| -------- | --------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Python   | `for item in items: visit(item)`              | `i = 0; while i < len(items)` with only a normal `i += 1` step                                     |
-| Kotlin   | `for (item in items) visit(item)`             | `while (i < items.size)` with an index initialized to zero and incremented once on every iteration |
-| C++      | `for (const auto& item : items) visit(item);` | `while (i < items.size())` with the same counted-loop pattern                                      |
+<a id="sb-l-g-n-2"></a>
+
+### SB-L-G-N-2 — Leading underscore on private methods
+
+`Stylebrella-linter-general-naming-2`
+
+Every private method name must begin with exactly one underscore followed by its language-specific name. In Kotlin and C++, private visibility is determined by the declaration. In Python, this rule applies when project metadata or an explicit `MARK: Private Helpers` section identifies the method as private; a name alone cannot establish private intent. Python special methods whose names begin and end with double underscores are excluded. Report at the method name; do not rename it automatically.
+
+**Python** — the project marks `copy` as private.
+
+**Allowed**:
+
+```python
+class Reader:
+  # MARK: Read value
+  # --------------------------------------------------
+
+  def read(self, value: str) -> str:
+    return self._copy(value)
+
+  # MARK: Private Helpers
+  # --------------------------------------------------
+
+  def _copy(self, value: str) -> str:
+    return value
+```
+
+**Violation**:
+
+```python
+class Reader:
+  def read(self, value: str) -> str:
+    return self.copy(value)
+
+  # MARK: Private Helpers
+  # --------------------------------------------------
+
+  def copy(self, value: str) -> str:
+    return value
+```
+
+**Kotlin**
+
+**Allowed**:
+
+```kotlin
+class Reader {
+  // MARK: Read value
+  // --------------------------------------------------
+
+  fun read(value: String): String = _copy(value)
+
+  // MARK: Private Helpers
+  // --------------------------------------------------
+
+  private fun _copy(value: String): String = value
+}
+```
+
+**Violation**:
+
+```kotlin
+class Reader {
+  // MARK: Read value
+  // --------------------------------------------------
+
+  fun read(value: String): String = copy(value)
+
+  // MARK: Private Helpers
+  // --------------------------------------------------
+
+  private fun copy(value: String): String = value
+}
+```
+
+**C++**
+
+**Allowed**:
+
+```cpp
+class Reader {
+ public:
+  // MARK: Read value
+  // --------------------------------------------------
+
+  int read(int value) const { return _copy(value); }
+
+ private:
+  // MARK: Private Helpers
+  // --------------------------------------------------
+
+  int _copy(int value) const { return value; }
+};
+```
+
+**Violation**:
+
+```cpp
+class Reader {
+ public:
+  // MARK: Read value
+  // --------------------------------------------------
+
+  int read(int value) const { return copy(value); }
+
+ private:
+  // MARK: Private Helpers
+  // --------------------------------------------------
+
+  int copy(int value) const { return value; }
+};
+```
+
+## `json`
+
+<a id="stylebrella-linter-general-json-1"></a>
+
+<a id="sb-l-g-j-1"></a>
+
+### SB-L-G-J-1 — Case of statically resolved JSON keys
+
+`Stylebrella-linter-general-json-1`
+
+Check the case of a key only when its constant spelling is statically resolved at a serialization field or JSON accessor. Report at the key, not an arbitrary string. The language rules define the accepted case. The spelling is not rewritten and the constants rules still apply to uses outside schema metadata.
+
+**Python**
+
+**Allowed**:
+
+```python
+record["user_id"]
+```
+
+**Violation**:
+
+```python
+record["User-ID"]
+```
+
+**Kotlin**
+
+**Allowed**:
+
+```kotlin
+@JsonProperty("user_id")
+```
+
+**Violation**:
+
+```kotlin
+@JsonProperty("userId")
+```
+
+**C++**
+
+**Allowed**:
+
+```cpp
+record["user_id"]
+```
+
+**Violation**:
+
+```cpp
+record["userId"]
+```
+
+## `mark`
+
+<a id="stylebrella-linter-general-mark-1"></a>
+
+<a id="sb-l-g-m-1"></a>
+
+### SB-L-G-M-1 — Descriptive MARK titles
+
+`Stylebrella-linter-general-mark-1`
+
+A descriptive MARK title must be nonempty, begin with an uppercase ASCII letter, and not consist solely of the targeted declaration's camelCase or PascalCase identifier. A resolved HTTP method plus route is a valid title. Strip the exact trailing group suffix before checking the title.
+
+**Python**
+
+**Allowed**:
+
+```python
+# MARK: Build response
+```
+
+**Violation**:
+
+```python
+# MARK: buildResponse
+```
+
+**Kotlin**
+
+**Allowed**:
+
+```kotlin
+// MARK: Build response
+```
+
+**Violation**:
+
+```kotlin
+// MARK: buildResponse
+```
+
+**C++**
+
+**Allowed**:
+
+```cpp
+// MARK: Build response
+```
+
+**Violation**:
+
+```cpp
+// MARK: BuildResponse
+```
+
+<a id="stylebrella-linter-general-mark-2"></a>
+
+<a id="sb-l-g-m-2"></a>
+
+### SB-L-G-M-2 — MARK for nontrivial public and important functions
+
+`Stylebrella-linter-general-mark-2`
+
+A function is nontrivial if its canonical body spans at least two executable lines, contains at least two executable statements, or contains nested control flow. It is important if at least two distinct project references resolve to it other than self-recursion; multiple references in one caller count. Require a descriptive MARK for a public nontrivial function or an important function, unless covered by a valid group or [SB-L-G-M-5](#stylebrella-linter-general-mark-5). Otherwise a separator suffices. Count body lines in the canonical format, excluding blank, comment-only, documentation-only and delimiter-only lines.
+
+**Python**
+
+**Allowed**:
+
+```python
+# MARK: Read data
+# --------------------------------------------------
+def read():
+  load()
+  validate()
+```
+
+**Violation**:
+
+```python
+# --------------------------------------------------
+def read():
+  load()
+  validate()
+```
+
+**Kotlin**
+
+**Allowed**:
+
+```kotlin
+// MARK: Read data
+// --------------------------------------------------
+fun read() { load(); validate() }
+```
+
+**Violation**:
+
+```kotlin
+// --------------------------------------------------
+fun read() { load(); validate() }
+```
+
+**C++**
+
+**Allowed**:
+
+```cpp
+// MARK: Read data
+// --------------------------------------------------
+void read() { load(); validate(); }
+```
+
+**Violation**:
+
+```cpp
+// --------------------------------------------------
+void read() { load(); validate(); }
+```
+
+<a id="stylebrella-linter-general-mark-3"></a>
+
+<a id="sb-l-g-m-3"></a>
+
+### SB-L-G-M-3 — Counted MARK groups
+
+`Stylebrella-linter-general-mark-3`
+
+A `MARK: <title> [group:N]` covers exactly the next `N` sibling function or method declarations in the current scope. `N` is a decimal integer at least 2. Ignore nested definitions and nonfunction declarations. Report a malformed count, another MARK before the Nth declaration, or scope ending with fewer than N. The N+1th declaration is outside the group.
+
+**Python**
+
+**Allowed**:
+
+```python
+# MARK: Load adapters [group:2]
+def a(): ...
+def b(): ...
+```
+
+**Violation** (EOF):
+
+```python
+# MARK: Load adapters [group:2]
+def a(): ...
+```
+
+**Kotlin**
+
+**Allowed**:
+
+```kotlin
+// MARK: Load adapters [group:2]
+fun a() = Unit
+fun b() = Unit
+```
+
+**Violation**:
+
+```kotlin
+// MARK: Load adapters [group:1]
+fun a() = Unit
+```
+
+**C++**
+
+**Allowed**:
+
+```cpp
+// MARK: Load adapters [group:2]
+void a();
+void b();
+```
+
+**Violation**:
+
+```cpp
+// MARK: Load adapters [group:1]
+void a();
+```
+
+<a id="stylebrella-linter-general-mark-4"></a>
+
+<a id="sb-l-g-m-4"></a>
+
+### SB-L-G-M-4 — Adjacent MARKs
+
+`Stylebrella-linter-general-mark-4`
+
+Report the second of two sibling MARKs when there is no declaration or executable statement between them. Blank lines, separators and documentation do not break adjacency. After `Private Helpers`, recommend replacing the second MARK with the language's documentation block. `Private Helpers` is structural, has no count, and remains in effect across later descriptive MARKs.
+
+**Python**
+
+**Allowed**:
+
+```python
+# MARK: Read
+def read(): ...
+# MARK: Write
+```
+
+**Violation**:
+
+```python
+# MARK: Private Helpers
+# --------------------------------------------------
+# MARK: Read
+```
+
+**Kotlin**
+
+**Allowed**:
+
+```kotlin
+// MARK: Read
+fun read() = Unit
+// MARK: Write
+```
+
+**Violation**:
+
+```kotlin
+// MARK: Private Helpers
+// --------------------------------------------------
+// MARK: Read
+```
+
+**C++**
+
+**Allowed**:
+
+```cpp
+// MARK: Read
+void read();
+// MARK: Write
+```
+
+**Violation**:
+
+```cpp
+// MARK: Private Helpers
+// --------------------------------------------------
+// MARK: Read
+```
+
+<a id="stylebrella-linter-general-mark-5"></a>
+
+<a id="sb-l-g-m-5"></a>
+
+### SB-L-G-M-5 — Documentation for the first important private method
+
+`Stylebrella-linter-general-mark-5`
+
+The structural header covers the first private method only. If that method is important, require its language documentation block in place of an additional MARK. A documented C++ declaration satisfies the requirement for its definition.
+
+**Python**
+
+**Allowed**:
+
+```python
+  # MARK: Private Helpers
+  def _read(self):
+    """
+    Читает данные.
+    """
+```
+
+**Violation**:
+
+```python
+  # MARK: Private Helpers
+  def _read(self): ...
+```
+
+**Kotlin**
+
+**Allowed**:
+
+```kotlin
+  // MARK: Private Helpers
+  /**
+   * Читает данные.
+   */
+  private fun read() = Unit
+```
+
+**Violation**:
+
+```kotlin
+  // MARK: Private Helpers
+  private fun read() = Unit
+```
+
+**C++**
+
+**Allowed**:
+
+```cpp
+  // MARK: Private Helpers
+  /**
+   * @brief Читает данные.
+   */
+  void _read();
+```
+
+**Violation**:
+
+```cpp
+  // MARK: Private Helpers
+  void _read();
+```
+
+<a id="stylebrella-linter-general-mark-6"></a>
+
+<a id="sb-l-g-m-6"></a>
+
+### SB-L-G-M-6 — Required class MARKs
+
+`Stylebrella-linter-general-mark-6`
+
+A concrete class with both public and private methods needs a MARK attached to a public method and the separate structural MARK. A counted group cannot replace both. When no public method is important, any public method may carry the required public MARK. Exempt interfaces and confirmed DTO-only types; a class without private methods does not need the structural MARK.
+
+**Python**
+
+**Allowed**:
+
+```python
+  # MARK: Read
+  def read(self): ...
+  # MARK: Private Helpers
+  def _read(self): ...
+```
+
+**Violation**:
+
+```python
+  def read(self): ...
+  # MARK: Private Helpers
+  def _read(self): ...
+```
+
+**Kotlin**
+
+**Allowed**:
+
+```kotlin
+  // MARK: Read
+  fun read() = Unit
+  // MARK: Private Helpers
+  private fun helper() = Unit
+```
+
+**Violation**:
+
+```kotlin
+  fun read() = Unit
+  // MARK: Private Helpers
+  private fun helper() = Unit
+```
+
+**C++**
+
+**Allowed**:
+
+```cpp
+ public:
+  // MARK: Read
+  void read();
+ private:
+  // MARK: Private Helpers
+  void _read();
+```
+
+**Violation**:
+
+```cpp
+ public:
+  void read();
+ private:
+  // MARK: Private Helpers
+  void _read();
+```
+
+<a id="stylebrella-linter-general-mark-7"></a>
+
+<a id="sb-l-g-m-7"></a>
+
+### SB-L-G-M-7 — Private methods after public methods
+
+`Stylebrella-linter-general-mark-7`
+
+In an eligible class under [SB-L-G-M-6](#stylebrella-linter-general-mark-6), a private method must not precede any public method. Report the early private declaration; do not reorder declarations. Visibility is defined by the language, not by observed use.
+
+**Python**
+
+**Allowed**:
+
+```python
+  def read(self): ...
+  def _read(self): ...
+```
+
+**Violation**:
+
+```python
+  def _read(self): ...
+  def read(self): ...
+```
+
+**Kotlin**
+
+**Allowed**:
+
+```kotlin
+  fun read() = Unit
+  private fun helper() = Unit
+```
+
+**Violation**:
+
+```kotlin
+  private fun helper() = Unit
+  fun read() = Unit
+```
+
+**C++**
+
+**Allowed**:
+
+```cpp
+public: void read();
+private: void _read();
+```
+
+**Violation**:
+
+```cpp
+private: void _read();
+public: void read();
+```
+
+## `comments`
+
+<a id="stylebrella-linter-general-comments-1"></a>
+
+<a id="sb-l-g-cm-1"></a>
+
+### SB-L-G-CM-1 — Inline comments on fields
+
+`Stylebrella-linter-general-comments-1`
+
+For fields selected by the language-specific rules, require an inline comment with non-whitespace text after the declaration on the same line, except for explicit name exemptions. Report at the field; do not infer quality or units.
+
+**Python**
+
+**Allowed**:
+
+```python
+df_hz: float = 0.0  # offset, Hz
+```
+
+**Violation**:
+
+```python
+df_hz: float = 0.0
+```
+
+**Kotlin**
+
+**Allowed**:
+
+```kotlin
+val dfHz: Double = 0.0, // offset, Hz
+```
+
+**Violation**:
+
+```kotlin
+val dfHz: Double = 0.0,
+```
+
+**C++**
+
+**Allowed**:
+
+```cpp
+double df_hz = 0.0; // offset, Hz
+```
+
+**Violation**:
+
+```cpp
+double df_hz = 0.0;
+```
+
+## `constants`
+
+<a id="stylebrella-linter-general-constants-1"></a>
+
+<a id="sb-l-g-c-1"></a>
+
+### SB-L-G-C-1 — Named values instead of inline literals
+
+`Stylebrella-linter-general-constants-1`
+
+Report inline numeric and string literals in runtime defaults, call arguments, returned/assigned values, expressions or test data unless a documented exception applies. Allow booleans and null, and numeric zero/one or the empty string only as direct initializers, including typed equivalents. A literal in a named constant's definition is not an inline use. Report the literal; never extract or deduplicate automatically.
+
+**Python**
+
+**Allowed**:
+
+```python
+connect(Constants.Network.DEFAULT_PORT)
+```
+
+**Violation**:
+
+```python
+connect(8080)
+```
+
+**Kotlin**
+
+**Allowed**:
+
+```kotlin
+connect(Constants.Network.DEFAULT_PORT)
+```
+
+**Violation**:
+
+```kotlin
+connect(8080)
+```
+
+**C++**
+
+**Allowed**:
+
+```cpp
+connect(app::constants::network::DEFAULT_PORT);
+```
+
+**Violation**:
+
+```cpp
+connect(8080);
+```
+
+<a id="stylebrella-linter-general-constants-2"></a>
+
+<a id="sb-l-g-c-2"></a>
+
+### SB-L-G-C-2 — Literal exceptions for messages and metadata
+
+`Stylebrella-linter-general-constants-2`
+
+Exempt literal message text in statically resolved output, logging or exception message parameters, including the text parts of interpolated messages. Data passed as separate arguments or interpolated expressions is not exempt. Also exempt language-specific schema and syntax metadata explicitly listed by the applicable contract.
+
+**Python**
+
+**Allowed**:
+
+```python
+logger.info("Connected")
+```
+
+**Violation**:
+
+```python
+logger.info("Port: %d", 8080)
+```
+
+**Kotlin**
+
+**Allowed**:
+
+```kotlin
+logger.info("Connected")
+```
+
+**Violation**:
+
+```kotlin
+logger.info("Port: {}", 8080)
+```
+
+**C++**
+
+**Allowed**:
+
+```cpp
+throw std::runtime_error("[Network::connect] Disconnected: peer=" + peer);
+```
+
+**Violation**:
+
+```cpp
+throw std::runtime_error("[Network::connect] Disconnected: port=" + std::to_string(8080));
+```
+
+## `loops`
+
+<a id="stylebrella-linter-general-loops-1"></a>
+
+<a id="sb-l-g-lp-1"></a>
+
+### SB-L-G-LP-1 — For loops instead of equivalent counter loops
+
+`Stylebrella-linter-general-loops-1`
+
+Report a `while` at its header when its counter is initialized to zero immediately before it, tests `<` against the size of an unchanged collection, increments once by one at the end of every iteration, and has no other counter use except indexing that collection or preserving the final counter. If the final counter is used after the loop, any update, early exit, or side effect may change equivalence, or resolution is missing, do not report. Do not rewrite the loop.
+
+**Python**
+
+**Allowed**:
+
+```python
+for item in items: visit(item)
+```
+
+**Violation**:
+
+```python
+i = 0
+while i < len(items):
+  visit(items[i])
+  i += 1
+```
+
+**Kotlin**
+
+**Allowed**:
+
+```kotlin
+for (item in items) visit(item)
+```
+
+**Violation**:
+
+```kotlin
+var i = 0
+while (i < items.size) { visit(items[i]); i++ }
+```
+
+**C++**
+
+**Allowed**:
+
+```cpp
+for (const auto& item : items) visit(item);
+```
+
+**Violation**:
+
+```cpp
+int i = 0;
+while (i < items.size()) { visit(items[i]); ++i; }
+```
+
+## `imports`
+
+<a id="stylebrella-linter-general-imports-1"></a>
+
+<a id="sb-l-g-i-1"></a>
+
+### SB-L-G-I-1 — Imports and includes in the file preamble
+
+`Stylebrella-linter-general-imports-1`
+
+Imports and includes must appear in the initial file preamble, never after the first executable statement or declaration. The preamble allows comments, file directives (including module docstrings, Kotlin file annotations/package, C++ `#pragma once`), and conditional branches that contain only preamble items. Imports in functions or other non-file scopes are late. Report at the directive; formatting does not move it.
+
+**Python**
+
+**Allowed**:
+
+```python
+import sys
+
+
+# --------------------------------------------------
+
+
+def run() -> None:
+  sys.exit()
+```
+
+**Violation**:
+
+```python
+def run() -> None:
+  sys.exit()
+
+
+import sys
+```
+
+**Kotlin**
+
+**Allowed**:
+
+```kotlin
+package app
+import java.time.Clock
+
+
+// --------------------------------------------------
+
+
+val clock = Clock.systemUTC()
+```
+
+**Violation**:
+
+```kotlin
+package app
+val clock = Clock.systemUTC()
+
+
+import java.time.Clock
+```
+
+**C++**
+
+**Allowed**:
+
+```cpp
+#pragma once
+#include <vector>
+
+
+// --------------------------------------------------
+
+
+void run();
+```
+
+**Violation**:
+
+```cpp
+#pragma once
+void run();
+
+
+#include <vector>
+```
+
+## Recommendations (no diagnostic)
+
+Choose meaningful names and include units where useful. Describe intent in comments and put units in field explanations. Prefer Russian for ordinary new or changed comments; English is also allowed. Use English descriptions in MARKs. Consolidate values that mean the same thing, not merely values with the same spelling. Use `for` for simple traversal; keep `while` when state or termination is not equivalent. Keep executable logic independent of import order.

@@ -101,7 +101,7 @@ stylebrella check src tests --output sarif
 stylebrella lint src --output json
 stylebrella format src --diff
 stylebrella format src
-stylebrella explain CPP-HEADER-PRAGMA-ONCE
+stylebrella explain SB-L-C-FI-1
 ```
 
 ## Language engines and reuse boundaries
@@ -178,22 +178,13 @@ passed; independent file and syntax checks must still run.
 
 ## Rules and fixes
 
-Stable rule IDs use the `PY-*`, `NB-*`, `KT-*`, and `CPP-*` prefixes. Initial
-candidates include:
+The [rule ID registry](docs/en/code-style/linting.md#id-registry) defines the
+canonical ID format and its short aliases. For example:
 
-- `CPP-HEADER-PRAGMA-ONCE`: require `#pragma once` in project-owned headers;
-  only auto-insert it when its location is unambiguous.
-- `CPP-HEADER-DOXYGEN`: require multiline Doxygen on applicable declarations
-  in `.hpp` files; never invent a description.
-- `KT-NO-BANG-BANG`: forbid `!!`; no automatic replacement because the right
-  validation and exception depend on intent.
-- `KT-ONE-TYPE-PER-FILE`: limit top-level types per file with documented
-  exceptions; do not move classes automatically.
-- `PY-TYPED-FUNCTION`: require parameter and return annotations; only
-  auto-fix when the correct type is demonstrable.
-- `NB-NO-DEFINITIONS`: forbid `def` and `class` in code cells; report only.
-- `*-MARK-SEPARATOR`: validate `MARK` syntax and a separator of **exactly 50
-  hyphens**; a uniquely identifiable separator length can be auto-fixed.
+- [`SB-L-C-FI-1`](docs/en/code-style/cpp/linting.md#stylebrella-linter-cpp-files-1): require `#pragma once` in project-owned headers.
+- [`SB-L-C-D-1`](docs/en/code-style/cpp/linting.md#stylebrella-linter-cpp-documentation-1): require multiline Doxygen where specified.
+- [`SB-L-K-NU-1`](docs/en/code-style/kotlin/linting.md#stylebrella-linter-kotlin-nulls-1): forbid `!!`.
+- [`SB-F-G-M-1`](docs/en/code-style/formatting.md#stylebrella-formatter-general-mark-1): normalize separators to exactly 50 hyphens.
 
 Diagnostics are sorted by path, line, column, and rule ID. A normalized
 diagnostic carries `rule_id`, `source`, `severity`, `message`, `path`,
@@ -228,9 +219,8 @@ patterns = ["src/**", "tests/**", "notebooks/**"]
 patterns = ["build/**", ".venv/**", "generated/**"]
 
 [rules]
-"CPP-HEADER-DOXYGEN" = "error"
-"KT-NO-BANG-BANG" = "error"
-"NB-NO-DEFINITIONS" = "error"
+"Stylebrella-linter-cpp-documentation-1" = "error"
+"Stylebrella-linter-kotlin-nulls-1" = "error"
 ```
 
 Bundled engine versions are pinned per release. Arbitrary programs found on

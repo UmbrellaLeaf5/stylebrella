@@ -1,95 +1,226 @@
-# Python formatting
+# Formatting Python
 
 [Русская версия](../../../ru/code-style/python/formatting.md)
 
-This page adds Python-specific rules to [shared formatting](../formatting.md). It covers `.py`; notebooks and standalone config files are deferred. See [Python linting](linting.md). Examples are acceptance fixtures or excerpts.
+Scope: `.py`. Notebooks and standalone configuration files are outside this contract. For class visibility see [Python linting](linting.md).
 
-## Layout and imports
+[Shared rules](../formatting.md)
 
-Use LF and double quotes where changing quotes preserves the literal. Ruff is the Python base formatter and import sorter. Do not chain Black or isort. Order imports as standard library, third-party, then local, with a blank line between groups. Preserve comment attachment and imports whose order cannot safely be changed. Import-order diagnostics belong to the formatting check, even if Ruff implements sorting through an `I` rule.
+Examples isolate the rule being illustrated.
 
-Before:
+## `source`
 
-```python
-from app import run
-import os
-def main():
-    run('example', os.environ)
-```
+<a id="stylebrella-formatter-python-source-1"></a>
 
-After:
+<a id="sb-f-p-s-1"></a>
 
-```python
-import os
+### SB-F-P-S-1 — LF line endings
 
-from app import run
+`Stylebrella-formatter-python-source-1`
 
+Normalize file line endings to LF without changing literal contents.
 
-def main():
-  run("example", os.environ)
-```
-
-## Blank lines
-
-- Use a blank line after a function/class docstring before the first statement. A docstring-only body needs no trailing blank line inside it.
-- In addition to the shared control-flow rules, add a blank line at a peer boundary before `while`, `try`, `finally`, `with`, `raise`, `assert`, and `continue`. Separate `elif`, `else`, `except`, and `finally` headers from the preceding suite. Do not split an inline suite or put a blank line before its only statement. Deeply nested one-line control-flow idioms can stay compact.
-- A series of standalone field assignments after an object declaration starts after a blank line; initialization followed by a receiver call still uses shared grouping.
-- Keep constructor category comments in the parameter list without inserting blank lines there. Inline comments use `# `; keep them attached to their code.
-
-Before:
+**Before** (CRLF):
 
 ```python
-def configure(config: Config) -> None:
-  announce()
-  filter_ = Filter()
-  filter_.init(config)
-  if config.enabled:
-    filter_.start()
-  return
+x = 1
 ```
 
-After:
+**After** (LF):
 
 ```python
-def configure(config: Config) -> None:
-  announce()
-
-  filter_ = Filter()
-  filter_.init(config)
-
-  if config.enabled:
-    filter_.start()
-
-  return
+x = 1
 ```
 
-## Separators and private helpers
+<a id="stylebrella-formatter-python-source-2"></a>
 
-Use `#` for the shared separators and structural comments. [Python linting](linting.md#marks-method-order-and-documentation) defines which methods count as private.
+<a id="sb-f-p-s-2"></a>
 
-Before:
+### SB-F-P-S-2 — Double quotes for strings
+
+`Stylebrella-formatter-python-source-2`
+
+Use double quotes for string literals when doing so preserves the value and does not introduce additional escapes.
+
+**Before**:
 
 ```python
-class Reader:
-  def read(self) -> str:
-    return self._read()
-  def _read(self) -> str:
-    return self.source.read()
+x = 'hello'
 ```
 
-After:
+**After**:
 
 ```python
-class Reader:
-
-  def read(self) -> str:
-    return self._read()
-
-  # MARK: Private Helpers
-  # --------------------------------------------------
-
-  def _read(self) -> str:
-    return self.source.read()
+x = "hello"
 ```
 
-Formatting must stabilize on a second pass. If Ruff disagrees with a layout fixture, record the gap and resolve it before claiming support; do not ship two passes that undo one another.
+## `imports`
+
+<a id="stylebrella-formatter-python-imports-1"></a>
+
+<a id="sb-f-p-i-1"></a>
+
+### SB-F-P-I-1 — Grouping and sorting imports
+
+`Stylebrella-formatter-python-imports-1`
+
+In the leading import block order groups as future imports, standard library, third-party, and local; use one blank line between present groups. Order imports within a group by module and imported name, and retain attached comments with their imports. Do not skip sorting because of import-time effects. Do not relocate imports into the block.
+
+**Before**:
+
+```python
+import requests
+import sys
+```
+
+**After**:
+
+```python
+import sys
+
+import requests
+```
+
+## `blank_lines`
+
+<a id="stylebrella-formatter-python-blank_lines-1"></a>
+
+<a id="sb-f-p-bl-1"></a>
+
+### SB-F-P-BL-1 — Blank line after a docstring
+
+`Stylebrella-formatter-python-blank_lines-1`
+
+Put one blank line between a function or class docstring and the next body statement; add none when the docstring is the only statement.
+
+**Before**:
+
+```python
+def _read() -> None:
+  """
+  Читает данные.
+  """
+  read()
+```
+
+**After**:
+
+```python
+def _read() -> None:
+  """
+  Читает данные.
+  """
+
+  read()
+```
+
+<a id="stylebrella-formatter-python-blank_lines-2"></a>
+
+<a id="sb-f-p-bl-2"></a>
+
+### SB-F-P-BL-2 — Blank lines before statements and clause headers
+
+`Stylebrella-formatter-python-blank_lines-2`
+
+Put one blank line before sibling `while`, `try`, `with`, `raise`, `assert`, and `continue` statements and before `elif`, `else`, `except`, and `finally` clause headers following a suite. Do not split a same-line suite to insert this space.
+
+**Before**:
+
+```python
+  log()
+  assert ready
+```
+
+**After**:
+
+```python
+  log()
+
+  assert ready
+```
+
+<a id="stylebrella-formatter-python-blank_lines-3"></a>
+
+<a id="sb-f-p-bl-3"></a>
+
+### SB-F-P-BL-3 — Blank line before field assignments
+
+`Stylebrella-formatter-python-blank_lines-3`
+
+Leave one blank line between an object declaration and a directly following run of assignments to that object's fields; keep that run together. A directly following method call still uses the shared grouping rule.
+
+**Before**:
+
+```python
+  a = A()
+  a.x = x
+  a.y = y
+```
+
+**After**:
+
+```python
+  a = A()
+
+  a.x = x
+  a.y = y
+```
+
+<a id="stylebrella-formatter-python-blank_lines-4"></a>
+
+<a id="sb-f-p-bl-4"></a>
+
+### SB-F-P-BL-4 — Spacing around constructor category comments
+
+`Stylebrella-formatter-python-blank_lines-4`
+
+Keep constructor parameter category comments in their parameter list and remove blank lines directly before and after them.
+
+**Before**:
+
+```python
+def __init__(
+  self,
+
+  # services:
+  service: Service,
+): ...
+```
+
+**After**:
+
+```python
+def __init__(
+  self,
+  # services:
+  service: Service,
+): ...
+```
+
+## `mark`
+
+<a id="stylebrella-formatter-python-mark-1"></a>
+
+<a id="sb-f-p-m-1"></a>
+
+### SB-F-P-M-1 — Spacing in inline comments
+
+`Stylebrella-formatter-python-mark-1`
+
+Keep an inline comment on the same line as its code. Apply [SB-F-G-CM-1](../formatting.md#sb-f-g-cm-1) to spacing after `#`. Preserve interpreter directives, encoding declarations, and tool-marker text.
+
+**Before**:
+
+```python
+x = load()  #note
+```
+
+**After**:
+
+```python
+x = load()  # note
+```
+
+## Recommendations (no diagnostic)
+
+Keep import-time effects independent of import order. Use a separate utility module rather than working around import placement.

@@ -2,21 +2,18 @@
 
 This roadmap implements the application described in [README.md](README.md).
 All tasks below are planned; none is marked as completed before the code
-exists. Requirements come from the four style guides and three engine configs
-in `template_opencode_agented`, independently of other projects.
+exists. The Stylebrella [formatting](docs/en/code-style/formatting.md) and
+[linting](docs/en/code-style/linting.md) contracts define the current target.
+The original template and engine configurations are reference material.
+Notebook ideas below are deferred until a notebook contract is defined.
 
 ## 0. Requirements and compatibility proof
 
-- [ ] Inventory **every** rule in `cpp/CODE-STYLE.md`,
-      `kotlin/CODE-STYLE.md`, `python/CODE-STYLE.md`, and
-      `python/notebooks/CODE-STYLE.md`: source section, language, precise
-      condition, exceptions, existing engine coverage, automatable scope,
-      and valid/invalid examples.
-- [ ] Classify each rule as “provided by an engine,” “custom check,”
-      “optional heuristic,” “human instruction,” or “contradiction/requires
-      clarification.” Do not advertise semantic judgments as exact checks.
+- [ ] Map every documented rule ID to an implementation and acceptance
+      fixtures. Keep this implementation mapping separate from the public
+      contract. Do not implement review recommendations as diagnostics.
 - [ ] Turn examples into golden fixtures for indentation, comments, blank
-      lines, `else`/`catch`, signatures, file structure, and notebooks.
+      lines, `else`/`catch`, signatures, and file structure.
 - [ ] Preserve `cpp/.clang-format`, `kotlin/.editorconfig`, and
       `python/ruff.toml` as versioned preset inputs.
 - [ ] Compare ktlint, ktfmt, and IntelliJ output on the golden Kotlin
@@ -26,7 +23,7 @@ in `template_opencode_agented`, independently of other projects.
 - [ ] Verify the C++ and Python engines against their guide examples;
       specifically investigate conflicting blank-line rules and convergence.
 
-**Done when:** all four guides have a coverage table, runnable golden
+**Done when:** all in-scope rule IDs have implementation coverage, runnable golden
 fixtures exist, and the Kotlin formatter choice is supported by evidence.
 
 ## 1. Rust workspace and core model
@@ -37,8 +34,9 @@ fixtures exist, and the Kotlin formatter choice is supported by evidence.
 - [ ] Define `Diagnostic`, `SourceRange`, `TextEdit`, `RuleMetadata`,
       `EngineResult`, `ProjectConfig`, `Language`, and the machine-output
       schema version. Specify Unicode coordinate and offset conventions.
-- [ ] Define stable `PY-*`, `NB-*`, `KT-*`, `CPP-*` IDs. Keep native engine
-      rule IDs and engine names instead of relabeling them as Stylebrella rules.
+- [ ] Implement canonical IDs and short aliases from the
+      [rule ID registry](docs/en/code-style/linting.md#id-registry). Map
+      engine findings to the documented Stylebrella rules they implement.
 - [ ] Implement project discovery, extension filtering, symlink behavior,
       generated-directory exclusions, deterministic file ordering, and nested
       project boundaries; do not enter dependencies or submodules implicitly.
