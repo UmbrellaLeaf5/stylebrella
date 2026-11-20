@@ -1258,9 +1258,13 @@ Insert exactly one blank line before a `return` or a standalone yield following 
   recordAttempt()
   return try {
     load()
-  } catch (error: IOException) {
+  }
+
+  catch (error: IOException) {
     fallback()
-  } finally {
+  }
+
+  finally {
     release()
   }
 ```
@@ -1279,7 +1283,9 @@ Insert exactly one blank line before a `return` or a standalone yield following 
   return if (ready) {
     recordSuccess()
     current()
-  } else {
+  }
+
+  else {
     recordFailure()
     fallback()
   }
@@ -1298,9 +1304,13 @@ Insert exactly one blank line before a `return` or a standalone yield following 
 
   return try {
     load()
-  } catch (error: IOException) {
+  }
+
+  catch (error: IOException) {
     fallback()
-  } finally {
+  }
+
+  finally {
     release()
   }
 ```
@@ -1321,7 +1331,9 @@ Insert exactly one blank line before a `return` or a standalone yield following 
   return if (ready) {
     recordSuccess()
     current()
-  } else {
+  }
+
+  else {
     recordFailure()
     fallback()
   }
@@ -2156,7 +2168,11 @@ Every standalone MARK must be followed by a separator at the same indentation. I
 
 `Stylebrella-formatter-general-mark-2`
 
-For a concrete class with at least one public and one private method, put a single `MARK: Private Helpers` and separator before its first private method. Remove duplicate structural blocks and obsolete `(no private methods)` comments. Preserve access labels, member order, and all descriptive MARKs, even when lint reports adjacent MARKs. Do not apply to interfaces or types positively identified as DTO-only.
+For a concrete class with at least one private method, including a class with no public methods, require exactly one `MARK: Private Helpers` block before its first private method. `format` inserts or moves the block and its separator to that position and removes duplicate structural blocks and obsolete `(no private methods)` comments. `check` reports the same needed edits without writing. Preserve access labels, member order, and all descriptive MARKs, even when lint reports adjacent MARKs. Do not apply to interfaces or confirmed DTO-only types.
+
+If a public method follows a private one, skip all Private Helpers and placeholder edits in that class and continue formatting. [SB-L-G-M-7](linting.md#sb-l-g-m-7) reports the order violation in `lint`. Determine visibility before editing, using the language's declaration rules; in Python, preserve the classification of methods identified by an existing private section. For a class with public methods and no private methods, apply [SB-F-G-CM-4](#sb-f-g-cm-4) instead.
+
+In each example below, the same marker edit applies if the class contains only the private `_copy` method: add the header before the existing separator. If `_copy` instead precedes `read`, leave the class's structural markers as they are. If there are no private methods, use the placeholder examples in [SB-F-G-CM-4](#sb-f-g-cm-4).
 
 **Python**
 
@@ -2577,7 +2593,7 @@ int value; // key feature of this configuration and its required behavior for ev
 
 `Stylebrella-formatter-general-comments-4`
 
-For a concrete class with public but no private methods, ensure exactly one `(no private methods)` standalone comment after the last public method, separated by one blank line. Replace stale `Private Helpers` blocks and remove duplicate placeholders. As in [SB-F-G-M-2](#sb-f-g-m-2), interfaces and confirmed DTO-only types are exempt.
+For a concrete class with public but no private methods, require exactly one `(no private methods)` standalone comment after the last public method, separated by one blank line. `format` replaces stale `Private Helpers` blocks, inserts or moves the placeholder, and removes duplicates; `check` reports the same needed edits without writing. A class with neither public nor private methods does not need a placeholder. If private methods exist, follow [SB-F-G-M-2](#sb-f-g-m-2), including its order guard. Interfaces and confirmed DTO-only types are exempt.
 
 **Python**
 

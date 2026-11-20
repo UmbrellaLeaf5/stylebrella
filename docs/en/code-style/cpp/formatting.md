@@ -185,6 +185,8 @@ Regroup contiguous leading includes and order them by category, then case-sensit
 
 `Stylebrella-formatter-cpp-blank_lines-1`
 
+Use exactly one blank line immediately after the opening `{` and immediately before the closing `}` of each namespace definition, including anonymous and nested namespaces. In an empty namespace, one blank line serves both boundaries. Keep the closing brace on its own line with a clang-format-style comment: `}  // namespace` for an anonymous namespace, `}  // namespace name` for a named namespace, and `}  // namespace app::detail` for a compact nested namespace such as `namespace app::detail`. Require the comment even for a short or empty namespace; add or correct it as needed.
+
 Use one blank line between declaration blocks inside a namespace, including around separators; keep attached Doxygen with its declaration. Consecutive assignments to different fields of the same newly declared object stay in its declaration group.
 
 **Before**:
@@ -194,19 +196,80 @@ namespace n {
 void a();
 // --------------------------------------------------
 void b();
-}  // namespace n
+}  // namespace wrong
+```
+
+```cpp
+namespace {
+void a();
+}
+```
+
+```cpp
+namespace app::detail {
+void a();
+}
+```
+
+```cpp
+namespace outer {
+namespace inner {
+void a();
+}
+}
+```
+
+```cpp
+namespace empty {
+}
 ```
 
 **After**:
 
 ```cpp
 namespace n {
+
 void a();
 
 // --------------------------------------------------
 
 void b();
+
 }  // namespace n
+```
+
+```cpp
+namespace {
+
+void a();
+
+}  // namespace
+```
+
+```cpp
+namespace app::detail {
+
+void a();
+
+}  // namespace app::detail
+```
+
+```cpp
+namespace outer {
+
+namespace inner {
+
+void a();
+
+}  // namespace inner
+
+}  // namespace outer
+```
+
+```cpp
+namespace empty {
+
+}  // namespace empty
 ```
 
 <a id="stylebrella-formatter-cpp-blank_lines-2"></a>

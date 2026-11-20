@@ -18,7 +18,7 @@ Examples isolate the rule being illustrated. Function examples are focused excer
 
 `Stylebrella-linter-kotlin-naming-1`
 
-Require camelCase for variables, parameters, properties and public callables; PascalCase for class, interface, object, enum and annotation types; and SCREAMING_SNAKE_CASE for `const val`. Private method names use the underscore prefix required by [SB-L-G-N-3](../general/linting.md#sb-l-g-n-3), followed by a camelCase name.
+Require camelCase for variables, parameters, properties and public callables; PascalCase for class, interface, object, enum and annotation types; and SCREAMING_SNAKE_CASE for `const val`. Private method names use the underscore prefix required by [SB-L-G-N-3](../general/linting.md#sb-l-g-n-3), followed by a camelCase name. Report forbidden leading underscores on public methods and standalone functions under [SB-L-G-N-4](../general/linting.md#sb-l-g-n-4).
 
 **Allowed**:
 

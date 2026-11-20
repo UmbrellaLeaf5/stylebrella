@@ -244,7 +244,7 @@ val b = 2
 
 `Stylebrella-formatter-kotlin-blank_lines-3`
 
-Start `else if`, `else`, `catch`, and `finally` on a new line. Apply [SB-F-G-BL-7](../general/formatting.md#stylebrella-formatter-general-blank_lines-7) at the branch boundary. In `return try` and `return if`, put each of these clauses on the same line as the preceding `}` when there is one, with one space before the keyword. Apply [SB-F-G-BL-8](../general/formatting.md#stylebrella-formatter-general-blank_lines-8) before the whole `return` statement. Do not introduce braces solely for formatting.
+Start `else if`, `else`, `catch`, and `finally` on a new line, including inside `return if` and `return try`. Apply [SB-F-G-BL-7](../general/formatting.md#stylebrella-formatter-general-blank_lines-7) at the branch boundary and [SB-F-G-BL-8](../general/formatting.md#stylebrella-formatter-general-blank_lines-8) before the whole `return` statement. Do not introduce braces solely for formatting.
 
 **Before**:
 
@@ -253,6 +253,40 @@ if (x) {
   f()
   g()
 } else {
+  h()
+  i()
+}
+```
+
+```kotlin
+  return try {
+    load()
+  } catch (error: IOException) {
+    fallback()
+  } finally {
+    release()
+  }
+```
+
+```kotlin
+  return if (ready) {
+    recordSuccess()
+    current()
+  } else {
+    recordFailure()
+    fallback()
+  }
+```
+
+**After**:
+
+```kotlin
+if (x) {
+  f()
+  g()
+}
+
+else {
   h()
   i()
 }
@@ -279,40 +313,6 @@ if (x) {
   }
 
   else {
-    recordFailure()
-    fallback()
-  }
-```
-
-**After**:
-
-```kotlin
-if (x) {
-  f()
-  g()
-}
-
-else {
-  h()
-  i()
-}
-```
-
-```kotlin
-  return try {
-    load()
-  } catch (error: IOException) {
-    fallback()
-  } finally {
-    release()
-  }
-```
-
-```kotlin
-  return if (ready) {
-    recordSuccess()
-    current()
-  } else {
     recordFailure()
     fallback()
   }

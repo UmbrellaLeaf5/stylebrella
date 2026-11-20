@@ -18,7 +18,7 @@ Examples isolate the rule being illustrated. Function examples are focused excer
 
 `Stylebrella-linter-cpp-naming-1`
 
-The PascalCase requirement in [SB-L-G-N-1](../general/linting.md#sb-l-g-n-1) applies to `class`, `struct`, and `enum` declarations, including scoped enums. Use snake_case for functions, variables, fields, and parameters, subject to the constant rule [SB-L-C-N-2](#sb-l-c-n-2). Use lowercase for namespaces. For private-member prefixes, see [SB-L-G-N-3](../general/linting.md#sb-l-g-n-3).
+The PascalCase requirement in [SB-L-G-N-1](../general/linting.md#sb-l-g-n-1) applies to `class`, `struct`, and `enum` declarations, including scoped enums. Use snake_case for functions, variables, fields, and parameters, subject to the constant rule [SB-L-C-N-2](#sb-l-c-n-2). Use lowercase for namespaces. For private-member prefixes, see [SB-L-G-N-3](../general/linting.md#sb-l-g-n-3). Report forbidden leading underscores on public methods and standalone functions under [SB-L-G-N-4](../general/linting.md#sb-l-g-n-4).
 
 **Allowed** (class, struct, and scoped enum names; each snippet is from a separate file):
 
@@ -56,24 +56,28 @@ enum class connection_state { CONNECTING, CONNECTED, CLOSED };
 
 ```cpp
 namespace network {
+
 int count_free_slots(int pool_size, int reserved_slots) {
   int available_slots = pool_size;
   available_slots -= reserved_slots;
   return available_slots;
 }
-}
+
+}  // namespace network
 ```
 
 **Violation** (namespace capitalization and camelCase names):
 
 ```cpp
 namespace Network {
+
 int countFreeSlots(int poolSize, int reservedSlots) {
   int availableSlots = poolSize;
   availableSlots -= reservedSlots;
   return availableSlots;
 }
-}
+
+}  // namespace Network
 ```
 
 <a id="stylebrella-linter-cpp-naming-2"></a>
@@ -167,16 +171,20 @@ A type file has the same PascalCase stem as its primary named class, struct or e
 
 ```cpp
 namespace core {
+
 class Antenna;
-}
+
+}  // namespace core
 ```
 
 **Violation** (`include/app/math/antenna.hpp`):
 
 ```cpp
 namespace core {
+
 class Antenna;
-}
+
+}  // namespace core
 ```
 
 <a id="stylebrella-linter-cpp-files-3"></a>

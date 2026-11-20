@@ -96,7 +96,7 @@ import requests
 **До**:
 
 ```python
-def _read() -> None:
+def read_data() -> None:
   """
   Читает данные.
   """
@@ -106,7 +106,7 @@ def _read() -> None:
 **После**:
 
 ```python
-def _read() -> None:
+def read_data() -> None:
   """
   Читает данные.
   """

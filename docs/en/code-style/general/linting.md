@@ -128,7 +128,7 @@ constexpr int max_retries = 3;
 
 Every private method name must begin with exactly one underscore followed by its language-specific name. In Kotlin and C++, private visibility is determined by the declaration. In Python, this rule applies when project metadata or an explicit `MARK: Private Helpers` section identifies the method as private; a name alone cannot establish private intent. Python special methods whose names begin and end with double underscores are excluded. Report at the method name; do not rename it automatically.
 
-In C++, the same prefix is required for private fields unless the resulting identifier would be reserved. Private constants follow [SB-L-C-N-2](../cpp/linting.md#sb-l-c-n-2). Protected members do not take a private prefix. Report a field violation at its name; do not rename it automatically.
+In C++, the same prefix is required for nonconstant private fields unless the resulting identifier would be reserved. Protected members do not take a private prefix. Report a field violation at its name; do not rename it automatically.
 
 **Python** — the project marks `copy` as private.
 
@@ -250,6 +250,210 @@ class Reader {
 ```cpp
  private:
   int max_retries;
+```
+
+<a id="stylebrella-linter-general-naming-4"></a>
+
+<a id="sb-l-g-n-4"></a>
+
+### SB-L-G-N-4 — No leading underscore on public methods or standalone functions
+
+`Stylebrella-linter-general-naming-4`
+
+In Kotlin and C++, reject a leading underscore on public methods, using effective declaration visibility (including implicit `public`). Do not apply the public-method check in Python. In all three languages, reject a leading underscore on named non-member functions, including top-level, namespace-scope, and local functions where supported, regardless of their visibility. Python special names remain exempt. Report at the declared name; do not rename it automatically.
+
+**Python — Allowed / Violation** (module-level and local functions; the public-method check is not applicable):
+
+```python
+def read_value(value: str) -> str:
+  """
+  Удаляет пробелы по краям входной строки.
+
+  Args:
+    value: Исходная строка.
+
+  Returns:
+    Строка без пробелов по краям.
+  """
+
+  def normalize(text: str) -> str:
+    """
+    Удаляет начальные и конечные пробельные символы.
+
+    Args:
+      text: Текст для нормализации.
+
+    Returns:
+      Нормализованный текст.
+    """
+
+    return text.strip()
+
+  return normalize(value)
+```
+
+```python
+def _read_value(value: str) -> str:
+  """
+  Удаляет пробелы по краям входной строки.
+
+  Args:
+    value: Исходная строка.
+
+  Returns:
+    Строка без пробелов по краям.
+  """
+
+  def _normalize(text: str) -> str:
+    """
+    Удаляет начальные и конечные пробельные символы.
+
+    Args:
+      text: Текст для нормализации.
+
+    Returns:
+      Нормализованный текст.
+    """
+
+    return text.strip()
+
+  return _normalize(value)
+```
+
+**Kotlin — Allowed / Violation** (implicitly public method, private top-level function, and local function):
+
+```kotlin
+class Reader {
+  // MARK: Read value
+  // --------------------------------------------------
+
+  /**
+   * Возвращает значение без изменений.
+   *
+   * @param value исходная строка
+   * @return исходная строка без изменений
+   */
+  fun read(value: String): String = value
+
+  // (no private methods)
+}
+
+/**
+ * Удаляет пробельные символы по краям строки.
+ *
+ * @param value исходная строка
+ * @return строка без пробелов по краям
+ */
+private fun readValue(value: String): String {
+  /**
+   * Нормализует края текста.
+   *
+   * @param text текст для нормализации
+   * @return нормализованный текст
+   */
+  fun normalize(text: String): String = text.trim()
+
+  return normalize(value)
+}
+```
+
+```kotlin
+class Reader {
+  // MARK: Read value
+  // --------------------------------------------------
+
+  /**
+   * Возвращает значение без изменений.
+   *
+   * @param value исходная строка
+   * @return исходная строка без изменений
+   */
+  fun _read(value: String): String = value
+
+  // (no private methods)
+}
+
+/**
+ * Удаляет пробельные символы по краям строки.
+ *
+ * @param value исходная строка
+ * @return строка без пробелов по краям
+ */
+private fun _readValue(value: String): String {
+  /**
+   * Нормализует края текста.
+   *
+   * @param text текст для нормализации
+   * @return нормализованный текст
+   */
+  fun _normalize(text: String): String = text.trim()
+
+  return _normalize(value)
+}
+```
+
+**C++ — Allowed / Violation** (public method and namespace-scope function):
+
+```cpp
+namespace input {
+
+/**
+ * @brief Возвращает входное значение без преобразования.
+ */
+class Reader {
+ public:
+  // MARK: Read value
+  // --------------------------------------------------
+
+  /**
+   * @brief Возвращает переданное значение без изменений.
+   * @param value Входное значение.
+   * @return Исходное значение.
+   */
+  int read(int value) const { return value; }
+
+  // (no private methods)
+};
+
+/**
+ * @brief Передаёт исходное значение без преобразования.
+ * @param value Входное значение.
+ * @return Исходное значение.
+ */
+int read_value(int value) { return value; }
+
+}  // namespace input
+```
+
+```cpp
+namespace input {
+
+/**
+ * @brief Возвращает входное значение без преобразования.
+ */
+class Reader {
+ public:
+  // MARK: Read value
+  // --------------------------------------------------
+
+  /**
+   * @brief Возвращает переданное значение без изменений.
+   * @param value Входное значение.
+   * @return Исходное значение.
+   */
+  int _read(int value) const { return value; }
+
+  // (no private methods)
+};
+
+/**
+ * @brief Передаёт исходное значение без преобразования.
+ * @param value Входное значение.
+ * @return Исходное значение.
+ */
+int _read_value(int value) { return value; }
+
+}  // namespace input
 ```
 
 ## `files`
@@ -417,7 +621,7 @@ A descriptive MARK title must be nonempty, begin with an uppercase ASCII letter,
 
 A function is nontrivial if it declares more than three parameters or its canonical body spans more than 15 executable lines. Exclude type parameters and the receiver, including Python's `self` or `cls` when it serves as the receiver. Count each variadic or defaulted parameter once. Count body lines in the canonical format, excluding blank, comment-only, documentation-only and delimiter-only lines.
 
-A function is important if at least two distinct project references resolve to it other than self-recursion; multiple references in one caller count separately. This rule requires a descriptive MARK only for a nontrivial function that is public or important, unless covered by a [valid group](#stylebrella-linter-general-mark-3) or [SB-L-G-M-5](#stylebrella-linter-general-mark-5). A trivial function does not need its own descriptive MARK or group under this rule, even if important. Keep `MARK: Private Helpers` where [SB-L-G-M-6](#stylebrella-linter-general-mark-6) requires it; do not insert a second MARK between that header and the first private method ([SB-L-G-M-4](#stylebrella-linter-general-mark-4)).
+A function is important if at least two distinct project references resolve to it other than self-recursion; multiple references in one caller count separately. This rule requires a descriptive MARK only for a nontrivial function that is public or important, unless covered by a [valid group](#stylebrella-linter-general-mark-3) or [SB-L-G-M-5](#stylebrella-linter-general-mark-5). A trivial function does not need its own descriptive MARK or group under this rule, even if important. The formatter owns `MARK: Private Helpers` under [SB-F-G-M-2](formatting.md#sb-f-g-m-2); do not insert a second MARK between that header and the first private method ([SB-L-G-M-4](#stylebrella-linter-general-mark-4)).
 
 **Python**
 
@@ -855,7 +1059,7 @@ void read();
 
 `Stylebrella-linter-general-mark-5`
 
-The structural header covers the first private method only. If that method is both important and nontrivial under [SB-L-G-M-2](#stylebrella-linter-general-mark-2), its required language documentation takes the place of an additional MARK. In C++, document a method declared in a header there, not again at its source definition. Report missing documentation under this rule instead of the language presence rule at this boundary; report malformed documentation under the language format rule.
+The structural header covers the first private method only. If that method is both important and nontrivial under [SB-L-G-M-2](#stylebrella-linter-general-mark-2), its required language documentation takes the place of an additional MARK. Identify the first private method by visibility and declaration order, even if the header is missing; [SB-F-G-M-2](formatting.md#sb-f-g-m-2) owns that edit. In C++, document a method declared in a header there, not again at its source definition. Report missing documentation under this rule instead of the language presence rule at this boundary; report malformed documentation under the language format rule.
 
 **Allowed** (Kotlin): `_applyBounds` has four parameters and two resolved call sites. Both entry points share the validation and update so an invalid region never reaches the viewport. KDoc satisfies the requirement at the private section boundary.
 
@@ -968,13 +1172,13 @@ class ViewportController(private val _viewport: Viewport) {
 
 <a id="sb-l-g-m-6"></a>
 
-### SB-L-G-M-6 — Required class MARKs
+### SB-L-G-M-6 — Required public MARK in a class
 
 `Stylebrella-linter-general-mark-6`
 
 A concrete class with public methods must have either a valid counted MARK group of public methods or a descriptive MARK attached to a public method the author selected as important. Do not second-guess that choice based on reference counts or body size. Apply [SB-L-G-M-2](#stylebrella-linter-general-mark-2) independently to methods not covered by the group or a descriptive MARK.
 
-The class also needs a separate `MARK: Private Helpers` before its first private method, or the standalone `(no private methods)` comment after its last public method if it has no private methods. A public MARK or group does not replace either structural marker. Exempt interfaces and confirmed DTO-only types.
+Exempt interfaces and confirmed DTO-only types. This lint rule checks only the author-written public MARK or group. The formatter's read-only `check` owns the presence and placement of the [Private Helpers section (SB-F-G-M-2)](formatting.md#sb-f-g-m-2) or [the `(no private methods)` placeholder (SB-F-G-CM-4)](formatting.md#sb-f-g-cm-4). `format` corrects those markers; a public MARK or group does not replace either one.
 
 **Allowed** (Python, a single MARK chosen by the author and no private methods):
 
@@ -1016,7 +1220,7 @@ class ExportQueue:
 
 **Allowed** (Kotlin, a counted group): [`ViewportController` above](#stylebrella-linter-general-mark-5) groups `restoreProfile` and `resetToWorkspace` under one `[group:2]` MARK. The group's scope ends before the separate `MARK: Private Helpers`.
 
-**Violation** (C++, the public MARK is present, but the class has no `(no private methods)` marker):
+**Violation** (C++, no descriptive public MARK or counted public group):
 
 ```cpp
 /**
@@ -1024,7 +1228,6 @@ class ExportQueue:
  */
 class ExportJournal {
  public:
-  // MARK: Persist export results
   // --------------------------------------------------
 
   /**
@@ -1046,10 +1249,12 @@ class ExportJournal {
   void close(Journal& journal) const {
     journal.close();
   }
+
+  // (no private methods)
 };
 ```
 
-The Python class would also violate this rule if its public MARK were removed, and the Kotlin class would violate it if its separate `Private Helpers` MARK were removed.
+Removing the Python class's public MARK would also violate this rule. Removing only the Kotlin class's `Private Helpers` header or the Python class's placeholder would be reported by `check`, not by this lint rule.
 
 <a id="stylebrella-linter-general-mark-7"></a>
 
@@ -1059,7 +1264,7 @@ The Python class would also violate this rule if its public MARK were removed, a
 
 `Stylebrella-linter-general-mark-7`
 
-In a class with both public and private methods covered by [SB-L-G-M-6](#stylebrella-linter-general-mark-6), a private method must not precede any public method. Report the early private declaration; do not reorder declarations. Use declaration visibility, including the explicit Python private-section convention, rather than observed use.
+In a concrete class with both public and private methods, a private method must not precede any public method. Exempt interfaces and confirmed DTO-only types. Report the early private declaration; do not reorder declarations. Use declaration visibility, including the explicit Python private-section convention, rather than observed use. On this violation, [SB-F-G-M-2](formatting.md#sb-f-g-m-2) skips structural marker edits for the class.
 
 **Allowed** (Python, public operations first and the private writer last):
 

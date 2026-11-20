@@ -185,6 +185,8 @@ class Sender {
 
 `Stylebrella-formatter-cpp-blank_lines-1`
 
+Ставьте ровно одну пустую строку сразу после открывающей `{` и перед закрывающей `}` каждого определения пространства имён, включая анонимные и вложенные. В пустом пространстве имён одна пустая строка служит обеим границам. Закрывающую скобку ставьте на отдельную строку с комментарием в стиле clang-format: `}  // namespace` для анонимного пространства, `}  // namespace name` для именованного и `}  // namespace app::detail` для сокращённой записи вложенного пространства `namespace app::detail`. Добавляйте или исправляйте комментарий даже у коротких и пустых пространств имён.
+
 Между блоками объявлений в пространстве имён ставится одна пустая строка, включая границы разделителей; Doxygen остаётся с объявлением. Последовательные присваивания разным полям только что объявленного объекта остаются в его группе.
 
 **До**:
@@ -194,19 +196,80 @@ namespace n {
 void a();
 // --------------------------------------------------
 void b();
-}  // namespace n
+}  // namespace wrong
+```
+
+```cpp
+namespace {
+void a();
+}
+```
+
+```cpp
+namespace app::detail {
+void a();
+}
+```
+
+```cpp
+namespace outer {
+namespace inner {
+void a();
+}
+}
+```
+
+```cpp
+namespace empty {
+}
 ```
 
 **После**:
 
 ```cpp
 namespace n {
+
 void a();
 
 // --------------------------------------------------
 
 void b();
+
 }  // namespace n
+```
+
+```cpp
+namespace {
+
+void a();
+
+}  // namespace
+```
+
+```cpp
+namespace app::detail {
+
+void a();
+
+}  // namespace app::detail
+```
+
+```cpp
+namespace outer {
+
+namespace inner {
+
+void a();
+
+}  // namespace inner
+
+}  // namespace outer
+```
+
+```cpp
+namespace empty {
+
+}  // namespace empty
 ```
 
 <a id="stylebrella-formatter-cpp-blank_lines-2"></a>

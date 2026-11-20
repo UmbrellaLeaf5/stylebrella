@@ -42,7 +42,7 @@ def loadConfig() -> Config:
 
 `Stylebrella-linter-python-naming-2`
 
-Require one leading underscore for symbols declared internal by project metadata or an explicit visibility convention. Lack of use or omission from an unrelated export list is not evidence.
+Require one leading underscore for symbols declared internal by project metadata or an explicit visibility convention, except non-member functions, which follow [SB-L-G-N-4](../general/linting.md#sb-l-g-n-4). Lack of use or omission from an unrelated export list is not evidence.
 
 **Allowed** (internal type):
 

@@ -18,7 +18,7 @@
 
 `Stylebrella-linter-cpp-naming-1`
 
-Требование PascalCase из [SB-L-G-N-1](../general/linting.md#sb-l-g-n-1) применяется к объявлениям `class`, `struct` и `enum`, включая `enum class`. Для функций, переменных, полей и параметров используется snake_case с учётом правила для констант [SB-L-C-N-2](#sb-l-c-n-2). Имена пространств имён пишутся строчными буквами. Префиксы приватных членов задаёт [SB-L-G-N-3](../general/linting.md#sb-l-g-n-3).
+Требование PascalCase из [SB-L-G-N-1](../general/linting.md#sb-l-g-n-1) применяется к объявлениям `class`, `struct` и `enum`, включая `enum class`. Для функций, переменных, полей и параметров используется snake_case с учётом правила для констант [SB-L-C-N-2](#sb-l-c-n-2). Имена пространств имён пишутся строчными буквами. Префиксы приватных членов задаёт [SB-L-G-N-3](../general/linting.md#sb-l-g-n-3). О запрещённом начальном подчёркивании у публичных методов и самостоятельных функций сообщайте по [SB-L-G-N-4](../general/linting.md#sb-l-g-n-4).
 
 **Допустимо** (имена класса, структуры и `enum class`; каждый фрагмент из отдельного файла):
 
@@ -56,24 +56,28 @@ enum class connection_state { CONNECTING, CONNECTED, CLOSED };
 
 ```cpp
 namespace network {
+
 int count_free_slots(int pool_size, int reserved_slots) {
   int available_slots = pool_size;
   available_slots -= reserved_slots;
   return available_slots;
 }
-}
+
+}  // namespace network
 ```
 
 **Нарушение** (заглавная буква в имени пространства имён и имена в camelCase):
 
 ```cpp
 namespace Network {
+
 int countFreeSlots(int poolSize, int reservedSlots) {
   int availableSlots = poolSize;
   availableSlots -= reservedSlots;
   return availableSlots;
 }
-}
+
+}  // namespace Network
 ```
 
 <a id="stylebrella-linter-cpp-naming-2"></a>
@@ -167,16 +171,20 @@ class Antenna;
 
 ```cpp
 namespace core {
+
 class Antenna;
-}
+
+}  // namespace core
 ```
 
 **Нарушение** (`include/app/math/antenna.hpp`):
 
 ```cpp
 namespace core {
+
 class Antenna;
-}
+
+}  // namespace core
 ```
 
 <a id="stylebrella-linter-cpp-files-3"></a>

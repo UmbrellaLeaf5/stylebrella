@@ -96,7 +96,7 @@ Put one blank line between a function or class docstring and the next body state
 **Before**:
 
 ```python
-def _read() -> None:
+def read_data() -> None:
   """
   Читает данные.
   """
@@ -106,7 +106,7 @@ def _read() -> None:
 **After**:
 
 ```python
-def _read() -> None:
+def read_data() -> None:
   """
   Читает данные.
   """
