@@ -336,30 +336,108 @@ void f() {
 
 <a id="sb-f-g-bl-4"></a>
 
-### SB-F-G-BL-4 — Spacing around local declaration groups
+### SB-F-G-BL-4 — Spacing around local declaration and receiver-operation groups
 
 `Stylebrella-formatter-general-blank_lines-4`
 
-In a statement list, a run of adjacent local declarations is one group. Direct method calls or field assignments whose receiver resolves to the last declared local extend its group. Separate that group by one blank line from adjacent statements outside it; preserve explicit comment boundaries. Python field-assignment runs use [SB-F-P-BL-3](python/formatting.md#stylebrella-formatter-python-blank_lines-3) instead.
+In a statement list, keep adjacent local declarations together when neither starts a receiver-operation group. Keep a local declaration with consecutive direct method calls, field assignments, reassignments that target that same local, and direct calls whose sole argument is that local (for example, `use(f)`). Separate each such group from unrelated adjacent statements by one blank line. A call with additional arguments, such as `use(f, g)`, or a call through another receiver, such as `g.func(f, a)`, starts an unrelated group. Preserve explicit comment boundaries.
 
 **Python**
 
 **Before**:
 
 ```python
-  log()
-  f = Filter()
-
+  f: SomeClass
   f.init()
+  f.x = x
+  f = transform(f)
+  use(f)
+  close()
+```
+
+```python
+  a = A()
+  b = B()
+  c = C()
+  c.x = x
+```
+
+```python
+  a = A()
+  a.x = x
+  b = B()
+  b.x = x
+```
+
+```python
+  a = A()
+  b = B()
+  b.init()
+```
+
+```python
+  f: SomeClass
+  f.init()
+  f.x = x
+  use(f, g)
+```
+
+```python
+  f: SomeClass
+  f.init()
+  f.x = x
+  g.func(f, a)
 ```
 
 **After**:
 
 ```python
-  log()
-
-  f = Filter()
+  f: SomeClass
   f.init()
+  f.x = x
+  f = transform(f)
+  use(f)
+
+  close()
+```
+
+```python
+  a = A()
+  b = B()
+
+  c = C()
+  c.x = x
+```
+
+```python
+  a = A()
+  a.x = x
+
+  b = B()
+  b.x = x
+```
+
+```python
+  a = A()
+
+  b = B()
+  b.init()
+```
+
+```python
+  f: SomeClass
+  f.init()
+  f.x = x
+
+  use(f, g)
+```
+
+```python
+  f: SomeClass
+  f.init()
+  f.x = x
+
+  g.func(f, a)
 ```
 
 **Kotlin**
@@ -367,19 +445,97 @@ In a statement list, a run of adjacent local declarations is one group. Direct m
 **Before**:
 
 ```kotlin
-  log()
-  val f = Filter()
-
+  var f: SomeClass = SomeClass()
   f.init()
+  f.x = x
+  f = transform(f)
+  use(f)
+  close()
+```
+
+```kotlin
+  val a = A()
+  val b = B()
+  val c = C()
+  c.x = x
+```
+
+```kotlin
+  val a = A()
+  a.x = x
+  val b = B()
+  b.x = x
+```
+
+```kotlin
+  val a = A()
+  val b = B()
+  b.init()
+```
+
+```kotlin
+  var f: SomeClass = SomeClass()
+  f.init()
+  f.x = x
+  use(f, g)
+```
+
+```kotlin
+  var f: SomeClass = SomeClass()
+  f.init()
+  f.x = x
+  g.func(f, a)
 ```
 
 **After**:
 
 ```kotlin
-  log()
-
-  val f = Filter()
+  var f: SomeClass = SomeClass()
   f.init()
+  f.x = x
+  f = transform(f)
+  use(f)
+
+  close()
+```
+
+```kotlin
+  val a = A()
+  val b = B()
+
+  val c = C()
+  c.x = x
+```
+
+```kotlin
+  val a = A()
+  a.x = x
+
+  val b = B()
+  b.x = x
+```
+
+```kotlin
+  val a = A()
+
+  val b = B()
+  b.init()
+```
+
+```kotlin
+  var f: SomeClass = SomeClass()
+  f.init()
+  f.x = x
+
+  use(f, g)
+```
+
+```kotlin
+  var f: SomeClass = SomeClass()
+  f.init()
+  f.x = x
+
+  g.func(f, a)
 ```
 
 **C++**
@@ -387,46 +543,151 @@ In a statement list, a run of adjacent local declarations is one group. Direct m
 **Before**:
 
 ```cpp
-  log();
-  Filter f;
-
+  SomeClass f;
   f.init();
+  f.x = x;
+  f = transform(f);
+  use(f);
+  close();
+```
+
+```cpp
+  A a;
+  B b;
+  C c;
+  c.x = x;
+```
+
+```cpp
+  A a;
+  a.x = x;
+  B b;
+  b.x = x;
+```
+
+```cpp
+  A a;
+  B b;
+  b.init();
+```
+
+```cpp
+  SomeClass f;
+  f.init();
+  f.x = x;
+  use(f, g);
+```
+
+```cpp
+  SomeClass f;
+  f.init();
+  f.x = x;
+  g.func(f, a);
 ```
 
 **After**:
 
 ```cpp
-  log();
-
-  Filter f;
+  SomeClass f;
   f.init();
+  f.x = x;
+  f = transform(f);
+  use(f);
+
+  close();
+```
+
+```cpp
+  A a;
+  B b;
+
+  C c;
+  c.x = x;
+```
+
+```cpp
+  A a;
+  a.x = x;
+
+  B b;
+  b.x = x;
+```
+
+```cpp
+  A a;
+
+  B b;
+  b.init();
+```
+
+```cpp
+  SomeClass f;
+  f.init();
+  f.x = x;
+
+  use(f, g);
+```
+
+```cpp
+  SomeClass f;
+  f.init();
+  f.x = x;
+
+  g.func(f, a);
 ```
 
 <a id="stylebrella-formatter-general-blank_lines-5"></a>
 
 <a id="sb-f-g-bl-5"></a>
 
-### SB-F-G-BL-5 — Spacing between field declarations
+### SB-F-G-BL-5 — Spacing before comment-attached declarations
 
 `Stylebrella-formatter-general-blank_lines-5`
 
-Keep consecutive field declarations together unless the next field has a leading comment or annotation; in that case use one blank line before the attached group.
+Keep consecutive class-field and local-variable declarations together unless the next declaration has a leading comment or annotation; in that case put one blank line before the attached comment or annotation. For local variables, this boundary takes precedence over the grouping in [SB-F-G-BL-4](#stylebrella-formatter-general-blank_lines-4). A leading comment or annotation is treated as attached to the declaration.
 
 **Python**
 
 **Before**:
 
 ```python
+class C:
   x: int
 
   y: int
+
+  # legacy value
+  z: int
 ```
 
 **After**:
 
 ```python
+class C:
   x: int
   y: int
+
+  # legacy value
+  z: int
+```
+
+**Before — local variables**:
+
+```python
+def build() -> None:
+  a = A()
+  # configured dependency
+  b = B()
+```
+
+**After**:
+
+```python
+def build() -> None:
+  a = A()
+
+  # configured dependency
+  b = B()
 ```
 
 **Kotlin**
@@ -434,16 +695,47 @@ Keep consecutive field declarations together unless the next field has a leading
 **Before**:
 
 ```kotlin
-  val x: Int
+class C {
+  var x: Int = 0
 
-  val y: Int
+  var y: Int = 0
+
+  @Deprecated("legacy")
+  val z: Int = 3
+}
 ```
 
 **After**:
 
 ```kotlin
-  val x: Int
-  val y: Int
+class C {
+  var x: Int = 0
+  var y: Int = 0
+
+  @Deprecated("legacy")
+  val z: Int = 3
+}
+```
+
+**Before — local variables**:
+
+```kotlin
+fun build() {
+  val a = A()
+  // configured dependency
+  val b = B()
+}
+```
+
+**After**:
+
+```kotlin
+fun build() {
+  val a = A()
+
+  // configured dependency
+  val b = B()
+}
 ```
 
 **C++**
@@ -451,16 +743,47 @@ Keep consecutive field declarations together unless the next field has a leading
 **Before**:
 
 ```cpp
+class C {
   int x;
 
   int y;
+
+  // legacy value
+  int z;
+};
 ```
 
 **After**:
 
 ```cpp
+class C {
   int x;
   int y;
+
+  // legacy value
+  int z;
+};
+```
+
+**Before — local variables**:
+
+```cpp
+void build() {
+  A a;
+  // configured dependency
+  B b;
+}
+```
+
+**After**:
+
+```cpp
+void build() {
+  A a;
+
+  // configured dependency
+  B b;
+}
 ```
 
 <a id="stylebrella-formatter-general-blank_lines-6"></a>
@@ -471,15 +794,17 @@ Keep consecutive field declarations together unless the next field has a leading
 
 `Stylebrella-formatter-general-blank_lines-6`
 
-After a statement spanning multiple code lines, insert one blank line before the next sibling statement. Do not insert one before a closing delimiter. The uninterrupted declaration group of [SB-F-G-BL-4](#stylebrella-formatter-general-blank_lines-4) takes precedence within that group.
+After a statement that remains multiline in formatted output, insert one blank line before the next sibling statement. Do not add this spacing just because the input split a statement that formatting otherwise collapses to one line. Calls that exceed the width limit must remain wrapped as required by [SB-F-G-LY-2](#stylebrella-formatter-general-layout-2). Do not insert a blank line before a closing delimiter. The uninterrupted declaration group of [SB-F-G-BL-4](#stylebrella-formatter-general-blank_lines-4) takes precedence within that group.
 
 **Python**
 
 **Before**:
 
 ```python
-  f(
-    x,
+  run_request_processing_pipeline(
+    project_configuration,
+    request_processing_settings,
+    transaction_logging_context,
   )
   g()
 ```
@@ -487,8 +812,10 @@ After a statement spanning multiple code lines, insert one blank line before the
 **After**:
 
 ```python
-  f(
-    x,
+  run_request_processing_pipeline(
+    project_configuration,
+    request_processing_settings,
+    transaction_logging_context,
   )
 
   g()
@@ -499,8 +826,10 @@ After a statement spanning multiple code lines, insert one blank line before the
 **Before**:
 
 ```kotlin
-  f(
-    x,
+  run_request_processing_pipeline(
+    project_configuration,
+    request_processing_settings,
+    transaction_logging_context,
   )
   g()
 ```
@@ -508,8 +837,10 @@ After a statement spanning multiple code lines, insert one blank line before the
 **After**:
 
 ```kotlin
-  f(
-    x,
+  run_request_processing_pipeline(
+    project_configuration,
+    request_processing_settings,
+    transaction_logging_context,
   )
 
   g()
@@ -520,16 +851,20 @@ After a statement spanning multiple code lines, insert one blank line before the
 **Before**:
 
 ```cpp
-  f(
-    x);
+  run_request_processing_pipeline(
+    project_configuration,
+    request_processing_settings,
+    transaction_logging_context);
   g();
 ```
 
 **After**:
 
 ```cpp
-  f(
-    x);
+  run_request_processing_pipeline(
+    project_configuration,
+    request_processing_settings,
+    transaction_logging_context);
 
   g();
 ```
@@ -818,6 +1153,73 @@ When a MARK and its separator have only blank lines between them, remove all tho
 ```cpp
 // MARK: Build response
 // --------------------------------------------------
+```
+
+<a id="stylebrella-formatter-general-blank_lines-11"></a>
+
+<a id="sb-f-g-bl-11"></a>
+
+### SB-F-G-BL-11 — Blank line before a leading line-comment block
+
+`Stylebrella-formatter-general-blank_lines-11`
+
+In a statement list, before a contiguous block of one or more standalone line-comment lines immediately preceding a statement or declaration, insert one blank line when a sibling statement precedes the block. Keep comment lines within the block adjacent to each other and keep the block attached to the following statement or declaration. At the start of a file or statement list, do not add a preceding blank line. This rule does not apply to comments inside headers, parameter lists, or other nested syntax. More specific rules for the boundary take precedence; use their prescribed blank-line count instead of adding this rule's count.
+
+**Python**
+
+**Before**:
+
+```python
+  send()
+  # explain the next operation
+  receive()
+```
+
+**After**:
+
+```python
+  send()
+
+  # explain the next operation
+  receive()
+```
+
+**Kotlin**
+
+**Before**:
+
+```kotlin
+  send()
+  // explain the next operation
+  receive()
+```
+
+**After**:
+
+```kotlin
+  send()
+
+  // explain the next operation
+  receive()
+```
+
+**C++**
+
+**Before**:
+
+```cpp
+  send();
+  // explain the next operation
+  receive();
+```
+
+**After**:
+
+```cpp
+  send();
+
+  // explain the next operation
+  receive();
 ```
 
 ## `layout`

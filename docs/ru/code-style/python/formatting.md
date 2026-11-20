@@ -139,33 +139,6 @@ def _read() -> None:
   assert ready
 ```
 
-<a id="stylebrella-formatter-python-blank_lines-3"></a>
-
-<a id="sb-f-p-bl-3"></a>
-
-### SB-F-P-BL-3 — Пустая строка перед присваиваниями полям
-
-`Stylebrella-formatter-python-blank_lines-3`
-
-Между объявлением объекта и следующей за ним серией присваиваний его полям оставляется одна пустая строка; сама серия не разрывается. Для следующего сразу за объявлением вызова действует общее правило группировки.
-
-**До**:
-
-```python
-  a = A()
-  a.x = x
-  a.y = y
-```
-
-**После**:
-
-```python
-  a = A()
-
-  a.x = x
-  a.y = y
-```
-
 <a id="stylebrella-formatter-python-blank_lines-4"></a>
 
 <a id="sb-f-p-bl-4"></a>

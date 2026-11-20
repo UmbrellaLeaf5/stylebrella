@@ -139,33 +139,6 @@ Put one blank line before sibling `while`, `try`, `with`, `raise`, `assert`, and
   assert ready
 ```
 
-<a id="stylebrella-formatter-python-blank_lines-3"></a>
-
-<a id="sb-f-p-bl-3"></a>
-
-### SB-F-P-BL-3 — Blank line before field assignments
-
-`Stylebrella-formatter-python-blank_lines-3`
-
-Leave one blank line between an object declaration and a directly following run of assignments to that object's fields; keep that run together. A directly following method call still uses the shared grouping rule.
-
-**Before**:
-
-```python
-  a = A()
-  a.x = x
-  a.y = y
-```
-
-**After**:
-
-```python
-  a = A()
-
-  a.x = x
-  a.y = y
-```
-
 <a id="stylebrella-formatter-python-blank_lines-4"></a>
 
 <a id="sb-f-p-bl-4"></a>

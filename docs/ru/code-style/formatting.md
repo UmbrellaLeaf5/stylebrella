@@ -336,30 +336,108 @@ void f() {
 
 <a id="sb-f-g-bl-4"></a>
 
-### SB-F-G-BL-4 — Отступы между группами локальных объявлений
+### SB-F-G-BL-4 — Пустые строки между группами локальных объявлений и операций с получателем
 
 `Stylebrella-formatter-general-blank_lines-4`
 
-В списке инструкций соседние локальные объявления составляют одну группу. Прямые вызовы или присваивания полям последнего объявленного объекта продолжают его группу, если получатель разрешается в это объявление. От соседних инструкций вне группы её отделяет одна пустая строка; явные границы по комментариям сохраняются. Для серии присваиваний полям в Python действует [SB-F-P-BL-3](python/formatting.md#stylebrella-formatter-python-blank_lines-3).
+В списке инструкций соседние локальные объявления остаются вместе, если ни одно из них не начинает группу операций с получателем. Объявление локальной переменной объединяется с последовательными прямыми вызовами методов, присваиваниями её полям, повторными присваиваниями самой переменной и прямыми вызовами, где эта переменная — единственный аргумент (например, `use(f)`). Каждая такая группа отделяется одной пустой строкой от соседних несвязанных инструкций. Вызов с дополнительными аргументами, например `use(f, g)`, или вызов через другой объект, например `g.func(f, a)`, начинает несвязанную группу. Явные границы по комментариям сохраняются.
 
 **Python**
 
 **До**:
 
 ```python
-  log()
-  f = Filter()
-
+  f: SomeClass
   f.init()
+  f.x = x
+  f = transform(f)
+  use(f)
+  close()
+```
+
+```python
+  a = A()
+  b = B()
+  c = C()
+  c.x = x
+```
+
+```python
+  a = A()
+  a.x = x
+  b = B()
+  b.x = x
+```
+
+```python
+  a = A()
+  b = B()
+  b.init()
+```
+
+```python
+  f: SomeClass
+  f.init()
+  f.x = x
+  use(f, g)
+```
+
+```python
+  f: SomeClass
+  f.init()
+  f.x = x
+  g.func(f, a)
 ```
 
 **После**:
 
 ```python
-  log()
-
-  f = Filter()
+  f: SomeClass
   f.init()
+  f.x = x
+  f = transform(f)
+  use(f)
+
+  close()
+```
+
+```python
+  a = A()
+  b = B()
+
+  c = C()
+  c.x = x
+```
+
+```python
+  a = A()
+  a.x = x
+
+  b = B()
+  b.x = x
+```
+
+```python
+  a = A()
+
+  b = B()
+  b.init()
+```
+
+```python
+  f: SomeClass
+  f.init()
+  f.x = x
+
+  use(f, g)
+```
+
+```python
+  f: SomeClass
+  f.init()
+  f.x = x
+
+  g.func(f, a)
 ```
 
 **Kotlin**
@@ -367,19 +445,97 @@ void f() {
 **До**:
 
 ```kotlin
-  log()
-  val f = Filter()
-
+  var f: SomeClass = SomeClass()
   f.init()
+  f.x = x
+  f = transform(f)
+  use(f)
+  close()
+```
+
+```kotlin
+  val a = A()
+  val b = B()
+  val c = C()
+  c.x = x
+```
+
+```kotlin
+  val a = A()
+  a.x = x
+  val b = B()
+  b.x = x
+```
+
+```kotlin
+  val a = A()
+  val b = B()
+  b.init()
+```
+
+```kotlin
+  var f: SomeClass = SomeClass()
+  f.init()
+  f.x = x
+  use(f, g)
+```
+
+```kotlin
+  var f: SomeClass = SomeClass()
+  f.init()
+  f.x = x
+  g.func(f, a)
 ```
 
 **После**:
 
 ```kotlin
-  log()
-
-  val f = Filter()
+  var f: SomeClass = SomeClass()
   f.init()
+  f.x = x
+  f = transform(f)
+  use(f)
+
+  close()
+```
+
+```kotlin
+  val a = A()
+  val b = B()
+
+  val c = C()
+  c.x = x
+```
+
+```kotlin
+  val a = A()
+  a.x = x
+
+  val b = B()
+  b.x = x
+```
+
+```kotlin
+  val a = A()
+
+  val b = B()
+  b.init()
+```
+
+```kotlin
+  var f: SomeClass = SomeClass()
+  f.init()
+  f.x = x
+
+  use(f, g)
+```
+
+```kotlin
+  var f: SomeClass = SomeClass()
+  f.init()
+  f.x = x
+
+  g.func(f, a)
 ```
 
 **C++**
@@ -387,46 +543,151 @@ void f() {
 **До**:
 
 ```cpp
-  log();
-  Filter f;
-
+  SomeClass f;
   f.init();
+  f.x = x;
+  f = transform(f);
+  use(f);
+  close();
+```
+
+```cpp
+  A a;
+  B b;
+  C c;
+  c.x = x;
+```
+
+```cpp
+  A a;
+  a.x = x;
+  B b;
+  b.x = x;
+```
+
+```cpp
+  A a;
+  B b;
+  b.init();
+```
+
+```cpp
+  SomeClass f;
+  f.init();
+  f.x = x;
+  use(f, g);
+```
+
+```cpp
+  SomeClass f;
+  f.init();
+  f.x = x;
+  g.func(f, a);
 ```
 
 **После**:
 
 ```cpp
-  log();
-
-  Filter f;
+  SomeClass f;
   f.init();
+  f.x = x;
+  f = transform(f);
+  use(f);
+
+  close();
+```
+
+```cpp
+  A a;
+  B b;
+
+  C c;
+  c.x = x;
+```
+
+```cpp
+  A a;
+  a.x = x;
+
+  B b;
+  b.x = x;
+```
+
+```cpp
+  A a;
+
+  B b;
+  b.init();
+```
+
+```cpp
+  SomeClass f;
+  f.init();
+  f.x = x;
+
+  use(f, g);
+```
+
+```cpp
+  SomeClass f;
+  f.init();
+  f.x = x;
+
+  g.func(f, a);
 ```
 
 <a id="stylebrella-formatter-general-blank_lines-5"></a>
 
 <a id="sb-f-g-bl-5"></a>
 
-### SB-F-G-BL-5 — Пустые строки между полями
+### SB-F-G-BL-5 — Пустые строки перед объявлениями с комментарием
 
 `Stylebrella-formatter-general-blank_lines-5`
 
-Соседние объявления полей не разделяются, кроме случая, когда у следующего поля есть предшествующий комментарий или аннотация: перед всей группой ставится одна пустая строка.
+Соседние объявления полей класса и локальных переменных не разделяются, кроме случая, когда у следующего объявления есть предшествующий комментарий или аннотация: перед прикреплённым комментарием или аннотацией ставится одна пустая строка. Для локальных переменных эта граница имеет приоритет над группировкой по [SB-F-G-BL-4](#stylebrella-formatter-general-blank_lines-4). Считайте начальный комментарий или аннотацию прикреплёнными к объявлению.
 
 **Python**
 
 **До**:
 
 ```python
+class C:
   x: int
 
   y: int
+
+  # legacy value
+  z: int
 ```
 
 **После**:
 
 ```python
+class C:
   x: int
   y: int
+
+  # legacy value
+  z: int
+```
+
+**До — локальные переменные**:
+
+```python
+def build() -> None:
+  a = A()
+  # configured dependency
+  b = B()
+```
+
+**После**:
+
+```python
+def build() -> None:
+  a = A()
+
+  # configured dependency
+  b = B()
 ```
 
 **Kotlin**
@@ -434,16 +695,47 @@ void f() {
 **До**:
 
 ```kotlin
-  val x: Int
+class C {
+  var x: Int = 0
 
-  val y: Int
+  var y: Int = 0
+
+  @Deprecated("legacy")
+  val z: Int = 3
+}
 ```
 
 **После**:
 
 ```kotlin
-  val x: Int
-  val y: Int
+class C {
+  var x: Int = 0
+  var y: Int = 0
+
+  @Deprecated("legacy")
+  val z: Int = 3
+}
+```
+
+**До — локальные переменные**:
+
+```kotlin
+fun build() {
+  val a = A()
+  // configured dependency
+  val b = B()
+}
+```
+
+**После**:
+
+```kotlin
+fun build() {
+  val a = A()
+
+  // configured dependency
+  val b = B()
+}
 ```
 
 **C++**
@@ -451,16 +743,47 @@ void f() {
 **До**:
 
 ```cpp
+class C {
   int x;
 
   int y;
+
+  // legacy value
+  int z;
+};
 ```
 
 **После**:
 
 ```cpp
+class C {
   int x;
   int y;
+
+  // legacy value
+  int z;
+};
+```
+
+**До — локальные переменные**:
+
+```cpp
+void build() {
+  A a;
+  // configured dependency
+  B b;
+}
+```
+
+**После**:
+
+```cpp
+void build() {
+  A a;
+
+  // configured dependency
+  B b;
+}
 ```
 
 <a id="stylebrella-formatter-general-blank_lines-6"></a>
@@ -471,15 +794,17 @@ void f() {
 
 `Stylebrella-formatter-general-blank_lines-6`
 
-После инструкции, занимающей несколько строк кода, перед следующей инструкцией того же уровня ставится одна пустая строка. Перед закрывающим разделителем она не добавляется. Внутри непрерывной группы объявлений действует [SB-F-G-BL-4](#stylebrella-formatter-general-blank_lines-4).
+Перед следующей инструкцией того же уровня ставится одна пустая строка, если предыдущая инструкция остаётся многострочной после форматирования. Не добавляйте её лишь потому, что во входном файле инструкция разбита на строки, хотя форматтер свёл бы её к одной. Вызовы длиннее лимита должны оставаться перенесёнными согласно [SB-F-G-LY-2](#stylebrella-formatter-general-layout-2). Перед закрывающим разделителем пустая строка не добавляется. Внутри непрерывной группы объявлений действует [SB-F-G-BL-4](#stylebrella-formatter-general-blank_lines-4).
 
 **Python**
 
 **До**:
 
 ```python
-  f(
-    x,
+  run_request_processing_pipeline(
+    project_configuration,
+    request_processing_settings,
+    transaction_logging_context,
   )
   g()
 ```
@@ -487,8 +812,10 @@ void f() {
 **После**:
 
 ```python
-  f(
-    x,
+  run_request_processing_pipeline(
+    project_configuration,
+    request_processing_settings,
+    transaction_logging_context,
   )
 
   g()
@@ -499,8 +826,10 @@ void f() {
 **До**:
 
 ```kotlin
-  f(
-    x,
+  run_request_processing_pipeline(
+    project_configuration,
+    request_processing_settings,
+    transaction_logging_context,
   )
   g()
 ```
@@ -508,8 +837,10 @@ void f() {
 **После**:
 
 ```kotlin
-  f(
-    x,
+  run_request_processing_pipeline(
+    project_configuration,
+    request_processing_settings,
+    transaction_logging_context,
   )
 
   g()
@@ -520,16 +851,20 @@ void f() {
 **До**:
 
 ```cpp
-  f(
-    x);
+  run_request_processing_pipeline(
+    project_configuration,
+    request_processing_settings,
+    transaction_logging_context);
   g();
 ```
 
 **После**:
 
 ```cpp
-  f(
-    x);
+  run_request_processing_pipeline(
+    project_configuration,
+    request_processing_settings,
+    transaction_logging_context);
 
   g();
 ```
@@ -818,6 +1153,73 @@ int read();
 ```cpp
 // MARK: Build response
 // --------------------------------------------------
+```
+
+<a id="stylebrella-formatter-general-blank_lines-11"></a>
+
+<a id="sb-f-g-bl-11"></a>
+
+### SB-F-G-BL-11 — Пустая строка перед ведущим блоком строчных комментариев
+
+`Stylebrella-formatter-general-blank_lines-11`
+
+В списке инструкций перед непрерывным блоком из одной или нескольких отдельных строк с комментариями, непосредственно предшествующим инструкции или объявлению, ставится одна пустая строка, если перед блоком есть соседняя инструкция. Строки внутри блока комментариев остаются соседними, сам блок остаётся прикреплённым к следующей инструкции или объявлению. В начале файла или списка инструкций предшествующая пустая строка не добавляется. Правило не применяется к комментариям внутри заголовков, списков параметров и других вложенных конструкций. Если на этой границе более конкретное правило задаёт интервал, применяется указанное им число строк, без сложения с этим правилом.
+
+**Python**
+
+**До**:
+
+```python
+  send()
+  # explain the next operation
+  receive()
+```
+
+**После**:
+
+```python
+  send()
+
+  # explain the next operation
+  receive()
+```
+
+**Kotlin**
+
+**До**:
+
+```kotlin
+  send()
+  // explain the next operation
+  receive()
+```
+
+**После**:
+
+```kotlin
+  send()
+
+  // explain the next operation
+  receive()
+```
+
+**C++**
+
+**До**:
+
+```cpp
+  send();
+  // explain the next operation
+  receive();
+```
+
+**После**:
+
+```cpp
+  send();
+
+  // explain the next operation
+  receive();
 ```
 
 ## `layout`
