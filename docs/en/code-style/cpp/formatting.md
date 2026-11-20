@@ -14,28 +14,29 @@ Examples isolate the rule being illustrated.
 
 <a id="sb-f-c-ly-1"></a>
 
-### SB-F-C-LY-1 — Baseline layout and continuation indentation
+### SB-F-C-LY-1 — Google baseline and brace placement
 
 `Stylebrella-formatter-cpp-layout-1`
 
-Use Google C++ layout as the baseline, with the exceptions on this page and in the shared contract. Continuation indentation adds two spaces relative to the construct’s line.
+Use Google C++ layout as the baseline, with the exceptions on this page and in the shared contract. Opening braces for function definitions stay on the declaration line. Continuation indentation is governed by the shared layout rules.
 
 **Before**:
 
 ```cpp
-void process(
-    const Request& incoming_request,
-    const Configuration& processing_configuration,
-    ResultCollector& result_collector);
+void process()
+{
+  prepare();
+  execute();
+}
 ```
 
 **After**:
 
 ```cpp
-void process(
-  const Request& incoming_request,
-  const Configuration& processing_configuration,
-  ResultCollector& result_collector);
+void process() {
+  prepare();
+  execute();
+}
 ```
 
 <a id="stylebrella-formatter-cpp-layout-2"></a>
@@ -118,45 +119,30 @@ C::C()
 
 <a id="sb-f-c-ly-5"></a>
 
-### SB-F-C-LY-5 — Preserving comment lines
+### SB-F-C-LY-5 — Inline member function layout
 
 `Stylebrella-formatter-cpp-layout-5`
 
-Do not reflow comment text. Keep a field’s trailing comment on its declaration line even if the line exceeds the width target.
+Collapse an inline member function whose body contains one statement to a single line when it fits within 100 columns. The shared rule governs unbraced `if` and `for` bodies.
 
 **Before**:
 
 ```cpp
-int count;  // Number of bytes in the payload before compression.
+class Sender {
+ public:
+  void send() const {
+    notify();
+  }
+};
 ```
 
 **After**:
 
 ```cpp
-int count;  // Number of bytes in the payload before compression.
-```
-
-<a id="stylebrella-formatter-cpp-layout-6"></a>
-
-<a id="sb-f-c-ly-6"></a>
-
-### SB-F-C-LY-6 — Short functions and unbraced control bodies
-
-`Stylebrella-formatter-cpp-layout-6`
-
-Allow inline member functions and short unbraced `if` statements without `else` to occupy one line when they fit, subject to the nested-control layout in [SB-F-G-LY-3](../general/formatting.md#stylebrella-formatter-general-layout-3). Do not force braces around short unbraced `if` or `for` bodies. The shared rule may remove braces from eligible single-statement bodies.
-
-**Before**:
-
-```cpp
-if (ready)
-  send();
-```
-
-**After**:
-
-```cpp
-if (ready) send();
+class Sender {
+ public:
+  void send() const { notify(); }
+};
 ```
 
 ## `imports`

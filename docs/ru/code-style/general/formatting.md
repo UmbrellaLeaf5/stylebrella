@@ -2,13 +2,67 @@
 
 [English version](../../../en/code-style/general/formatting.md)
 
-Нормативный контракт будущих `format`, `format --check` (без записи) и проверки форматирования в `check`. Правила описывают целевое поведение, а не статус реализации. Для каждого языка применяется один канонический форматтер, без цепочки альтернативных форматтеров. После Stylebrella и повторный проход Stylebrella, и отдельный проход форматтера языка с тем же пресетом Stylebrella должны оставлять файл побайтно неизменным. Несовместимость блокирует поддержку затронутого правила до пересмотра контракта или выбора форматтера.
+Нормативный контракт будущих `format`, `check` и `format --check` (обе проверки только для чтения и только форматирования). Правила описывают целевое поведение, а не статус реализации. Для каждого языка применяется один канонический форматтер, без цепочки альтернативных форматтеров. После Stylebrella и повторный проход Stylebrella, и отдельный проход форматтера языка с тем же пресетом Stylebrella должны оставлять файл побайтно неизменным. Несовместимость блокирует поддержку затронутого правила до пересмотра контракта или выбора форматтера.
 
 [Python](../python/formatting.md) · [Kotlin](../kotlin/formatting.md) · [C++](../cpp/formatting.md)
 
 [Общий линтинг](linting.md) · [Реестр ID](../README.md#id-registry)
 
 Каждый пример изолирует указанное правило.
+
+## `source`
+
+<a id="stylebrella-formatter-general-source-1"></a>
+
+<a id="sb-f-g-s-1"></a>
+
+### SB-F-G-S-1 — Исходники UTF-8 с переводами строк LF
+
+`Stylebrella-formatter-general-source-1`
+
+Записывайте исходники в UTF-8 без BOM и нормализуйте переводы строк до LF. Удаляйте концевые пробелы и табуляции вне литералов, а каждый непустой файл завершайте ровно одним LF. Не изменяйте значения литералов при нормализации. Явно отключённый диапазон форматирования освобождён от правила, если языковое правило это указывает. В примерах `<BOM>`, `··`, `→`, `<CRLF>`, `<LF>` и `<EOF>` обозначают маркер порядка байтов, два концевых пробела, концевую табуляцию, переводы строк и немедленный конец файла.
+
+**Python**
+
+**До**:
+
+```text
+<BOM>value = "данные"··→<CRLF><EOF>
+```
+
+**После**:
+
+```text
+value = "данные"<LF><EOF>
+```
+
+**Kotlin**
+
+**До**:
+
+```text
+<BOM>val value = "данные"··→<CRLF><EOF>
+```
+
+**После**:
+
+```text
+val value = "данные"<LF><EOF>
+```
+
+**C++**
+
+**До**:
+
+```text
+<BOM>const char* value = "данные";··→<CRLF><EOF>
+```
+
+**После**:
+
+```text
+const char* value = "данные";<LF><EOF>
+```
 
 ## `blank_lines`
 
@@ -2436,6 +2490,64 @@ class Counter {
 // --------------------------------------------------
 ```
 
+<a id="stylebrella-formatter-general-mark-5"></a>
+
+<a id="sb-f-g-m-5"></a>
+
+### SB-F-G-M-5 — Удаление суффикса одиночной группы
+
+`Stylebrella-formatter-general-mark-5`
+
+Если заголовок MARK заканчивается точным суффиксом ` [group:1]`, удаляйте суффикс вместе с предшествующим пробелом. Остальной текст заголовка и структуру MARK сохраняйте. Счётчики групп от 2 и выше сохраняются.
+
+**Python**
+
+**До**:
+
+```python
+# MARK: Load adapters [group:1]
+# --------------------------------------------------
+```
+
+**После**:
+
+```python
+# MARK: Load adapters
+# --------------------------------------------------
+```
+
+**Kotlin**
+
+**До**:
+
+```kotlin
+// MARK: Load adapters [group:1]
+// --------------------------------------------------
+```
+
+**После**:
+
+```kotlin
+// MARK: Load adapters
+// --------------------------------------------------
+```
+
+**C++**
+
+**До**:
+
+```cpp
+// MARK: Load adapters [group:1]
+// --------------------------------------------------
+```
+
+**После**:
+
+```cpp
+// MARK: Load adapters
+// --------------------------------------------------
+```
+
 ## `comments`
 
 <a id="stylebrella-formatter-general-comments-1"></a>
@@ -2542,6 +2654,61 @@ class Counter {
 ```cpp
   /* skip the cached value. */
   refresh();
+```
+
+<a id="stylebrella-formatter-general-comments-3"></a>
+
+<a id="sb-f-g-cm-3"></a>
+
+### SB-F-G-CM-3 — Перенос концевых комментариев объявлений переменных
+
+`Stylebrella-formatter-general-comments-3`
+
+Для обычного прозаического концевого комментария `#` или `//` у объявления переменной или поля переносите текст по границам слов, чтобы по возможности каждая строка укладывалась в 100 столбцов. Сохраняйте все слова и знаки препинания; пробелы между словами нормализуйте до одного ASCII-пробела. Если комментарий продолжается, ставьте маркер продолжения в той же колонке, что и исходный маркер, и оставляйте после него один пробел. Неделимые слова не разрывайте. Не переносите отдельные комментарии, комментарии у других инструкций, документацию, MARK, разделители, директивы инструментов, а также комментарии с выравниванием или форматированным кодом. Также применяйте языковые правила префиксов и регистра.
+
+**Python**
+
+**До**:
+
+```python
+value = 10  # key feature of this configuration and its required behavior for every request, including retries and recovery
+```
+
+**После**:
+
+```python
+value = 10  # key feature of this configuration and its required behavior for every request,
+            # including retries and recovery
+```
+
+**Kotlin**
+
+**До**:
+
+```kotlin
+val value = 10  // key feature of this configuration and its required behavior for every request, including retries and recovery
+```
+
+**После**:
+
+```kotlin
+val value = 10  // key feature of this configuration and its required behavior for every request,
+                // including retries and recovery
+```
+
+**C++**
+
+**До**:
+
+```cpp
+int value; // key feature of this configuration and its required behavior for every request, including retries and recovery
+```
+
+**После**:
+
+```cpp
+int value; // key feature of this configuration and its required behavior for every request,
+           // including retries and recovery
 ```
 
 ## Рекомендации (без диагностики)

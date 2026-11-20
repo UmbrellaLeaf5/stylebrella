@@ -6,7 +6,7 @@ Scope: `.py`; notebooks are out of scope. Only checks expressly defined by this 
 
 [Shared rules](../general/linting.md)
 
-Examples isolate the rule being illustrated.
+Examples isolate the rule being illustrated. Function examples are focused excerpts; unless documentation is the rule under test, any required docstring omitted from an excerpt is assumed present in the full function body.
 
 ## `naming`
 
@@ -64,22 +64,22 @@ class InternalType:
 
 <a id="sb-l-p-j-1"></a>
 
-### SB-L-P-J-1 — One naming convention for JSON keys
+### SB-L-P-J-1 — snake_case JSON keys
 
 `Stylebrella-linter-python-json-1`
 
-Use one configured convention, snake_case or camelCase, for statically resolved JSON keys across the project. Do not infer a convention from an individual key.
+Require `snake_case` for every statically resolved JSON key. JSON keys are schema metadata and are exempt from the inline-literal rule; do not diagnose unrelated strings without an established JSON role.
 
-**Allowed** (snake_case project):
+**Allowed** (`record` is a resolved JSON object):
 
 ```python
-"user_id"
+record["user_id"]
 ```
 
-**Violation** (snake_case project):
+**Violation** (`record` is a resolved JSON object):
 
 ```python
-"User-ID"
+record["userId"]
 ```
 
 ## `types`

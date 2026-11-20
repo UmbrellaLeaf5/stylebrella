@@ -6,7 +6,7 @@ Scope: `.cpp`, `.cc`, `.cxx`, `.h`, `.hpp`, `.hh`; CMake is excluded. Use the pr
 
 [Shared rules](../general/linting.md)
 
-Examples isolate the rule being illustrated.
+Examples isolate the rule being illustrated. Function examples are focused excerpts; unless documentation is the rule under test, any required documentation omitted from an excerpt is assumed present in the full source context.
 
 ## `naming`
 
@@ -64,18 +64,18 @@ constexpr int maxRetries = 3;
 
 `Stylebrella-linter-cpp-json-1`
 
-A resolved C++ JSON key uses snake_case. Ignore strings with no established JSON role.
+A resolved C++ JSON key uses snake_case. JSON keys are schema metadata and are exempt from the inline-literal rule. Ignore strings with no established JSON role.
 
-**Allowed**:
+**Allowed** (resolved JSON accessor):
 
 ```cpp
-record["center_freq_hz"]
+record["center_freq_hz"];
 ```
 
-**Violation**:
+**Violation** (resolved JSON accessor):
 
 ```cpp
-record["centerFreqHz"]
+record["centerFreqHz"];
 ```
 
 ## `files`

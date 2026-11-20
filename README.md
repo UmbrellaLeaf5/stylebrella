@@ -73,9 +73,10 @@ stylebrella --version
 ```
 
 `PATH` can be a file or directory; the current directory is used when no path
-is supplied. `check` verifies both formatting and lint rules. `lint` checks
-rules, including those from bundled linters. `format --check` checks only
-formatting. `format --diff` and `fix --diff` print proposed changes without
+is supplied. `check` reports formatting differences only and never writes
+files. `lint` reports lint-rule violations only and never runs formatting
+checks or writes files. `format --check` also checks formatting without
+writing; `format --diff` and `fix --diff` print proposed changes without
 writing files. `fix` applies only approved safe edits and still reports
 violations that cannot be fixed automatically. `explain` displays a rule's
 rationale and examples. Common flags will include rule filters and profile
@@ -128,8 +129,8 @@ Ruff does not expose a third-party lint plugin API. Additional rules therefore
 run in a separate analyzer. Syntax-aware Python checks need a parser with
 source locations and access to comments or whitespace when those matter.
 Pyright is a planned separate engine. Once integrated, `basic` mode type
-errors will block Python `lint` and `check`; its runtime requirements must
-also ship in the release.
+errors will block Python `lint`; they do not affect `check`. Its runtime
+requirements must also ship in the release.
 
 Ruff handles `.ipynb`, but it does not enforce notebook-specific requirements
 such as no `def`/`class` in cells, cell ordering, a maximum of 15 lines for

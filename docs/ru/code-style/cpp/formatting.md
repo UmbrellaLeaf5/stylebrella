@@ -14,28 +14,29 @@
 
 <a id="sb-f-c-ly-1"></a>
 
-### SB-F-C-LY-1 — Базовое оформление и отступ продолжения
+### SB-F-C-LY-1 — Базовая раскладка Google и положение скобок
 
 `Stylebrella-formatter-cpp-layout-1`
 
-Базовая раскладка — Google C++ с исключениями этой страницы и общего контракта. Продолжение добавляет два пробела к отступу строки конструкции.
+Базовая раскладка — Google C++ с исключениями этой страницы и общего контракта. Открывающие фигурные скобки определений функций остаются в строке объявления. Отступ продолжения задаётся общими правилами оформления.
 
 **До**:
 
 ```cpp
-void process(
-    const Request& incoming_request,
-    const Configuration& processing_configuration,
-    ResultCollector& result_collector);
+void process()
+{
+  prepare();
+  execute();
+}
 ```
 
 **После**:
 
 ```cpp
-void process(
-  const Request& incoming_request,
-  const Configuration& processing_configuration,
-  ResultCollector& result_collector);
+void process() {
+  prepare();
+  execute();
+}
 ```
 
 <a id="stylebrella-formatter-cpp-layout-2"></a>
@@ -118,45 +119,30 @@ C::C()
 
 <a id="sb-f-c-ly-5"></a>
 
-### SB-F-C-LY-5 — Сохранение строк комментариев
+### SB-F-C-LY-5 — Оформление встроенных методов
 
 `Stylebrella-formatter-cpp-layout-5`
 
-Текст комментариев не переносится. Концевой комментарий поля остаётся на строке объявления даже при превышении целевой ширины.
+Сворачивайте тело встроенного метода класса с одной инструкцией в одну строку, если оно помещается в 100 столбцов. Оформление тел `if` и `for` без скобок задаётся общим правилом.
 
 **До**:
 
 ```cpp
-int count;  // Number of bytes in the payload before compression.
+class Sender {
+ public:
+  void send() const {
+    notify();
+  }
+};
 ```
 
 **После**:
 
 ```cpp
-int count;  // Number of bytes in the payload before compression.
-```
-
-<a id="stylebrella-formatter-cpp-layout-6"></a>
-
-<a id="sb-f-c-ly-6"></a>
-
-### SB-F-C-LY-6 — Короткие функции и управляющие тела без скобок
-
-`Stylebrella-formatter-cpp-layout-6`
-
-Встроенная функция-член или короткий `if` без скобок и без `else` могут занимать одну строку, если помещаются, с учётом раскладки вложенных конструкций по [SB-F-G-LY-3](../general/formatting.md#stylebrella-formatter-general-layout-3). Не добавляйте скобки к короткому телу `if` или `for` без скобок. Общее правило разрешает удалять скобки у подходящих блоков с одной инструкцией.
-
-**До**:
-
-```cpp
-if (ready)
-  send();
-```
-
-**После**:
-
-```cpp
-if (ready) send();
+class Sender {
+ public:
+  void send() const { notify(); }
+};
 ```
 
 ## `imports`

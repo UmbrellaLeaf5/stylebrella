@@ -149,7 +149,8 @@ report coverage honestly, and never alter CMake files.
       reporting findings that remain after a fix.
 - [ ] Add fixed-point tests: `format(format(x)) = format(x)`; `fix` +
       `format` + `check` must not produce a change cycle.
-- [ ] Test Kotlin CRLF from `.editorconfig`, Python LF from `ruff.toml`,
+- [ ] Test CRLF input for Kotlin from `.editorconfig` and Python line endings
+       from `ruff.toml`; verify that formatting normalizes both to LF,
       Unicode locations, BOM, parse errors, empty and large files, symlinks,
       and multiple nested configs.
 - [ ] Turn examples from all four guides into integration fixtures.

@@ -6,7 +6,7 @@ Scope: `.kt` and `.kts`. Visibility is as declared, including implicit `public`;
 
 [Shared rules](../general/linting.md)
 
-Examples isolate the rule being illustrated.
+Examples isolate the rule being illustrated. Function examples are focused excerpts; unless documentation is the rule under test, any required documentation omitted from an excerpt is assumed present in the full source context.
 
 ## `naming`
 

@@ -2,13 +2,13 @@
 
 [Русская версия](../../../ru/code-style/general/linting.md)
 
-Normative preview contract for `lint` and the linting part of `check`. Emit a finding only when the stated predicate is established. Missing resolution or required context is not a violation. These rules describe future behavior.
+Normative preview contract for `lint`, which checks lint rules only. `check` does not run lint rules. Emit a finding only when the stated predicate is established. Missing resolution or required context is not a violation. These rules describe future behavior.
 
 [Python](../python/linting.md) · [Kotlin](../kotlin/linting.md) · [C++](../cpp/linting.md)
 
 [Shared formatting](formatting.md) · [ID registry](../README.md#id-registry)
 
-Examples isolate the rule being illustrated. Outside documentation rules, function fragments may show only the signature or statements relevant to the rule, with required documentation outside the excerpt.
+Examples isolate the rule being illustrated. Outside documentation rules, function examples are focused excerpts; any required documentation not shown is assumed present in omitted source context.
 
 ## `naming`
 
@@ -20,20 +20,22 @@ Examples isolate the rule being illustrated. Outside documentation rules, functi
 
 `Stylebrella-linter-general-naming-1`
 
-Check declaration names by their syntactic kind and language-specific naming rules; report at the declared identifier. Never infer the kind from the name or rename it as a lint action.
+Require PascalCase for class-like type declarations and SCREAMING_SNAKE_CASE for named constants in Python, Kotlin, and C++. Variables, properties, parameters, and functions follow the language-specific naming rules; this shared rule does not override them. Report at the declared identifier. Never infer a declaration's kind from its name or rename it as a lint action.
 
 **Python**
 
 **Allowed**:
 
 ```python
-total_count = count()
+class NetworkConfig:
+  pass
 ```
 
 **Violation**:
 
 ```python
-totalCount = count()
+class networkConfig:
+  pass
 ```
 
 **Kotlin**
@@ -41,13 +43,13 @@ totalCount = count()
 **Allowed**:
 
 ```kotlin
-val totalCount = count()
+class NetworkConfig
 ```
 
 **Violation**:
 
 ```kotlin
-val total_count = count()
+class networkConfig
 ```
 
 **C++**
@@ -55,13 +57,55 @@ val total_count = count()
 **Allowed**:
 
 ```cpp
-int total_count = count();
+class NetworkConfig {};
 ```
 
 **Violation**:
 
 ```cpp
-int totalCount = count();
+class networkConfig {};
+```
+
+**Python**
+
+**Allowed** (constant):
+
+```python
+MAX_RETRIES = 3
+```
+
+**Violation** (constant):
+
+```python
+max_retries = 3
+```
+
+**Kotlin**
+
+**Allowed** (constant):
+
+```kotlin
+const val MAX_RETRIES = 3
+```
+
+**Violation** (constant):
+
+```kotlin
+const val maxRetries = 3
+```
+
+**C++**
+
+**Allowed** (constant):
+
+```cpp
+constexpr int MAX_RETRIES = 3;
+```
+
+**Violation** (constant):
+
+```cpp
+constexpr int max_retries = 3;
 ```
 
 <a id="stylebrella-linter-general-naming-2"></a>
@@ -188,52 +232,52 @@ class Reader {
 
 <a id="sb-l-g-j-1"></a>
 
-### SB-L-G-J-1 — Case of statically resolved JSON keys
+### SB-L-G-J-1 — snake_case for statically resolved JSON keys
 
 `Stylebrella-linter-general-json-1`
 
-Check the case of a key only when its constant spelling is statically resolved at a serialization field or JSON accessor. Report at the key, not an arbitrary string. The language rules define the accepted case. The spelling is not rewritten and the constants rules still apply to uses outside schema metadata.
+Require `snake_case` for every statically resolved JSON key in Python, Kotlin, and C++, whether it appears at a serialization field or a JSON accessor. Report at the key, not an arbitrary string; unrelated strings are outside the rule. JSON keys are schema metadata and exempt from the inline-literal rule.
 
 **Python**
 
-**Allowed**:
+**Allowed** (resolved JSON accessor):
 
 ```python
 record["user_id"]
 ```
 
-**Violation**:
+**Violation** (resolved JSON accessor):
 
 ```python
-record["User-ID"]
+record["userId"]
 ```
 
 **Kotlin**
 
-**Allowed**:
+**Allowed** (resolved serialization field):
 
 ```kotlin
-@JsonProperty("user_id")
+@JsonProperty("user_id") val userId: String
 ```
 
-**Violation**:
+**Violation** (resolved serialization field):
 
 ```kotlin
-@JsonProperty("userId")
+@JsonProperty("userId") val userId: String
 ```
 
 **C++**
 
-**Allowed**:
+**Allowed** (resolved JSON accessor):
 
 ```cpp
-record["user_id"]
+record["user_id"];
 ```
 
-**Violation**:
+**Violation** (resolved JSON accessor):
 
 ```cpp
-record["userId"]
+record["userId"];
 ```
 
 ## `mark`
@@ -254,12 +298,14 @@ A descriptive MARK title must be nonempty, begin with an uppercase ASCII letter,
 
 ```python
 # MARK: Build response
+# --------------------------------------------------
 ```
 
 **Violation**:
 
 ```python
 # MARK: buildResponse
+# --------------------------------------------------
 ```
 
 **Kotlin**
@@ -268,12 +314,14 @@ A descriptive MARK title must be nonempty, begin with an uppercase ASCII letter,
 
 ```kotlin
 // MARK: Build response
+// --------------------------------------------------
 ```
 
 **Violation**:
 
 ```kotlin
 // MARK: buildResponse
+// --------------------------------------------------
 ```
 
 **C++**
@@ -282,12 +330,14 @@ A descriptive MARK title must be nonempty, begin with an uppercase ASCII letter,
 
 ```cpp
 // MARK: Build response
+// --------------------------------------------------
 ```
 
 **Violation**:
 
 ```cpp
 // MARK: BuildResponse
+// --------------------------------------------------
 ```
 
 <a id="stylebrella-linter-general-mark-2"></a>
@@ -307,6 +357,7 @@ A function is nontrivial if its canonical body spans at least two executable lin
 ```python
 # MARK: Read data
 # --------------------------------------------------
+
 def read():
   load()
   validate()
@@ -316,6 +367,7 @@ def read():
 
 ```python
 # --------------------------------------------------
+
 def read():
   load()
   validate()
@@ -328,6 +380,7 @@ def read():
 ```kotlin
 // MARK: Read data
 // --------------------------------------------------
+
 fun read() { load(); validate() }
 ```
 
@@ -335,6 +388,7 @@ fun read() { load(); validate() }
 
 ```kotlin
 // --------------------------------------------------
+
 fun read() { load(); validate() }
 ```
 
@@ -345,6 +399,7 @@ fun read() { load(); validate() }
 ```cpp
 // MARK: Read data
 // --------------------------------------------------
+
 void read() { load(); validate(); }
 ```
 
@@ -352,6 +407,7 @@ void read() { load(); validate(); }
 
 ```cpp
 // --------------------------------------------------
+
 void read() { load(); validate(); }
 ```
 
@@ -363,7 +419,7 @@ void read() { load(); validate(); }
 
 `Stylebrella-linter-general-mark-3`
 
-A `MARK: <title> [group:N]` covers exactly the next `N` sibling function or method declarations in the current scope. `N` is a decimal integer at least 2. Ignore nested definitions and nonfunction declarations. Report a malformed count, another MARK before the Nth declaration, or scope ending with fewer than N. The N+1th declaration is outside the group.
+A `MARK: <title> [group:N]` covers exactly the next `N` sibling function or method declarations in the current scope. `N` is a decimal integer at least 2. Ignore nested definitions and nonfunction declarations. The formatter removes the redundant `[group:1]` suffix under [SB-F-G-M-5](formatting.md#stylebrella-formatter-general-mark-5). Report other malformed counts, another MARK before the Nth declaration, or scope ending with fewer than N. The N+1th declaration is outside the group. Apply [SB-F-G-SP-2](formatting.md#stylebrella-formatter-general-separators-2) to require separators between group members.
 
 **Python**
 
@@ -371,15 +427,48 @@ A `MARK: <title> [group:N]` covers exactly the next `N` sibling function or meth
 
 ```python
 # MARK: Load adapters [group:2]
+# --------------------------------------------------
+
 def a(): ...
+
+
+# --------------------------------------------------
+
+
 def b(): ...
 ```
 
-**Violation** (EOF):
+**Violation** (fewer than two members at EOF):
 
 ```python
 # MARK: Load adapters [group:2]
+# --------------------------------------------------
+
 def a(): ...
+```
+
+**Violation** (another MARK interrupts the three-member group):
+
+```python
+# MARK: Load adapters [group:3]
+# --------------------------------------------------
+
+def a(): ...
+
+
+# --------------------------------------------------
+
+
+# MARK: Parse adapters [group:2]
+# --------------------------------------------------
+
+def b(): ...
+
+
+# --------------------------------------------------
+
+
+def c(): ...
 ```
 
 **Kotlin**
@@ -388,15 +477,48 @@ def a(): ...
 
 ```kotlin
 // MARK: Load adapters [group:2]
+// --------------------------------------------------
+
 fun a() = Unit
+
+
+// --------------------------------------------------
+
+
 fun b() = Unit
 ```
 
-**Violation**:
+**Violation** (fewer than two members at EOF):
 
 ```kotlin
-// MARK: Load adapters [group:1]
+// MARK: Load adapters [group:2]
+// --------------------------------------------------
+
 fun a() = Unit
+```
+
+**Violation** (another MARK interrupts the three-member group):
+
+```kotlin
+// MARK: Load adapters [group:3]
+// --------------------------------------------------
+
+fun a() = Unit
+
+
+// --------------------------------------------------
+
+
+// MARK: Parse adapters [group:2]
+// --------------------------------------------------
+
+fun b() = Unit
+
+
+// --------------------------------------------------
+
+
+fun c() = Unit
 ```
 
 **C++**
@@ -405,15 +527,48 @@ fun a() = Unit
 
 ```cpp
 // MARK: Load adapters [group:2]
+// --------------------------------------------------
+
 void a();
+
+
+// --------------------------------------------------
+
+
 void b();
 ```
 
-**Violation**:
+**Violation** (fewer than two members at EOF):
 
 ```cpp
-// MARK: Load adapters [group:1]
+// MARK: Load adapters [group:2]
+// --------------------------------------------------
+
 void a();
+```
+
+**Violation** (another MARK interrupts the three-member group):
+
+```cpp
+// MARK: Load adapters [group:3]
+// --------------------------------------------------
+
+void a();
+
+
+// --------------------------------------------------
+
+
+// MARK: Parse adapters [group:2]
+// --------------------------------------------------
+
+void b();
+
+
+// --------------------------------------------------
+
+
+void c();
 ```
 
 <a id="stylebrella-linter-general-mark-4"></a>
@@ -431,9 +586,16 @@ Report the second of two sibling MARKs when there is no declaration or executabl
 **Allowed**:
 
 ```python
-# MARK: Read
+# MARK: Read records
+# --------------------------------------------------
+
 def read(): ...
-# MARK: Write
+
+
+# MARK: Write results
+# --------------------------------------------------
+
+def write(): ...
 ```
 
 **Violation**:
@@ -441,7 +603,11 @@ def read(): ...
 ```python
 # MARK: Private Helpers
 # --------------------------------------------------
-# MARK: Read
+
+# MARK: Read records
+# --------------------------------------------------
+
+def read(): ...
 ```
 
 **Kotlin**
@@ -449,9 +615,16 @@ def read(): ...
 **Allowed**:
 
 ```kotlin
-// MARK: Read
+// MARK: Read records
+// --------------------------------------------------
+
 fun read() = Unit
-// MARK: Write
+
+
+// MARK: Write results
+// --------------------------------------------------
+
+fun write() = Unit
 ```
 
 **Violation**:
@@ -459,7 +632,11 @@ fun read() = Unit
 ```kotlin
 // MARK: Private Helpers
 // --------------------------------------------------
-// MARK: Read
+
+// MARK: Read records
+// --------------------------------------------------
+
+fun read() = Unit
 ```
 
 **C++**
@@ -467,9 +644,16 @@ fun read() = Unit
 **Allowed**:
 
 ```cpp
-// MARK: Read
+// MARK: Read records
+// --------------------------------------------------
+
 void read();
-// MARK: Write
+
+
+// MARK: Write results
+// --------------------------------------------------
+
+void write();
 ```
 
 **Violation**:
@@ -477,7 +661,11 @@ void read();
 ```cpp
 // MARK: Private Helpers
 // --------------------------------------------------
-// MARK: Read
+
+// MARK: Read records
+// --------------------------------------------------
+
+void read();
 ```
 
 <a id="stylebrella-linter-general-mark-5"></a>
@@ -496,6 +684,8 @@ The structural header covers the first private method only. If that method is im
 
 ```python
   # MARK: Private Helpers
+  # --------------------------------------------------
+
   def _read(self) -> None:
     """
     Заполняет кэш из последнего сохранённого снимка.
@@ -508,6 +698,8 @@ The structural header covers the first private method only. If that method is im
 
 ```python
   # MARK: Private Helpers
+  # --------------------------------------------------
+
   def _read(self) -> None:
     self._cache.reload_snapshot()
 ```
@@ -518,6 +710,8 @@ The structural header covers the first private method only. If that method is im
 
 ```kotlin
   // MARK: Private Helpers
+  // --------------------------------------------------
+
   /**
    * Заполняет кэш из последнего сохранённого снимка.
    */
@@ -528,6 +722,8 @@ The structural header covers the first private method only. If that method is im
 
 ```kotlin
   // MARK: Private Helpers
+  // --------------------------------------------------
+
   private fun _read(): Unit = cache.reloadSnapshot()
 ```
 
@@ -537,6 +733,8 @@ The structural header covers the first private method only. If that method is im
 
 ```cpp
   // MARK: Private Helpers
+  // --------------------------------------------------
+
   /**
    * @brief Заполняет кэш из последнего сохранённого снимка.
    */
@@ -547,6 +745,8 @@ The structural header covers the first private method only. If that method is im
 
 ```cpp
   // MARK: Private Helpers
+  // --------------------------------------------------
+
   void _read();
 ```
 
@@ -565,9 +765,15 @@ A concrete class with both public and private methods needs a MARK attached to a
 **Allowed**:
 
 ```python
-  # MARK: Read
+  # MARK: Read records
+  # --------------------------------------------------
+
   def read(self): ...
+
+
   # MARK: Private Helpers
+  # --------------------------------------------------
+
   def _read(self): ...
 ```
 
@@ -575,7 +781,11 @@ A concrete class with both public and private methods needs a MARK attached to a
 
 ```python
   def read(self): ...
+
+
   # MARK: Private Helpers
+  # --------------------------------------------------
+
   def _read(self): ...
 ```
 
@@ -584,9 +794,15 @@ A concrete class with both public and private methods needs a MARK attached to a
 **Allowed**:
 
 ```kotlin
-  // MARK: Read
+  // MARK: Read records
+  // --------------------------------------------------
+
   fun read() = Unit
+
+
   // MARK: Private Helpers
+  // --------------------------------------------------
+
   private fun _helper() = Unit
 ```
 
@@ -594,7 +810,11 @@ A concrete class with both public and private methods needs a MARK attached to a
 
 ```kotlin
   fun read() = Unit
+
+
   // MARK: Private Helpers
+  // --------------------------------------------------
+
   private fun _helper() = Unit
 ```
 
@@ -604,10 +824,18 @@ A concrete class with both public and private methods needs a MARK attached to a
 
 ```cpp
  public:
-  // MARK: Read
+
+  // MARK: Read records
+  // --------------------------------------------------
+
   void read();
+
+
  private:
+
   // MARK: Private Helpers
+  // --------------------------------------------------
+
   void _read();
 ```
 
@@ -615,9 +843,15 @@ A concrete class with both public and private methods needs a MARK attached to a
 
 ```cpp
  public:
+
   void read();
+
+
  private:
+
   // MARK: Private Helpers
+  // --------------------------------------------------
+
   void _read();
 ```
 
@@ -636,14 +870,30 @@ In an eligible class under [SB-L-G-M-6](#stylebrella-linter-general-mark-6), a p
 **Allowed**:
 
 ```python
+  # MARK: Read records
+  # --------------------------------------------------
+
   def read(self): ...
+
+
+  # MARK: Private Helpers
+  # --------------------------------------------------
+
   def _read(self): ...
 ```
 
 **Violation**:
 
 ```python
+  # MARK: Private Helpers
+  # --------------------------------------------------
+
   def _read(self): ...
+
+
+  # MARK: Read records
+  # --------------------------------------------------
+
   def read(self): ...
 ```
 
@@ -652,14 +902,30 @@ In an eligible class under [SB-L-G-M-6](#stylebrella-linter-general-mark-6), a p
 **Allowed**:
 
 ```kotlin
+  // MARK: Read records
+  // --------------------------------------------------
+
   fun read() = Unit
+
+
+  // MARK: Private Helpers
+  // --------------------------------------------------
+
   private fun _helper() = Unit
 ```
 
 **Violation**:
 
 ```kotlin
+  // MARK: Private Helpers
+  // --------------------------------------------------
+
   private fun _helper() = Unit
+
+
+  // MARK: Read records
+  // --------------------------------------------------
+
   fun read() = Unit
 ```
 
@@ -668,15 +934,35 @@ In an eligible class under [SB-L-G-M-6](#stylebrella-linter-general-mark-6), a p
 **Allowed**:
 
 ```cpp
-public: void read();
-private: void _read();
+ public:
+  // MARK: Read records
+  // --------------------------------------------------
+
+  void read();
+
+
+ private:
+  // MARK: Private Helpers
+  // --------------------------------------------------
+
+  void _read();
 ```
 
 **Violation**:
 
 ```cpp
-private: void _read();
-public: void read();
+ private:
+  // MARK: Private Helpers
+  // --------------------------------------------------
+
+  void _read();
+
+
+ public:
+  // MARK: Read records
+  // --------------------------------------------------
+
+  void read();
 ```
 
 ## `documentation`

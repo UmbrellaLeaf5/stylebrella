@@ -2,13 +2,67 @@
 
 [Русская версия](../../../ru/code-style/general/formatting.md)
 
-Normative preview contract for `format`, `format --check` (read-only), and the formatting part of `check`. These rules describe intended behavior, not implementation status. Each language uses one canonical formatter, without chaining alternative formatters. After Stylebrella formatting, a second Stylebrella pass and a pass of the language formatter with the same Stylebrella preset must each leave the bytes unchanged. An incompatibility blocks support for the affected rule until its contract or the formatter selection is revised.
+Normative preview contract for `format`, `check`, and `format --check` (both checks are read-only and cover formatting only). These rules describe intended behavior, not implementation status. Each language uses one canonical formatter, without chaining alternative formatters. After Stylebrella formatting, a second Stylebrella pass and a pass of the language formatter with the same Stylebrella preset must each leave the bytes unchanged. An incompatibility blocks support for the affected rule until its contract or the formatter selection is revised.
 
 [Python](../python/formatting.md) · [Kotlin](../kotlin/formatting.md) · [C++](../cpp/formatting.md)
 
 [Shared linting](linting.md) · [ID registry](../README.md#id-registry)
 
 Examples isolate the rule being illustrated.
+
+## `source`
+
+<a id="stylebrella-formatter-general-source-1"></a>
+
+<a id="sb-f-g-s-1"></a>
+
+### SB-F-G-S-1 — UTF-8 source files with LF line endings
+
+`Stylebrella-formatter-general-source-1`
+
+Write source files as UTF-8 without a BOM and normalize line endings to LF. Remove trailing spaces and tabs outside literals, and end every nonempty file with exactly one LF. Do not change literal values while normalizing. A language-specific formatter-off range is exempt where its language rule explicitly says so. In these examples, `<BOM>`, `··`, `→`, `<CRLF>`, `<LF>`, and `<EOF>` represent a byte-order mark, two trailing spaces, a trailing tab, line endings, and immediate end of file.
+
+**Python**
+
+**Before**:
+
+```text
+<BOM>value = "данные"··→<CRLF><EOF>
+```
+
+**After**:
+
+```text
+value = "данные"<LF><EOF>
+```
+
+**Kotlin**
+
+**Before**:
+
+```text
+<BOM>val value = "данные"··→<CRLF><EOF>
+```
+
+**After**:
+
+```text
+val value = "данные"<LF><EOF>
+```
+
+**C++**
+
+**Before**:
+
+```text
+<BOM>const char* value = "данные";··→<CRLF><EOF>
+```
+
+**After**:
+
+```text
+const char* value = "данные";<LF><EOF>
+```
 
 ## `blank_lines`
 
@@ -2435,6 +2489,64 @@ When a MARK has a title, use exactly one ASCII space between `MARK:` and the fir
 // --------------------------------------------------
 ```
 
+<a id="stylebrella-formatter-general-mark-5"></a>
+
+<a id="sb-f-g-m-5"></a>
+
+### SB-F-G-M-5 — Remove the singleton group suffix
+
+`Stylebrella-formatter-general-mark-5`
+
+When a MARK title ends with the exact suffix ` [group:1]`, remove the suffix and its preceding space. Leave all other title text and MARK structure unchanged. Group counts of two or more are preserved.
+
+**Python**
+
+**Before**:
+
+```python
+# MARK: Load adapters [group:1]
+# --------------------------------------------------
+```
+
+**After**:
+
+```python
+# MARK: Load adapters
+# --------------------------------------------------
+```
+
+**Kotlin**
+
+**Before**:
+
+```kotlin
+// MARK: Load adapters [group:1]
+// --------------------------------------------------
+```
+
+**After**:
+
+```kotlin
+// MARK: Load adapters
+// --------------------------------------------------
+```
+
+**C++**
+
+**Before**:
+
+```cpp
+// MARK: Load adapters [group:1]
+// --------------------------------------------------
+```
+
+**After**:
+
+```cpp
+// MARK: Load adapters
+// --------------------------------------------------
+```
+
 ## `comments`
 
 <a id="stylebrella-formatter-general-comments-1"></a>
@@ -2541,6 +2653,61 @@ If the first non-whitespace character of an ordinary standalone or trailing sing
 ```cpp
   /* skip the cached value. */
   refresh();
+```
+
+<a id="stylebrella-formatter-general-comments-3"></a>
+
+<a id="sb-f-g-cm-3"></a>
+
+### SB-F-G-CM-3 — Wrapping trailing comments on variable declarations
+
+`Stylebrella-formatter-general-comments-3`
+
+For an ordinary prose trailing `#` or `//` comment on a variable or field declaration, wrap comment text at word boundaries to keep each line within 100 columns where possible. Preserve every word and punctuation mark; normalize inter-word whitespace to one ASCII space. If the comment continues, start each continuation marker at the same column as the original marker and put one space after it. Do not split an indivisible word. Leave standalone comments, comments attached to other statements, documentation, MARKs, separators, tool directives, and comments containing aligned/code-formatted text unchanged. Apply the language-specific prefix and capitalization rules as well.
+
+**Python**
+
+**Before**:
+
+```python
+value = 10  # key feature of this configuration and its required behavior for every request, including retries and recovery
+```
+
+**After**:
+
+```python
+value = 10  # key feature of this configuration and its required behavior for every request,
+            # including retries and recovery
+```
+
+**Kotlin**
+
+**Before**:
+
+```kotlin
+val value = 10  // key feature of this configuration and its required behavior for every request, including retries and recovery
+```
+
+**After**:
+
+```kotlin
+val value = 10  // key feature of this configuration and its required behavior for every request,
+                // including retries and recovery
+```
+
+**C++**
+
+**Before**:
+
+```cpp
+int value; // key feature of this configuration and its required behavior for every request, including retries and recovery
+```
+
+**After**:
+
+```cpp
+int value; // key feature of this configuration and its required behavior for every request,
+           // including retries and recovery
 ```
 
 ## Recommendations (no diagnostic)

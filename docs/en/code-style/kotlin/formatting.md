@@ -18,18 +18,18 @@ Examples isolate the rule being illustrated.
 
 `Stylebrella-formatter-kotlin-source-1`
 
-Emit UTF-8 with CRLF, remove trailing spaces and tabs outside literals, and end a nonempty file with a newline.
+Emit UTF-8 with LF, remove trailing spaces and tabs outside literals, and end a nonempty file with exactly one LF. In the example, `·` represents a trailing ASCII space, `<CRLF>` and `<LF>` the line endings, and `<EOF>` the immediate end of file.
 
-**Before** (spaces + EOF):
+**Before**:
 
-```kotlin
-val n = 1
+```text
+val label = "данные"··<CRLF><EOF>
 ```
 
-**After** (CRLF + EOF):
+**After**:
 
-```kotlin
-val n = 1
+```text
+val label = "данные"<LF><EOF>
 ```
 
 <a id="stylebrella-formatter-kotlin-source-2"></a>
