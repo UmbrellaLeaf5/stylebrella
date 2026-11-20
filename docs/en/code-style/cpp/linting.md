@@ -304,25 +304,21 @@ flush();
 
 `Stylebrella-linter-cpp-documentation-1`
 
-Require multiline Doxygen immediately above function, class, struct and enum declarations in `.hpp`. For any in-scope function with more than 15 executable body lines or more than 3 declared function parameters, require Doxygen on the declaration or definition; an attached valid declaration block suffices. Count variadic packs once and body lines using [SB-L-G-M-2](../linting.md#stylebrella-linter-general-mark-2). Apply [SB-L-G-M-5](../linting.md#stylebrella-linter-general-mark-5) to the first important private method.
+Require Doxygen immediately above every function declaration in `.hpp` and above class, struct, and enum declarations there. Every other function, including constructors, destructors, and private methods, must have Doxygen at its declaration or definition. When a definition resolves to a documented declaration, do not require duplicate documentation. Check each present block separately under [SB-L-C-D-2](#stylebrella-linter-cpp-documentation-2). Lambdas are not applicable.
 
 **Allowed**:
 
 ```cpp
 /**
- * @brief Обрабатывает данные.
- * @param a первое значение
- * @param b второе значение
- * @param c третье значение
- * @param d четвёртое значение
+ * @brief Сохраняет накопленные записи перед закрытием журнала.
  */
-void f(int a, int b, int c, int d) {}
+void flush_log() { log.flush(); }
 ```
 
 **Violation**:
 
 ```cpp
-void f(int a, int b, int c, int d) {}
+void flush_log() { log.flush(); }
 ```
 
 <a id="stylebrella-linter-cpp-documentation-2"></a>
@@ -333,14 +329,14 @@ void f(int a, int b, int c, int d) {}
 
 `Stylebrella-linter-cpp-documentation-2`
 
-Doxygen opens with `/**` and closes with `*/` on separate lines; use a starred line for each interior line, including empty ones. Begin with a nonempty `@brief`; use `@param name description` in signature order, `@return` for non-void, and `@throws Type description` for known documented exceptions. Omit inapplicable tags, a colon after the parameter name, and a `Type:` label for the result. Apply the same Cyrillic/Latin prose check as [SB-L-K-D-2](../kotlin/linting.md#stylebrella-linter-kotlin-documentation-2); `///` and one-line blocks do not satisfy the multiline requirement.
+Doxygen opens with `/**` and closes with `*/` on separate lines; use a starred line for each interior line, including empty ones. Begin with a nonempty `@brief`. Require a nonempty `@param name description` for each named parameter in signature order, `@return` with a description for a resolved non-`void` result, and `@throws Type description` for known escaping exceptions. Constructors and destructors have no return tag. Omit inapplicable tags, a colon after the parameter name, and a `Type:` label for the result. Apply the same Cyrillic/Latin prose check as [SB-L-K-D-2](../kotlin/linting.md#stylebrella-linter-kotlin-documentation-2). Report invalid delimiters, missing or invalid tags, and empty descriptions even when a documentation block is present; `///` and one-line blocks do not satisfy the multiline requirement.
 
 **Allowed**:
 
 ```cpp
 /**
- * @brief Читает настройки.
- * @return Прочитанные настройки.
+ * @brief Загружает настройки из последнего сохранённого профиля.
+ * @return Настройки профиля с подставленными значениями по умолчанию.
  */
 Settings read();
 ```
@@ -348,8 +344,17 @@ Settings read();
 **Violation**:
 
 ```cpp
-/// Reads settings.
+/**
+ * @brief Загружает настройки из последнего сохранённого профиля.
+ */
 Settings read();
+```
+
+```cpp
+/**
+ * Запускает задачи.
+ */
+void start_tasks();
 ```
 
 ## `comments`

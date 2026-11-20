@@ -182,9 +182,9 @@ The [rule ID registry](docs/en/code-style/linting.md#id-registry) defines the
 canonical ID format and its short aliases. For example:
 
 - [`SB-L-C-FI-1`](docs/en/code-style/cpp/linting.md#stylebrella-linter-cpp-files-1): require `#pragma once` in project-owned headers.
-- [`SB-L-C-D-1`](docs/en/code-style/cpp/linting.md#stylebrella-linter-cpp-documentation-1): require multiline Doxygen where specified.
+- [`SB-L-C-D-1`](docs/en/code-style/cpp/linting.md#stylebrella-linter-cpp-documentation-1): require Doxygen for every function.
 - [`SB-L-K-NU-1`](docs/en/code-style/kotlin/linting.md#stylebrella-linter-kotlin-nulls-1): forbid `!!`.
-- [`SB-F-G-M-1`](docs/en/code-style/formatting.md#stylebrella-formatter-general-mark-1): normalize separators to exactly 50 hyphens.
+- [`SB-F-G-SP-1`](docs/en/code-style/formatting.md#stylebrella-formatter-general-separators-1): normalize separators to exactly 50 hyphens.
 
 Diagnostics are sorted by path, line, column, and rule ID. A normalized
 diagnostic carries `rule_id`, `source`, `severity`, `message`, `path`,

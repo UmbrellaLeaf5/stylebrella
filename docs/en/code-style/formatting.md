@@ -340,7 +340,7 @@ void f() {
 
 `Stylebrella-formatter-general-blank_lines-4`
 
-In a statement list, keep adjacent local declarations together when neither starts a receiver-operation group. Keep a local declaration with consecutive direct method calls, field assignments, reassignments that target that same local, and direct calls whose sole argument is that local (for example, `use(f)`). Separate each such group from unrelated adjacent statements by one blank line. A call with additional arguments, such as `use(f, g)`, or a call through another receiver, such as `g.func(f, a)`, starts an unrelated group. Preserve explicit comment boundaries.
+In a statement list, keep adjacent local declarations together when neither starts a receiver-operation group. Keep a local declaration with consecutive direct method calls, field assignments, reassignments that target that same local, and direct calls whose sole argument is that local (for example, `use(f)`). Separate each such group from unrelated adjacent statements by one blank line. A call with additional arguments, such as `use(f, g)`, or a call through another receiver, such as `g.func(f, a)`, starts an unrelated group. Preserve explicit comment boundaries. For leading and trailing comments on declarations, apply [SB-F-G-BL-5](#stylebrella-formatter-general-blank_lines-5).
 
 **Python**
 
@@ -644,7 +644,7 @@ In a statement list, keep adjacent local declarations together when neither star
 
 `Stylebrella-formatter-general-blank_lines-5`
 
-Keep consecutive class-field and local-variable declarations together unless the next declaration has a leading comment or annotation; in that case put one blank line before the attached comment or annotation. For local variables, this boundary takes precedence over the grouping in [SB-F-G-BL-4](#stylebrella-formatter-general-blank_lines-4). A leading comment or annotation is treated as attached to the declaration.
+Keep consecutive class-field and local-variable declarations together unless the next declaration has a leading comment or annotation; in that case put one blank line before the attached comment or annotation. A trailing comment on the same line as its declaration does not separate the group. For local variables, the leading-comment or annotation boundary takes precedence over the grouping in [SB-F-G-BL-4](#stylebrella-formatter-general-blank_lines-4).
 
 **Python**
 
@@ -652,38 +652,54 @@ Keep consecutive class-field and local-variable declarations together unless the
 
 ```python
 class C:
-  x: int
+  _x: int
 
-  y: int
+  _y: int
 
   # legacy value
-  z: int
+  _z: int
+```
+
+```python
+class Position:
+  _y: int  # vertical coordinate
+
+  _x: int  # horizontal coordinate
 ```
 
 ```python
 def build() -> None:
-  a = A()
+  a = A()  # first dependency
+
+  b = B()  # second dependency
   # configured dependency
-  b = B()
+  c = C()
 ```
 
 **After**:
 
 ```python
 class C:
-  x: int
-  y: int
+  _x: int
+  _y: int
 
   # legacy value
-  z: int
+  _z: int
+```
+
+```python
+class Position:
+  _y: int  # vertical coordinate
+  _x: int  # horizontal coordinate
 ```
 
 ```python
 def build() -> None:
-  a = A()
+  a = A()  # first dependency
+  b = B()  # second dependency
 
   # configured dependency
-  b = B()
+  c = C()
 ```
 
 **Kotlin**
@@ -702,10 +718,20 @@ class C {
 ```
 
 ```kotlin
+class Position {
+  var y: Int = 0 // vertical coordinate
+
+  var x: Int = 0 // horizontal coordinate
+}
+```
+
+```kotlin
 fun build() {
-  val a = A()
+  val a = A() // first dependency
+
+  val b = B() // second dependency
   // configured dependency
-  val b = B()
+  val c = C()
 }
 ```
 
@@ -722,11 +748,19 @@ class C {
 ```
 
 ```kotlin
+class Position {
+  var y: Int = 0 // vertical coordinate
+  var x: Int = 0 // horizontal coordinate
+}
+```
+
+```kotlin
 fun build() {
-  val a = A()
+  val a = A() // first dependency
+  val b = B() // second dependency
 
   // configured dependency
-  val b = B()
+  val c = C()
 }
 ```
 
@@ -736,20 +770,30 @@ fun build() {
 
 ```cpp
 class C {
-  int x;
+  int _x;
 
-  int y;
+  int _y;
 
   // legacy value
-  int z;
+  int _z;
+};
+```
+
+```cpp
+class Position {
+  int _y;  // vertical coordinate
+
+  int _x;  // horizontal coordinate
 };
 ```
 
 ```cpp
 void build() {
-  A a;
+  A a;  // first dependency
+
+  B b;  // second dependency
   // configured dependency
-  B b;
+  C c;
 }
 ```
 
@@ -757,20 +801,28 @@ void build() {
 
 ```cpp
 class C {
-  int x;
-  int y;
+  int _x;
+  int _y;
 
   // legacy value
-  int z;
+  int _z;
+};
+```
+
+```cpp
+class Position {
+  int _y;  // vertical coordinate
+  int _x;  // horizontal coordinate
 };
 ```
 
 ```cpp
 void build() {
-  A a;
+  A a;  // first dependency
+  B b;  // second dependency
 
   // configured dependency
-  B b;
+  C c;
 }
 ```
 
@@ -782,7 +834,7 @@ void build() {
 
 `Stylebrella-formatter-general-blank_lines-6`
 
-After a statement that remains multiline in formatted output, insert one blank line before the next sibling statement. Do not add this spacing just because the input split a statement that formatting otherwise collapses to one line. Calls that exceed the width limit must remain wrapped as required by [SB-F-G-LY-2](#stylebrella-formatter-general-layout-2). Do not insert a blank line before a closing delimiter. The uninterrupted declaration group of [SB-F-G-BL-4](#stylebrella-formatter-general-blank_lines-4) takes precedence within that group.
+After a statement that remains multiline in formatted output, insert one blank line before the next sibling statement. Do not add this spacing just because the input split a statement that formatting otherwise collapses to one line. Calls that exceed the width limit must remain wrapped as required by [SB-F-G-LY-2](#stylebrella-formatter-general-layout-2). Do not insert a blank line before a closing delimiter. Use [SB-F-G-BL-7](#stylebrella-formatter-general-blank_lines-7) for the control-flow boundaries it covers. The uninterrupted declaration group of [SB-F-G-BL-4](#stylebrella-formatter-general-blank_lines-4) takes precedence within that group.
 
 **Python**
 
@@ -867,7 +919,7 @@ After a statement that remains multiline in formatted output, insert one blank l
 
 `Stylebrella-formatter-general-blank_lines-7`
 
-Separate an `if` or `for` from adjacent sibling statements by one blank line, including after an unbraced single-statement body. Separate successive conditional and exception-handler branches that begin on distinct lines by one blank line. When a language-specific rule moves a branch clause off the preceding branch's line, apply this spacing at the new boundary; same-line branch syntax is governed by that language-specific newline rule. Do not put a blank line just inside a closing delimiter or between a control header and its single-line body.
+Separate `if`, `for`, `try`, and selection statements (Python `match`, Kotlin `when`, C++ `switch`) from adjacent sibling statements by one blank line, including after an unbraced single-statement body. Use one blank line between successive `if` clauses and between successive `try` clauses (`except`/`catch`, `else` and `finally` where supported) that start on their own lines after language-specific layout; do not split a same-line clause solely to add a blank line. Start each selection branch (`case`, `when` entry, or `default`) on its own line and separate successive branches by one blank line. Keep consecutive C++ labels that share a body together without blank lines. Do not add a blank line before the first or after the last item of a body, or between a control header and its body.
 
 **Python**
 
@@ -878,12 +930,55 @@ Separate an `if` or `for` from adjacent sibling statements by one blank line, in
   g()
 ```
 
+```python
+  log()
+  try:
+    load()
+  except OSError:
+    recover()
+  else:
+    validate()
+  finally:
+    release()
+  match state:
+    case State.READY:
+      start()
+    case _:
+      wait()
+  flush()
+```
+
 **After**:
 
 ```python
   if x: f()
 
   g()
+```
+
+```python
+  log()
+
+  try:
+    load()
+
+  except OSError:
+    recover()
+
+  else:
+    validate()
+
+  finally:
+    release()
+
+  match state:
+    case State.READY:
+      start()
+
+    case _:
+      wait()
+
+  flush()
 ```
 
 **Kotlin**
@@ -895,12 +990,54 @@ Separate an `if` or `for` from adjacent sibling statements by one blank line, in
   g()
 ```
 
+```kotlin
+  log()
+  try {
+    load()
+  }
+  catch (error: IOException) {
+    recover()
+  }
+  finally {
+    release()
+  }
+  when (state) {
+    State.READY -> start()
+    else -> waitForWork()
+  }
+  flush()
+```
+
 **After**:
 
 ```kotlin
   if (x) f()
 
   g()
+```
+
+```kotlin
+  log()
+
+  try {
+    load()
+  }
+
+  catch (error: IOException) {
+    recover()
+  }
+
+  finally {
+    release()
+  }
+
+  when (state) {
+    State.READY -> start()
+
+    else -> waitForWork()
+  }
+
+  flush()
 ```
 
 **C++**
@@ -912,12 +1049,57 @@ Separate an `if` or `for` from adjacent sibling statements by one blank line, in
   g();
 ```
 
+```cpp
+  log();
+  try {
+    load();
+  }
+  catch (const LoadError& error) {
+    recover();
+  }
+  switch (state) {
+    case State::READY:
+    case State::RETRY:
+      start();
+      break;
+    default:
+      wait();
+      break;
+  }
+  flush();
+```
+
 **After**:
 
 ```cpp
   if (x) f();
 
   g();
+```
+
+```cpp
+  log();
+
+  try {
+    load();
+  }
+
+  catch (const LoadError& error) {
+    recover();
+  }
+
+  switch (state) {
+    case State::READY:
+    case State::RETRY:
+      start();
+      break;
+
+    default:
+      wait();
+      break;
+  }
+
+  flush();
 ```
 
 <a id="stylebrella-formatter-general-blank_lines-8"></a>
@@ -1393,7 +1575,7 @@ f(x);
 
 `Stylebrella-formatter-general-layout-3`
 
-In Kotlin and C++, remove braces from an `if` or `for` block whose body consists of exactly one statement when the language permits an unbraced body and the resulting complete statement fits within 100 columns. Apply this recursively to nested `for` blocks. Preserve braces when required for syntax or scope, when there are comments or multiple statements in the body, or when removing them could change control-flow binding. Python is not applicable: its suites are defined by indentation, not braces.
+In Kotlin and C++, remove braces from an `if` or `for` block whose body consists of exactly one statement if the language permits an unbraced body and the resulting layout fits within 100 columns per line. Keep a single non-control body on the header line if it fits and is not part of an unbraced chain of nested controls. In such a chain, put each header on its own line and indent its body two spaces on the next line, including the innermost body. Preserve braces when required for syntax or scope, when there are comments or multiple statements in the body, or when removing them could change control-flow binding. Python is not applicable: its suites are defined by indentation, not braces.
 
 **Kotlin**
 
@@ -1410,7 +1592,9 @@ if (ready) {
 **After**:
 
 ```kotlin
-if (ready) for (item in items) send(item)
+if (ready)
+  for (item in items)
+    send(item)
 ```
 
 **C++**
@@ -1428,7 +1612,9 @@ if (ready) {
 **After**:
 
 ```cpp
-if (ready) for (const auto& item : items) send(item);
+if (ready)
+  for (const auto& item : items)
+    send(item);
 ```
 
 **Python:** Not applicable; Python does not use braces to delimit control-flow suites.
@@ -1972,13 +2158,13 @@ The first character after `#` in a Python line comment or `//` in a Kotlin or C+
 **Before**:
 
 ```python
-#Load the saved settings
+#load the saved settings
 ```
 
 **After**:
 
 ```python
-# Load the saved settings
+# load the saved settings
 ```
 
 **Kotlin**
@@ -1986,13 +2172,13 @@ The first character after `#` in a Python line comment or `//` in a Kotlin or C+
 **Before**:
 
 ```kotlin
-//Load the saved settings
+//load the saved settings
 ```
 
 **After**:
 
 ```kotlin
-// Load the saved settings
+// load the saved settings
 ```
 
 **C++**
@@ -2000,13 +2186,67 @@ The first character after `#` in a Python line comment or `//` in a Kotlin or C+
 **Before**:
 
 ```cpp
-//Load the saved settings
+//load the saved settings
 ```
 
 **After**:
 
 ```cpp
-// Load the saved settings
+// load the saved settings
+```
+
+<a id="stylebrella-formatter-general-comments-2"></a>
+
+<a id="sb-f-g-cm-2"></a>
+
+### SB-F-G-CM-2 — Lowercase opening of single-line comments
+
+`Stylebrella-formatter-general-comments-2`
+
+If the first non-whitespace character of an ordinary standalone or trailing single-line comment is an uppercase letter, lowercase it (including non-ASCII letters). This applies to `#`, `//`, and ordinary `/* ... */` comments confined to one line. Preserve the rest of the text; do not skip punctuation, digits, or code delimiters to find a letter. Preserve structured comments such as MARKs, separators, shebangs, documentation, and tool directives.
+
+**Python**
+
+**Before**:
+
+```python
+# Load the saved settings
+```
+
+**After**:
+
+```python
+# load the saved settings
+```
+
+**Kotlin**
+
+**Before**:
+
+```kotlin
+  val retries: Int, // Максимум повторов
+```
+
+**After**:
+
+```kotlin
+  val retries: Int, // максимум повторов
+```
+
+**C++**
+
+**Before**:
+
+```cpp
+  /* Skip the cached value. */
+  refresh();
+```
+
+**After**:
+
+```cpp
+  /* skip the cached value. */
+  refresh();
 ```
 
 ## Recommendations (no diagnostic)

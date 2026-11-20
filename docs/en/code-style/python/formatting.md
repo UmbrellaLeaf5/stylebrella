@@ -122,7 +122,7 @@ def _read() -> None:
 
 `Stylebrella-formatter-python-blank_lines-2`
 
-Put one blank line before sibling `while`, `try`, `with`, `raise`, `assert`, and `continue` statements and before `elif`, `else`, `except`, and `finally` clause headers following a suite. Do not split a same-line suite to insert this space.
+Put one blank line before sibling `while`, `with`, `raise`, `assert`, and `continue` statements, and before loop `else` clause headers following a suite. For spacing around `if`, `for`, `try`, and `match` and between their branches, apply [SB-F-G-BL-7](../formatting.md#stylebrella-formatter-general-blank_lines-7). Do not split a same-line suite to insert a blank line.
 
 **Before**:
 

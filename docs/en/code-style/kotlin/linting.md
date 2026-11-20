@@ -256,30 +256,25 @@ with(obj) { logStart(); logEnd() }
 
 <a id="sb-l-k-d-1"></a>
 
-### SB-L-K-D-1 — When a function needs KDoc
+### SB-L-K-D-1 — Required function KDoc
 
 `Stylebrella-linter-kotlin-documentation-1`
 
-Require multiline KDoc for important functions, functions with a descriptive MARK, those with more than 15 executable body lines, or those with more than 3 declared value parameters. Count each vararg once; do not count extension receivers or type parameters. Use [SB-L-G-M-2](../linting.md#stylebrella-linter-general-mark-2) for body lines and importance. Attach KDoc before any declaration annotations.
+Require KDoc for every named function, including local functions, methods, and expression-bodied functions. Attach it before any declaration annotations. Check present KDoc separately under [SB-L-K-D-2](#stylebrella-linter-kotlin-documentation-2). Lambdas and anonymous functions are not applicable.
 
 **Allowed**:
 
 ```kotlin
 /**
- * Обрабатывает входные данные.
- *
- * @param a первое значение
- * @param b второе значение
- * @param c третье значение
- * @param d четвёртое значение
+ * Сохраняет накопленные записи перед закрытием журнала.
  */
-fun f(a: A, b: B, c: C, d: D) = Unit
+fun flushLog(): Unit = log.flush()
 ```
 
 **Violation**:
 
 ```kotlin
-fun f(a: A, b: B, c: C, d: D) = Unit
+fun flushLog(): Unit = log.flush()
 ```
 
 <a id="stylebrella-linter-kotlin-documentation-2"></a>
@@ -290,20 +285,36 @@ fun f(a: A, b: B, c: C, d: D) = Unit
 
 `Stylebrella-linter-kotlin-documentation-2`
 
-KDoc opening `/**` and closing `*/` occupy separate lines; each interior line begins with `*` after indentation. Begin with a nonempty untagged summary. Before the tag list use one empty starred line. Require `@param name description` in signature order, `@return` for resolved non-`Unit` results, and `@throws Type description` for known escaping exceptions. No colon after parameter names or repeated type labels. Omit inapplicable tags and the tag delimiter when there are none. Require Russian prose; report nonempty prose consisting of Latin-script words with no Cyrillic after excluding tags, code, links and identifiers. Other language ambiguity is reviewed separately.
+KDoc opening `/**` and closing `*/` occupy separate lines; each interior line begins with `*` after indentation. Begin with a nonempty untagged summary. Before the tag list use one empty starred line. Require `@param name description` for each declared value parameter in signature order (including a `vararg` once), `@return` for resolved non-`Unit` results, and `@throws Type description` for known escaping exceptions. All applicable tags need nonempty descriptions. No colon after parameter names or repeated type labels. Omit inapplicable tags and the tag delimiter when there are none. Require Russian prose; report nonempty prose consisting of Latin-script words with no Cyrillic after excluding tags, code, links and identifiers. Other language ambiguity is reviewed separately. Report incorrect delimiters, layout, tags, or descriptions even when KDoc is present.
 
 **Allowed**:
 
 ```kotlin
 /**
- * Загружает данные.
+ * Возвращает задержку, после которой можно повторить запрос.
+ *
+ * @param attempt номер попытки, начиная с единицы
+ * @return задержка до следующей попытки
  */
+fun retryDelay(attempt: Int): Duration = backoff.delayFor(attempt)
 ```
 
 **Violation**:
 
 ```kotlin
-/** Loads data. */
+/**
+ * Возвращает задержку, после которой можно повторить запрос.
+ *
+ * @return задержка до следующей попытки
+ */
+fun retryDelay(attempt: Int): Duration = backoff.delayFor(attempt)
+```
+
+```kotlin
+/**
+ * Запускает задачи.
+ */
+fun startTasks(): Unit = scheduler.enqueueReady()
 ```
 
 ## `comments`

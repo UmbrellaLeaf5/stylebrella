@@ -144,7 +144,7 @@ int count;  // Number of bytes in the payload before compression.
 
 `Stylebrella-formatter-cpp-layout-6`
 
-Allow inline member functions and short unbraced `if` statements without `else` to occupy one line when they fit. Do not force braces around short unbraced `if` or `for` bodies. The shared [SB-F-G-LY-3](../formatting.md#stylebrella-formatter-general-layout-3) exception may remove braces from eligible single-statement bodies.
+Allow inline member functions and short unbraced `if` statements without `else` to occupy one line when they fit, subject to the nested-control layout in [SB-F-G-LY-3](../formatting.md#stylebrella-formatter-general-layout-3). Do not force braces around short unbraced `if` or `for` bodies. The shared rule may remove braces from eligible single-statement bodies.
 
 **Before**:
 
@@ -266,9 +266,9 @@ else {
 Use standalone headings to keep intentionally distinct include blocks apart. Do not rely on include order to provide another header’s declarations implicitly.
 
 ```cpp
-// Plotting
+// plotting
 #include "plot/Canvas.hpp"
 
-// Application state
+// application state
 #include "state/Session.hpp"
 ```

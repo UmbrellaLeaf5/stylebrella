@@ -39,7 +39,7 @@ Canonical IDs use `Stylebrella-<kind>-<language>-<subsection>-<number>`; aliases
 | `files` | `FI` |
 | `exceptions` | `EX` |
 
-Examples isolate the rule being illustrated.
+Examples isolate the rule being illustrated. Outside documentation rules, function fragments may show only the signature or statements relevant to the rule, with required documentation outside the excerpt.
 
 ## `naming`
 
@@ -519,7 +519,7 @@ void read();
 
 `Stylebrella-linter-general-mark-5`
 
-The structural header covers the first private method only. If that method is important, require its language documentation block in place of an additional MARK. A documented C++ declaration satisfies the requirement for its definition.
+The structural header covers the first private method only. If that method is important, its required language documentation takes the place of an additional MARK. A documented C++ declaration satisfies the requirement for its definition. Report missing documentation under this rule instead of the language presence rule at this boundary; report malformed documentation under the language format rule.
 
 **Python**
 
@@ -527,17 +527,20 @@ The structural header covers the first private method only. If that method is im
 
 ```python
   # MARK: Private Helpers
-  def _read(self):
+  def _read(self) -> None:
     """
-    Читает данные.
+    Заполняет кэш из последнего сохранённого снимка.
     """
+
+    self._cache.reload_snapshot()
 ```
 
 **Violation**:
 
 ```python
   # MARK: Private Helpers
-  def _read(self): ...
+  def _read(self) -> None:
+    self._cache.reload_snapshot()
 ```
 
 **Kotlin**
@@ -547,16 +550,16 @@ The structural header covers the first private method only. If that method is im
 ```kotlin
   // MARK: Private Helpers
   /**
-   * Читает данные.
+   * Заполняет кэш из последнего сохранённого снимка.
    */
-  private fun _read() = Unit
+  private fun _read(): Unit = cache.reloadSnapshot()
 ```
 
 **Violation**:
 
 ```kotlin
   // MARK: Private Helpers
-  private fun _read() = Unit
+  private fun _read(): Unit = cache.reloadSnapshot()
 ```
 
 **C++**
@@ -566,7 +569,7 @@ The structural header covers the first private method only. If that method is im
 ```cpp
   // MARK: Private Helpers
   /**
-   * @brief Читает данные.
+   * @brief Заполняет кэш из последнего сохранённого снимка.
    */
   void _read();
 ```
@@ -705,6 +708,52 @@ private: void _read();
 ```cpp
 private: void _read();
 public: void read();
+```
+
+## `documentation`
+
+<a id="stylebrella-linter-general-documentation-1"></a>
+
+<a id="sb-l-g-d-1"></a>
+
+### SB-L-G-D-1 — Only formal documentation may introduce a function
+
+`Stylebrella-linter-general-documentation-1`
+
+Require documentation for every named function and method, including private, local, and trivial ones. Check both presence and format: [Python docstrings](python/linting.md#stylebrella-linter-python-documentation-1), [KDoc](kotlin/linting.md#stylebrella-linter-kotlin-documentation-1), and [Doxygen](cpp/linting.md#stylebrella-linter-cpp-documentation-1). A summary is always required and must explain the purpose, effect, or guarantee, not merely restate the function name. Require parameter and result descriptions only when applicable; never require empty sections. Report missing documentation at the declaration and malformed documentation at its block, rather than reporting a present but malformed block as missing.
+
+Report any ordinary comment attached above a function, even when valid documentation is also present. A comment is attached if it is in the contiguous leading group at the function's indentation, without a blank line before its declaration or attached annotations/decorators; annotations and decorators do not break the group. Allow structural MARKs, separators, and recognized tool directives in their own positions. Python has no external function documentation: the docstring belongs inside the body. Detached comments about surrounding code are outside this rule.
+
+**Python — violation** (the docstring does not make the leading comment valid):
+
+```python
+# start tasks
+def start_tasks() -> None:
+  """
+  Передаёт планировщику только задачи, готовые к выполнению.
+  """
+
+  scheduler.enqueue_ready()
+```
+
+**Kotlin — violation** (ordinary comment before KDoc):
+
+```kotlin
+// start tasks
+/**
+ * Передаёт планировщику только задачи, готовые к выполнению.
+ */
+fun startTasks(): Unit = scheduler.enqueueReady()
+```
+
+**C++ — violation** (ordinary comment before Doxygen):
+
+```cpp
+// start tasks
+/**
+ * @brief Передаёт планировщику только задачи, готовые к выполнению.
+ */
+void start_tasks();
 ```
 
 ## `comments`

@@ -340,7 +340,7 @@ void f() {
 
 `Stylebrella-formatter-general-blank_lines-4`
 
-В списке инструкций соседние локальные объявления остаются вместе, если ни одно из них не начинает группу операций с получателем. Объявление локальной переменной объединяется с последовательными прямыми вызовами методов, присваиваниями её полям, повторными присваиваниями самой переменной и прямыми вызовами, где эта переменная — единственный аргумент (например, `use(f)`). Каждая такая группа отделяется одной пустой строкой от соседних несвязанных инструкций. Вызов с дополнительными аргументами, например `use(f, g)`, или вызов через другой объект, например `g.func(f, a)`, начинает несвязанную группу. Явные границы по комментариям сохраняются.
+В списке инструкций соседние локальные объявления остаются вместе, если ни одно из них не начинает группу операций с получателем. Объявление локальной переменной объединяется с последовательными прямыми вызовами методов, присваиваниями её полям, повторными присваиваниями самой переменной и прямыми вызовами, где эта переменная — единственный аргумент (например, `use(f)`). Каждая такая группа отделяется одной пустой строкой от соседних несвязанных инструкций. Вызов с дополнительными аргументами, например `use(f, g)`, или вызов через другой объект, например `g.func(f, a)`, начинает несвязанную группу. Явные границы по комментариям сохраняются. Для комментариев над объявлением и справа от него применяйте [SB-F-G-BL-5](#stylebrella-formatter-general-blank_lines-5).
 
 **Python**
 
@@ -644,7 +644,7 @@ void f() {
 
 `Stylebrella-formatter-general-blank_lines-5`
 
-Соседние объявления полей класса и локальных переменных не разделяются, кроме случая, когда у следующего объявления есть предшествующий комментарий или аннотация: перед прикреплённым комментарием или аннотацией ставится одна пустая строка. Для локальных переменных эта граница имеет приоритет над группировкой по [SB-F-G-BL-4](#stylebrella-formatter-general-blank_lines-4). Считайте начальный комментарий или аннотацию прикреплёнными к объявлению.
+Соседние объявления полей класса и локальных переменных не разделяются, кроме случая, когда у следующего объявления есть предшествующий комментарий или аннотация: перед прикреплённым комментарием или аннотацией ставится одна пустая строка. Комментарий справа на строке объявления не разрывает группу. Для локальных переменных граница перед предшествующим комментарием или аннотацией имеет приоритет над группировкой по [SB-F-G-BL-4](#stylebrella-formatter-general-blank_lines-4).
 
 **Python**
 
@@ -652,38 +652,54 @@ void f() {
 
 ```python
 class C:
-  x: int
+  _x: int
 
-  y: int
+  _y: int
 
   # legacy value
-  z: int
+  _z: int
+```
+
+```python
+class Position:
+  _y: int  # vertical coordinate
+
+  _x: int  # horizontal coordinate
 ```
 
 ```python
 def build() -> None:
-  a = A()
+  a = A()  # first dependency
+
+  b = B()  # second dependency
   # configured dependency
-  b = B()
+  c = C()
 ```
 
 **После**:
 
 ```python
 class C:
-  x: int
-  y: int
+  _x: int
+  _y: int
 
   # legacy value
-  z: int
+  _z: int
+```
+
+```python
+class Position:
+  _y: int  # vertical coordinate
+  _x: int  # horizontal coordinate
 ```
 
 ```python
 def build() -> None:
-  a = A()
+  a = A()  # first dependency
+  b = B()  # second dependency
 
   # configured dependency
-  b = B()
+  c = C()
 ```
 
 **Kotlin**
@@ -702,10 +718,20 @@ class C {
 ```
 
 ```kotlin
+class Position {
+  var y: Int = 0 // vertical coordinate
+
+  var x: Int = 0 // horizontal coordinate
+}
+```
+
+```kotlin
 fun build() {
-  val a = A()
+  val a = A() // first dependency
+
+  val b = B() // second dependency
   // configured dependency
-  val b = B()
+  val c = C()
 }
 ```
 
@@ -722,11 +748,19 @@ class C {
 ```
 
 ```kotlin
+class Position {
+  var y: Int = 0 // vertical coordinate
+  var x: Int = 0 // horizontal coordinate
+}
+```
+
+```kotlin
 fun build() {
-  val a = A()
+  val a = A() // first dependency
+  val b = B() // second dependency
 
   // configured dependency
-  val b = B()
+  val c = C()
 }
 ```
 
@@ -736,20 +770,30 @@ fun build() {
 
 ```cpp
 class C {
-  int x;
+  int _x;
 
-  int y;
+  int _y;
 
   // legacy value
-  int z;
+  int _z;
+};
+```
+
+```cpp
+class Position {
+  int _y;  // vertical coordinate
+
+  int _x;  // horizontal coordinate
 };
 ```
 
 ```cpp
 void build() {
-  A a;
+  A a;  // first dependency
+
+  B b;  // second dependency
   // configured dependency
-  B b;
+  C c;
 }
 ```
 
@@ -757,20 +801,28 @@ void build() {
 
 ```cpp
 class C {
-  int x;
-  int y;
+  int _x;
+  int _y;
 
   // legacy value
-  int z;
+  int _z;
+};
+```
+
+```cpp
+class Position {
+  int _y;  // vertical coordinate
+  int _x;  // horizontal coordinate
 };
 ```
 
 ```cpp
 void build() {
-  A a;
+  A a;  // first dependency
+  B b;  // second dependency
 
   // configured dependency
-  B b;
+  C c;
 }
 ```
 
@@ -782,7 +834,7 @@ void build() {
 
 `Stylebrella-formatter-general-blank_lines-6`
 
-Перед следующей инструкцией того же уровня ставится одна пустая строка, если предыдущая инструкция остаётся многострочной после форматирования. Не добавляйте её лишь потому, что во входном файле инструкция разбита на строки, хотя форматтер свёл бы её к одной. Вызовы длиннее лимита должны оставаться перенесёнными согласно [SB-F-G-LY-2](#stylebrella-formatter-general-layout-2). Перед закрывающим разделителем пустая строка не добавляется. Внутри непрерывной группы объявлений действует [SB-F-G-BL-4](#stylebrella-formatter-general-blank_lines-4).
+Перед следующей инструкцией того же уровня ставится одна пустая строка, если предыдущая инструкция остаётся многострочной после форматирования. Не добавляйте её лишь потому, что во входном файле инструкция разбита на строки, хотя форматтер свёл бы её к одной. Вызовы длиннее лимита должны оставаться перенесёнными согласно [SB-F-G-LY-2](#stylebrella-formatter-general-layout-2). Перед закрывающим разделителем пустая строка не добавляется. Для границ управляющих конструкций, охваченных [SB-F-G-BL-7](#stylebrella-formatter-general-blank_lines-7), применяйте это правило. Внутри непрерывной группы объявлений действует [SB-F-G-BL-4](#stylebrella-formatter-general-blank_lines-4).
 
 **Python**
 
@@ -867,7 +919,7 @@ void build() {
 
 `Stylebrella-formatter-general-blank_lines-7`
 
-Отделяйте `if` и `for` от соседних инструкций того же уровня одной пустой строкой, в том числе после однострочного тела без скобок. Между последовательными ветвями условия или обработчиками исключений, начинающимися на разных строках, ставится одна пустая строка. Если языковое правило переносит ветвь с конца строки предыдущей ветви, применяйте этот интервал к новой границе; синтаксис с ветвями на одной строке регулируется языковым правилом переноса. Перед закрывающим разделителем и между заголовком и однострочным телом строка не добавляется.
+Отделяйте `if`, `for`, `try` и инструкции выбора (`match` в Python, `when` в Kotlin, `switch` в C++) от соседних инструкций того же уровня одной пустой строкой, в том числе после тела из одной инструкции без скобок. Ставьте одну пустую строку между последовательными ветвями `if` и между частями `try` (`except`/`catch`, `else` и `finally`, где они доступны), если после языкового форматирования следующая ветвь начинается на отдельной строке; не переносите её только ради пустой строки. Каждую ветвь выбора (`case`, ветвь `when` или `default`) начинайте на отдельной строке и отделяйте от предыдущей одной пустой строкой. Последовательные метки C++ с общим телом не разделяйте пустыми строками. Не добавляйте пустую строку перед первым или после последнего элемента тела либо между заголовком и телом конструкции.
 
 **Python**
 
@@ -878,12 +930,55 @@ void build() {
   g()
 ```
 
+```python
+  log()
+  try:
+    load()
+  except OSError:
+    recover()
+  else:
+    validate()
+  finally:
+    release()
+  match state:
+    case State.READY:
+      start()
+    case _:
+      wait()
+  flush()
+```
+
 **После**:
 
 ```python
   if x: f()
 
   g()
+```
+
+```python
+  log()
+
+  try:
+    load()
+
+  except OSError:
+    recover()
+
+  else:
+    validate()
+
+  finally:
+    release()
+
+  match state:
+    case State.READY:
+      start()
+
+    case _:
+      wait()
+
+  flush()
 ```
 
 **Kotlin**
@@ -895,12 +990,54 @@ void build() {
   g()
 ```
 
+```kotlin
+  log()
+  try {
+    load()
+  }
+  catch (error: IOException) {
+    recover()
+  }
+  finally {
+    release()
+  }
+  when (state) {
+    State.READY -> start()
+    else -> waitForWork()
+  }
+  flush()
+```
+
 **После**:
 
 ```kotlin
   if (x) f()
 
   g()
+```
+
+```kotlin
+  log()
+
+  try {
+    load()
+  }
+
+  catch (error: IOException) {
+    recover()
+  }
+
+  finally {
+    release()
+  }
+
+  when (state) {
+    State.READY -> start()
+
+    else -> waitForWork()
+  }
+
+  flush()
 ```
 
 **C++**
@@ -912,12 +1049,57 @@ void build() {
   g();
 ```
 
+```cpp
+  log();
+  try {
+    load();
+  }
+  catch (const LoadError& error) {
+    recover();
+  }
+  switch (state) {
+    case State::READY:
+    case State::RETRY:
+      start();
+      break;
+    default:
+      wait();
+      break;
+  }
+  flush();
+```
+
 **После**:
 
 ```cpp
   if (x) f();
 
   g();
+```
+
+```cpp
+  log();
+
+  try {
+    load();
+  }
+
+  catch (const LoadError& error) {
+    recover();
+  }
+
+  switch (state) {
+    case State::READY:
+    case State::RETRY:
+      start();
+      break;
+
+    default:
+      wait();
+      break;
+  }
+
+  flush();
 ```
 
 <a id="stylebrella-formatter-general-blank_lines-8"></a>
@@ -1381,6 +1563,7 @@ f(
 ```
 
 **После**:
+
 ```cpp
 f(x);
 ```
@@ -1393,7 +1576,7 @@ f(x);
 
 `Stylebrella-formatter-general-layout-3`
 
-В Kotlin и C++ удаляйте скобки блока `if` или `for`, если его тело состоит ровно из одного оператора, язык допускает тело без скобок, а итоговый оператор помещается в 100 колонок. Применяйте это правило рекурсивно к вложенным блокам `for`. Сохраняйте скобки, если они нужны синтаксису или области видимости, если в блоке есть комментарии или несколько операторов, либо удаление может изменить привязку управления. К Python правило неприменимо: блоки языка задаются отступами, а не скобками.
+В Kotlin и C++ удаляйте скобки `if` или `for`, если тело состоит ровно из одной инструкции, язык допускает тело без скобок, а каждая строка результата укладывается в 100 колонок. Оставляйте одиночную инструкцию, которая сама не является управляющей конструкцией, на строке заголовка, если она помещается и не входит в цепочку вложенных конструкций без скобок. В такой цепочке ставьте каждый заголовок на отдельную строку, а его тело — на следующую с дополнительным отступом в два пробела, включая самое внутреннее тело. Сохраняйте скобки, если они нужны синтаксису или области видимости, если в блоке есть комментарии или несколько инструкций либо удаление может изменить привязку управления. К Python правило неприменимо: блоки языка задаются отступами, а не скобками.
 
 **Kotlin**
 
@@ -1410,7 +1593,9 @@ if (ready) {
 **После**:
 
 ```kotlin
-if (ready) for (item in items) send(item)
+if (ready)
+  for (item in items)
+    send(item)
 ```
 
 **C++**
@@ -1428,7 +1613,9 @@ if (ready) {
 **После**:
 
 ```cpp
-if (ready) for (const auto& item : items) send(item);
+if (ready)
+  for (const auto& item : items)
+    send(item);
 ```
 
 **Python:** неприменимо: Python не использует скобки для обозначения блоков управления.
@@ -1972,13 +2159,13 @@ class Reader {
 **До**:
 
 ```python
-#Load the saved settings
+#load the saved settings
 ```
 
 **После**:
 
 ```python
-# Load the saved settings
+# load the saved settings
 ```
 
 **Kotlin**
@@ -1986,13 +2173,13 @@ class Reader {
 **До**:
 
 ```kotlin
-//Load the saved settings
+//load the saved settings
 ```
 
 **После**:
 
 ```kotlin
-// Load the saved settings
+// load the saved settings
 ```
 
 **C++**
@@ -2000,13 +2187,67 @@ class Reader {
 **До**:
 
 ```cpp
-//Load the saved settings
+//load the saved settings
 ```
 
 **После**:
 
 ```cpp
-// Load the saved settings
+// load the saved settings
+```
+
+<a id="stylebrella-formatter-general-comments-2"></a>
+
+<a id="sb-f-g-cm-2"></a>
+
+### SB-F-G-CM-2 — Строчная буква в начале однострочного комментария
+
+`Stylebrella-formatter-general-comments-2`
+
+Если первый непробельный символ обычного однострочного комментария — прописная буква, заменяйте её строчной, в том числе вне ASCII. Это касается отдельных комментариев и комментариев после кода с `#`, `//` и обычных `/* ... */`, занимающих одну строку. Остальной текст сохраняйте; не пропускайте знаки препинания, цифры или разделители кода в поисках буквы. Сохраняйте структурные комментарии: MARK, разделители, shebang, документацию и директивы инструментов.
+
+**Python**
+
+**До**:
+
+```python
+# Load the saved settings
+```
+
+**После**:
+
+```python
+# load the saved settings
+```
+
+**Kotlin**
+
+**До**:
+
+```kotlin
+  val retries: Int, // Максимум повторов
+```
+
+**После**:
+
+```kotlin
+  val retries: Int, // максимум повторов
+```
+
+**C++**
+
+**До**:
+
+```cpp
+  /* Skip the cached value. */
+  refresh();
+```
+
+**После**:
+
+```cpp
+  /* skip the cached value. */
+  refresh();
 ```
 
 ## Рекомендации (без диагностики)

@@ -192,7 +192,7 @@ fun count() = items.size
 
 `Stylebrella-formatter-kotlin-blank_lines-1`
 
-Между соседними ветвями `when` ставится одна пустая строка, если хотя бы у одной тело-блок.
+Применяйте [SB-F-G-BL-7](../formatting.md#stylebrella-formatter-general-blank_lines-7) между всеми соседними ветвями `when`, даже если тело каждой из них — выражение.
 
 **До**:
 
@@ -240,11 +240,11 @@ val b = 2
 
 <a id="sb-f-k-bl-3"></a>
 
-### SB-F-K-BL-3 — Перенос перед else и catch
+### SB-F-K-BL-3 — Перенос перед else, catch и finally
 
 `Stylebrella-formatter-kotlin-blank_lines-3`
 
-`else if`, `else` и `catch` начинаются с новой строки. Если предыдущая ветвь завершается на той же строке, к новой границе применяется [SB-F-G-BL-7](../formatting.md#stylebrella-formatter-general-blank_lines-7). Скобки только ради форматирования не добавляются.
+`else if`, `else`, `catch` и `finally` начинаются с новой строки. К границе ветвей применяется [SB-F-G-BL-7](../formatting.md#stylebrella-formatter-general-blank_lines-7). Скобки только ради форматирования не добавляются.
 
 **До**:
 

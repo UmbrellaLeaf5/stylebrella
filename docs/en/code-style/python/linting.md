@@ -300,20 +300,32 @@ os.path.exists(path)
 
 `Stylebrella-linter-python-idioms-5`
 
-A file identified by project metadata as an executable script in a `.venv` or `uv` project starts with `#!/usr/bin/env python3`. If identified as both importable and executable, its invocation must be inside `if __name__ == "__main__":`.
+A file identified by project metadata as an executable script in a `.venv` or `uv` project starts with `#!/usr/bin/env python3`. Every executable script, even a one-statement script and whether or not it is importable, defines a module-level `def main() -> None:` with no parameters and invokes it through a top-level `if __name__ == "__main__":` whose only statement is `main()`, with no `else`. Apply the entry-point requirement to files identified as scripts by metadata, a Python shebang, or an existing entry guard. Report a missing or invalid entry point with: “Define `main()` and call it under `if __name__ == "__main__":`, even in a minimal script.”
 
 **Allowed**:
 
 ```python
 #!/usr/bin/env python3
+
+def main() -> None:
+  """
+  Обновляет локальный кэш перед запуском приложения.
+  """
+
+  refresh_cache()
+
+
 if __name__ == "__main__":
   main()
 ```
 
-**Violation** (executable and importable):
+**Violation** (executable script; an entry guard alone does not define `main`):
 
 ```python
-main()
+#!/usr/bin/env python3
+
+if __name__ == "__main__":
+  main()
 ```
 
 <a id="stylebrella-linter-python-idioms-6"></a>
@@ -336,6 +348,33 @@ logger.info("Loaded")
 
 ```python
 print("Loaded")
+```
+
+<a id="stylebrella-linter-python-idioms-7"></a>
+
+<a id="sb-l-p-id-7"></a>
+
+### SB-L-P-ID-7 — Executable work belongs inside a function
+
+`Stylebrella-linter-python-idioms-7`
+
+Report executable work outside a function or method, including bare calls, runtime assignments, loops, and control flow in module or class bodies. Allow declarations and their syntax (including decorators, annotations and defaults), imports and import-only preamble guards, docstrings, declarative module constants, exports such as `__all__`, and declarative class fields. These exceptions do not allow standalone calls or script work to run at import time; put initialization requiring runtime work in a function. Allow the top-level entry guard governed by [SB-L-P-ID-5](#stylebrella-linter-python-idioms-5); validate the guard and its body there. Report at the offending statement: “Move executable code into a function. For a script, define `main()` and call it under `if __name__ == "__main__":`.”
+
+**Allowed** (library module):
+
+```python
+def refresh_cache() -> None:
+  """
+  Обновляет локальный кэш по последнему сохранённому снимку.
+  """
+
+  cache.reload_snapshot()
+```
+
+**Violation** (library module):
+
+```python
+cache.reload_snapshot()
 ```
 
 ## `imports`
@@ -423,34 +462,28 @@ value = read()  # noqa
 
 <a id="sb-l-p-d-1"></a>
 
-### SB-L-P-D-1 — When a function needs a docstring
+### SB-L-P-D-1 — Required function docstrings
 
 `Stylebrella-linter-python-documentation-1`
 
-Require a multiline docstring as the first statement in every public nontrivial, important, or descriptively MARKed function and in any function with more than 15 executable body lines or more than 3 declared parameters, excluding `self` and `cls`. Count `*args` and `**kwargs` once each. Use [SB-L-G-M-2](../linting.md#stylebrella-linter-general-mark-2) to count lines and importance. Exactly 15 lines or 3 parameters does not by itself trigger the rule.
+Require a docstring as the first statement in every `def` and `async def`, including methods and nested functions. Comments above the declaration do not count. Lambdas have no docstring position and are not applicable. Check any present docstring separately under [SB-L-P-D-2](#stylebrella-linter-python-documentation-2).
 
 **Allowed**:
 
 ```python
-def f(a: int, b: int, c: int, d: int) -> None:
+def flush_log() -> None:
   """
-  Передаёт входные значения обработчику.
-
-  Args:
-    a: Первое входное значение.
-    b: Второе входное значение.
-    c: Третье входное значение.
-    d: Четвёртое входное значение.
+  Сохраняет накопленные записи перед закрытием журнала.
   """
 
-  consume(a, b, c, d)
+  log.flush()
 ```
 
 **Violation**:
 
 ```python
-def f(a: int, b: int, c: int, d: int) -> None:
-  consume(a, b, c, d)
+def flush_log() -> None:
+  log.flush()
 ```
 
 <a id="stylebrella-linter-python-documentation-2"></a>
@@ -461,23 +494,40 @@ def f(a: int, b: int, c: int, d: int) -> None:
 
 `Stylebrella-linter-python-documentation-2`
 
-Place opening and closing triple double quotes on their own lines. Begin with a nonempty summary. Separate paragraphs and sections with one blank line; use Google `Args:`, `Returns:`, `Raises:`, and `Attributes:` sections where applicable, with entries indented by two spaces. Require exact parameter or attribute names in declaration order, no receiver or repeated type in the label, and nonempty descriptions for applicable entries. `Returns:` applies to a resolved non-None result; `Raises:` applies to known escaping exceptions. Omit inapplicable sections.
+Use multiline Google-style docstrings. Put the opening and closing triple double quotes on separate lines at the body indentation. Align the required summary, other prose, and section headings with the quotes; indent each section entry by exactly two additional ASCII spaces, not tabs. Separate paragraphs and sections with one blank line. Require `Args:` for declared parameters other than `self` and `cls` (including `*args` and `**kwargs` with their stars), in signature order, and `Returns:` for a resolved non-`None` result. Use `Yields:` instead of `Returns:` to document yielded values and `Raises:` for known escaping exceptions. For attributes use `Attributes:` where applicable. Require exact names and nonempty descriptions, without repeating type annotations in labels. Omit inapplicable sections. Report incorrect delimiters, indentation, sections, or entries even if a docstring is present.
 
 **Allowed**:
 
 ```python
-"""
-  Returns the count.
+def row_count(table: Table) -> int:
+  """
+  Считает строки, видимые в текущем снимке таблицы.
+
+  Args:
+    table: Таблица с открытым снимком.
 
   Returns:
-    Number of rows.
+    Число строк в снимке.
   """
+
+  return table.snapshot_size()
 ```
 
-**Violation**:
+**Violation** (section entry not indented):
 
 ```python
-"""Returns the count."""
+def row_count(table: Table) -> int:
+  """
+  Считает строки, видимые в текущем снимке таблицы.
+
+  Args:
+  table: Таблица с открытым снимком.
+
+  Returns:
+    Число строк в снимке.
+  """
+
+  return table.snapshot_size()
 ```
 
 ## `comments`

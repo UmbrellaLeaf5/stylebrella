@@ -192,7 +192,7 @@ fun count() = items.size
 
 `Stylebrella-formatter-kotlin-blank_lines-1`
 
-Between adjacent `when` branches put one blank line if either has a block body.
+Apply [SB-F-G-BL-7](../formatting.md#stylebrella-formatter-general-blank_lines-7) between all adjacent `when` branches, even if both have expression bodies.
 
 **Before**:
 
@@ -240,11 +240,11 @@ val b = 2
 
 <a id="sb-f-k-bl-3"></a>
 
-### SB-F-K-BL-3 — Line breaks before else and catch
+### SB-F-K-BL-3 — Line breaks before else, catch, and finally
 
 `Stylebrella-formatter-kotlin-blank_lines-3`
 
-Start `else if`, `else`, and `catch` on a new line. When the preceding branch ends on that same line, apply [SB-F-G-BL-7](../formatting.md#stylebrella-formatter-general-blank_lines-7) to the new boundary. Do not introduce braces solely for formatting.
+Start `else if`, `else`, `catch`, and `finally` on a new line. Apply [SB-F-G-BL-7](../formatting.md#stylebrella-formatter-general-blank_lines-7) at the branch boundary. Do not introduce braces solely for formatting.
 
 **Before**:
 

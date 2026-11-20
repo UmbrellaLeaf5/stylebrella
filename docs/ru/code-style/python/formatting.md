@@ -122,7 +122,7 @@ def _read() -> None:
 
 `Stylebrella-formatter-python-blank_lines-2`
 
-Одна пустая строка ставится перед соседней инструкцией `while`, `try`, `with`, `raise`, `assert`, `continue` и перед заголовком `elif`, `else`, `except`, `finally` после предыдущего тела. Однострочное тело ради этой строки не разбивается.
+Ставьте одну пустую строку перед соседней инструкцией `while`, `with`, `raise`, `assert`, `continue` и перед заголовком `else` цикла после его тела. Для интервалов вокруг `if`, `for`, `try` и `match` и между их ветвями применяйте [SB-F-G-BL-7](../formatting.md#stylebrella-formatter-general-blank_lines-7). Не разбивайте однострочное тело ради пустой строки.
 
 **До**:
 
