@@ -660,6 +660,13 @@ class C:
   z: int
 ```
 
+```python
+def build() -> None:
+  a = A()
+  # configured dependency
+  b = B()
+```
+
 **After**:
 
 ```python
@@ -670,17 +677,6 @@ class C:
   # legacy value
   z: int
 ```
-
-**Before — local variables**:
-
-```python
-def build() -> None:
-  a = A()
-  # configured dependency
-  b = B()
-```
-
-**After**:
 
 ```python
 def build() -> None:
@@ -705,6 +701,14 @@ class C {
 }
 ```
 
+```kotlin
+fun build() {
+  val a = A()
+  // configured dependency
+  val b = B()
+}
+```
+
 **After**:
 
 ```kotlin
@@ -716,18 +720,6 @@ class C {
   val z: Int = 3
 }
 ```
-
-**Before — local variables**:
-
-```kotlin
-fun build() {
-  val a = A()
-  // configured dependency
-  val b = B()
-}
-```
-
-**After**:
 
 ```kotlin
 fun build() {
@@ -753,6 +745,14 @@ class C {
 };
 ```
 
+```cpp
+void build() {
+  A a;
+  // configured dependency
+  B b;
+}
+```
+
 **After**:
 
 ```cpp
@@ -764,18 +764,6 @@ class C {
   int z;
 };
 ```
-
-**Before — local variables**:
-
-```cpp
-void build() {
-  A a;
-  // configured dependency
-  B b;
-}
-```
-
-**After**:
 
 ```cpp
 void build() {
@@ -854,7 +842,8 @@ After a statement that remains multiline in formatted output, insert one blank l
   run_request_processing_pipeline(
     project_configuration,
     request_processing_settings,
-    transaction_logging_context);
+    transaction_logging_context
+  );
   g();
 ```
 
@@ -864,7 +853,8 @@ After a statement that remains multiline in formatted output, insert one blank l
   run_request_processing_pipeline(
     project_configuration,
     request_processing_settings,
-    transaction_logging_context);
+    transaction_logging_context
+  );
 
   g();
 ```
@@ -1298,7 +1288,7 @@ if (ready) {
 
 `Stylebrella-formatter-general-layout-2`
 
-Use a 100-column wrapping limit for calls and signatures. If their single-line form would exceed it, use hanging indentation with one item per continuation line at two extra spaces, subject to the language closing-delimiter rules. Do not split an indivisible token even if the line stays over the limit.
+Use a 100-column wrapping limit for calls and signatures. Collapse a call with exactly one argument to one line whenever the complete formatted call fits within the limit, regardless of its input line breaks; remove a trailing comma if the language permits one. Otherwise, if the single-line form exceeds the limit, use hanging indentation with one item per continuation line at two extra spaces, subject to the language closing-delimiter rules. In C++, put the closing `);` of a wrapped call on its own line, aligned with the start of the call; do not add a trailing comma. Do not split an indivisible token even if the line stays over the limit.
 
 **Python**
 
@@ -1316,6 +1306,20 @@ run_request_processing_pipeline(
   request_processing_settings,
   transaction_logging_context,
 )
+```
+
+**Before — one argument**:
+
+```python
+f(
+  x,
+)
+```
+
+**After**:
+
+```python
+f(x)
 ```
 
 **Kotlin**
@@ -1336,6 +1340,20 @@ run_request_processing_pipeline(
 )
 ```
 
+**Before — one argument**:
+
+```kotlin
+f(
+  x,
+)
+```
+
+**After**:
+
+```kotlin
+f(x)
+```
+
 **C++**
 
 **Before**:
@@ -1350,7 +1368,21 @@ run_request_processing_pipeline(project_configuration, request_processing_settin
 run_request_processing_pipeline(
   project_configuration,
   request_processing_settings,
-  transaction_logging_context);
+  transaction_logging_context
+);
+```
+
+**Before — one argument**:
+
+```cpp
+f(
+  x
+);
+```
+
+**After**:
+```cpp
+f(x);
 ```
 
 <a id="stylebrella-formatter-general-layout-3"></a>

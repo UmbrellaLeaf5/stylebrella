@@ -660,6 +660,13 @@ class C:
   z: int
 ```
 
+```python
+def build() -> None:
+  a = A()
+  # configured dependency
+  b = B()
+```
+
 **После**:
 
 ```python
@@ -670,17 +677,6 @@ class C:
   # legacy value
   z: int
 ```
-
-**До — локальные переменные**:
-
-```python
-def build() -> None:
-  a = A()
-  # configured dependency
-  b = B()
-```
-
-**После**:
 
 ```python
 def build() -> None:
@@ -705,6 +701,14 @@ class C {
 }
 ```
 
+```kotlin
+fun build() {
+  val a = A()
+  // configured dependency
+  val b = B()
+}
+```
+
 **После**:
 
 ```kotlin
@@ -716,18 +720,6 @@ class C {
   val z: Int = 3
 }
 ```
-
-**До — локальные переменные**:
-
-```kotlin
-fun build() {
-  val a = A()
-  // configured dependency
-  val b = B()
-}
-```
-
-**После**:
 
 ```kotlin
 fun build() {
@@ -753,6 +745,14 @@ class C {
 };
 ```
 
+```cpp
+void build() {
+  A a;
+  // configured dependency
+  B b;
+}
+```
+
 **После**:
 
 ```cpp
@@ -764,18 +764,6 @@ class C {
   int z;
 };
 ```
-
-**До — локальные переменные**:
-
-```cpp
-void build() {
-  A a;
-  // configured dependency
-  B b;
-}
-```
-
-**После**:
 
 ```cpp
 void build() {
@@ -854,7 +842,8 @@ void build() {
   run_request_processing_pipeline(
     project_configuration,
     request_processing_settings,
-    transaction_logging_context);
+    transaction_logging_context
+  );
   g();
 ```
 
@@ -864,7 +853,8 @@ void build() {
   run_request_processing_pipeline(
     project_configuration,
     request_processing_settings,
-    transaction_logging_context);
+    transaction_logging_context
+  );
 
   g();
 ```
@@ -1298,7 +1288,7 @@ if (ready) {
 
 `Stylebrella-formatter-general-layout-2`
 
-Для вызовов и сигнатур предел переноса — 100 столбцов. Если однострочная форма длиннее, используется висячий отступ в два дополнительных пробела по одному элементу на строку с оформлением закрывающего разделителя по языку. Неделимый токен не разрывается даже при превышении лимита.
+Для вызовов и сигнатур предел переноса — 100 столбцов. Вызов ровно с одним аргументом всегда сводится к одной строке, если полностью оформленный вызов помещается в лимит, независимо от переносов во входном коде; завершающая запятая удаляется, если язык её допускает. Иначе, если однострочная форма длиннее лимита, используется висячий отступ в два дополнительных пробела по одному элементу на строку с оформлением закрывающего разделителя по языку. В C++ закрывающие `);` перенесённого вызова ставятся на отдельной строке с отступом начала вызова; завершающая запятая не добавляется. Неделимый токен не разрывается даже при превышении лимита.
 
 **Python**
 
@@ -1316,6 +1306,20 @@ run_request_processing_pipeline(
   request_processing_settings,
   transaction_logging_context,
 )
+```
+
+**До — один аргумент**:
+
+```python
+f(
+  x,
+)
+```
+
+**После**:
+
+```python
+f(x)
 ```
 
 **Kotlin**
@@ -1336,6 +1340,20 @@ run_request_processing_pipeline(
 )
 ```
 
+**До — один аргумент**:
+
+```kotlin
+f(
+  x,
+)
+```
+
+**После**:
+
+```kotlin
+f(x)
+```
+
 **C++**
 
 **До**:
@@ -1350,7 +1368,21 @@ run_request_processing_pipeline(project_configuration, request_processing_settin
 run_request_processing_pipeline(
   project_configuration,
   request_processing_settings,
-  transaction_logging_context);
+  transaction_logging_context
+);
+```
+
+**До — один аргумент**:
+
+```cpp
+f(
+  x
+);
+```
+
+**После**:
+```cpp
+f(x);
 ```
 
 <a id="stylebrella-formatter-general-layout-3"></a>
