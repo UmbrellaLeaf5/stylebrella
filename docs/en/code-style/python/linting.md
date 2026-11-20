@@ -4,7 +4,7 @@
 
 Scope: `.py`; notebooks are out of scope. Only checks expressly defined by this contract are enabled as Stylebrella rules. One remaining finding fails lint; the formatter checks import order. For MARK, names starting with exactly one underscore are private; double-underscore special methods such as `__init__` are not private helpers.
 
-[Shared rules](../linting.md)
+[Shared rules](../general/linting.md)
 
 Examples isolate the rule being illustrated.
 
@@ -540,7 +540,7 @@ def row_count(table: Table) -> int:
 
 `Stylebrella-linter-python-comments-1`
 
-Apply [SB-L-G-CM-1](../linting.md#stylebrella-linter-general-comments-1) to dataclass instance fields except exact names `id`, `user_id` and `item_id`.
+Apply [SB-L-G-CM-1](../general/linting.md#stylebrella-linter-general-comments-1) to dataclass instance fields except exact names `id`, `user_id` and `item_id`.
 
 **Allowed**:
 
@@ -596,7 +596,7 @@ def __init__(
 
 `Stylebrella-linter-python-constants-1`
 
-Shared constants live in `constants.py` as `Constants.<Category>.<FIELD>` (e.g. Math, Entity, Validation, Pattern or a domain category). Report a named value referenced from two or more modules outside this container or a noncanonical reference to a resolved shared constant. Exempt `__main__` in the exact entry guard, names declared in `__all__`, and declarative pytest parameter/fixture names from [SB-L-G-C-1](../linting.md#stylebrella-linter-general-constants-1).
+Shared constants live in `constants.py` as `Constants.<Category>.<FIELD>` (e.g. Math, Entity, Validation, Pattern or a domain category). Report a named value referenced from two or more modules outside this container or a noncanonical reference to a resolved shared constant. Exempt `__main__` in the exact entry guard, names declared in `__all__`, and declarative pytest parameter/fixture names from [SB-L-G-C-1](../general/linting.md#stylebrella-linter-general-constants-1).
 
 **Allowed**:
 
@@ -643,7 +643,7 @@ class ParserTest(unittest.TestCase): ...
 
 `Stylebrella-linter-python-testing-2`
 
-Mark tests explicitly classified as environment-dependent with pytest `skip` or `skipif` resolved on that test or its enclosing class/module. Apply [SB-L-G-C-1](../linting.md#stylebrella-linter-general-constants-1) to literal test inputs and parameter data.
+Mark tests explicitly classified as environment-dependent with pytest `skip` or `skipif` resolved on that test or its enclosing class/module. Apply [SB-L-G-C-1](../general/linting.md#stylebrella-linter-general-constants-1) to literal test inputs and parameter data.
 
 **Allowed**:
 

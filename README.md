@@ -3,12 +3,14 @@
 Stylebrella is a unified linter and formatter for Python, Kotlin, and C++.
 It delegates standard formatting to established language-specific engines and
 adds checks for project-specific conventions. The
-[shared formatting](docs/en/code-style/formatting.md) and
-[shared linting](docs/en/code-style/linting.md) specifications link to the
+[shared formatting](docs/en/code-style/general/formatting.md) and
+[shared linting](docs/en/code-style/general/linting.md) specifications link to the
 Python, Kotlin, and C++ rules that define the implementation target. Notebook
 rules are deferred. The specifications are also available in Russian:
-[formatting](docs/ru/code-style/formatting.md) and
-[linting](docs/ru/code-style/linting.md). The first Windows preview packages the style engines and
+[formatting](docs/ru/code-style/general/formatting.md) and
+[linting](docs/ru/code-style/general/linting.md). See the code-style index in
+[English](docs/en/code-style/README.md) or [Russian](docs/ru/code-style/README.md)
+for all specifications. The first Windows preview packages the style engines and
 a CLI scaffold; the style commands themselves are still stubs.
 
 The goal is to replace long instructions for _mechanically enforceable_ style
@@ -178,13 +180,13 @@ passed; independent file and syntax checks must still run.
 
 ## Rules and fixes
 
-The [rule ID registry](docs/en/code-style/linting.md#id-registry) defines the
+The [rule ID registry](docs/en/code-style/README.md#id-registry) defines the
 canonical ID format and its short aliases. For example:
 
 - [`SB-L-C-FI-1`](docs/en/code-style/cpp/linting.md#stylebrella-linter-cpp-files-1): require `#pragma once` in project-owned headers.
 - [`SB-L-C-D-1`](docs/en/code-style/cpp/linting.md#stylebrella-linter-cpp-documentation-1): require Doxygen for every function.
 - [`SB-L-K-NU-1`](docs/en/code-style/kotlin/linting.md#stylebrella-linter-kotlin-nulls-1): forbid `!!`.
-- [`SB-F-G-SP-1`](docs/en/code-style/formatting.md#stylebrella-formatter-general-separators-1): normalize separators to exactly 50 hyphens.
+- [`SB-F-G-SP-1`](docs/en/code-style/general/formatting.md#stylebrella-formatter-general-separators-1): normalize separators to exactly 50 hyphens.
 
 Diagnostics are sorted by path, line, column, and rule ID. A normalized
 diagnostic carries `rule_id`, `source`, `severity`, `message`, `path`,

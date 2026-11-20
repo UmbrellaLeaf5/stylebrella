@@ -1,45 +1,12 @@
 # Shared linting
 
-[Русская версия](../../ru/code-style/linting.md)
+[Русская версия](../../../ru/code-style/general/linting.md)
 
-Normative preview contract for `lint` and the linting part of `check`. Emit a finding only when the stated predicate is established. Missing resolution or required context is not a violation. These rules describe future behavior. A full ID is canonical; its short ID is an equivalent alias.
+Normative preview contract for `lint` and the linting part of `check`. Emit a finding only when the stated predicate is established. Missing resolution or required context is not a violation. These rules describe future behavior.
 
-[Python](python/linting.md) · [Kotlin](kotlin/linting.md) · [C++](cpp/linting.md)
+[Python](../python/linting.md) · [Kotlin](../kotlin/linting.md) · [C++](../cpp/linting.md)
 
-<a id="id-registry"></a>
-
-## ID registry
-
-Canonical IDs use `Stylebrella-<kind>-<language>-<subsection>-<number>`; aliases use `SB-<kind>-<language>-<subsection>-<number>` with the tokens below.
-
-For each kind and language, number rules within a subsection consecutively from 1 in document order. When renumbering, update both IDs, their anchors, and all references in both languages.
-
-| Canonical token | Alias token |
-| --- | --- |
-| `formatter` / `linter` | `F` / `L` |
-| `general` | `G` |
-| `python` | `P` |
-| `kotlin` | `K` |
-| `cpp` | `C` |
-| `blank_lines` | `BL` |
-| `layout` | `LY` |
-| `mark` | `M` |
-| `separators` | `SP` |
-| `imports` | `I` |
-| `source` | `S` |
-| `expressions` | `E` |
-| `naming` | `N` |
-| `json` | `J` |
-| `comments` | `CM` |
-| `constants` | `C` |
-| `loops` | `LP` |
-| `types` | `T` |
-| `idioms` | `ID` |
-| `testing` | `TS` |
-| `documentation` | `D` |
-| `nulls` | `NU` |
-| `files` | `FI` |
-| `exceptions` | `EX` |
+[Shared formatting](formatting.md) · [ID registry](../README.md#id-registry)
 
 Examples isolate the rule being illustrated. Outside documentation rules, function fragments may show only the signature or statements relevant to the rule, with required documentation outside the excerpt.
 
@@ -722,7 +689,7 @@ public: void read();
 
 `Stylebrella-linter-general-documentation-1`
 
-Require documentation for every named function and method, including private, local, and trivial ones. Check both presence and format: [Python docstrings](python/linting.md#stylebrella-linter-python-documentation-1), [KDoc](kotlin/linting.md#stylebrella-linter-kotlin-documentation-1), and [Doxygen](cpp/linting.md#stylebrella-linter-cpp-documentation-1). A summary is always required and must explain the purpose, effect, or guarantee, not merely restate the function name. Require parameter and result descriptions only when applicable; never require empty sections. Report missing documentation at the declaration and malformed documentation at its block, rather than reporting a present but malformed block as missing.
+Require documentation for every named function and method, including private, local, and trivial ones. Check both presence and format: [Python docstrings](../python/linting.md#stylebrella-linter-python-documentation-1), [KDoc](../kotlin/linting.md#stylebrella-linter-kotlin-documentation-1), and [Doxygen](../cpp/linting.md#stylebrella-linter-cpp-documentation-1). A summary is always required and must explain the purpose, effect, or guarantee, not merely restate the function name. Require parameter and result descriptions only when applicable; never require empty sections. Report missing documentation at the declaration and malformed documentation at its block, rather than reporting a present but malformed block as missing.
 
 Report any ordinary comment attached above a function, even when valid documentation is also present. A comment is attached if it is in the contiguous leading group at the function's indentation, without a blank line before its declaration or attached annotations/decorators; annotations and decorators do not break the group. Allow structural MARKs, separators, and recognized tool directives in their own positions. Python has no external function documentation: the docstring belongs inside the body. Detached comments about surrounding code are outside this rule.
 

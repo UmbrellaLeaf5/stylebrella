@@ -4,7 +4,7 @@
 
 Scope: `.py`. Notebooks and standalone configuration files are outside this contract. For class visibility see [Python linting](linting.md).
 
-[Shared rules](../formatting.md)
+[Shared rules](../general/formatting.md)
 
 Examples isolate the rule being illustrated.
 
@@ -122,7 +122,7 @@ def _read() -> None:
 
 `Stylebrella-formatter-python-blank_lines-2`
 
-Put one blank line before sibling `while`, `with`, `raise`, `assert`, and `continue` statements, and before loop `else` clause headers following a suite. For spacing around `if`, `for`, `try`, and `match` and between their branches, apply [SB-F-G-BL-7](../formatting.md#stylebrella-formatter-general-blank_lines-7). Do not split a same-line suite to insert a blank line.
+Put one blank line before sibling `while`, `with`, `raise`, `assert`, and `continue` statements, and before loop `else` clause headers following a suite. For spacing around `if`, `for`, `try`, and `match` and between their branches, apply [SB-F-G-BL-7](../general/formatting.md#stylebrella-formatter-general-blank_lines-7). Do not split a same-line suite to insert a blank line.
 
 **Before**:
 
@@ -180,7 +180,7 @@ def __init__(
 
 `Stylebrella-formatter-python-mark-1`
 
-Keep an inline comment on the same line as its code. Apply [SB-F-G-CM-1](../formatting.md#sb-f-g-cm-1) to spacing after `#`. Preserve interpreter directives, encoding declarations, and tool-marker text.
+Keep an inline comment on the same line as its code. Apply [SB-F-G-CM-1](../general/formatting.md#sb-f-g-cm-1) to spacing after `#`. Preserve interpreter directives, encoding declarations, and tool-marker text.
 
 **Before**:
 

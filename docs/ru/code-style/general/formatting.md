@@ -1,12 +1,12 @@
 # Общее форматирование
 
-[English version](../../en/code-style/formatting.md)
+[English version](../../../en/code-style/general/formatting.md)
 
 Нормативный контракт будущих `format`, `format --check` (без записи) и проверки форматирования в `check`. Правила описывают целевое поведение, а не статус реализации. Для каждого языка применяется один канонический форматтер, без цепочки альтернативных форматтеров. После Stylebrella и повторный проход Stylebrella, и отдельный проход форматтера языка с тем же пресетом Stylebrella должны оставлять файл побайтно неизменным. Несовместимость блокирует поддержку затронутого правила до пересмотра контракта или выбора форматтера.
 
-[Python](python/formatting.md) · [Kotlin](kotlin/formatting.md) · [C++](cpp/formatting.md)
+[Python](../python/formatting.md) · [Kotlin](../kotlin/formatting.md) · [C++](../cpp/formatting.md)
 
-[Реестр ID и линтинг](linting.md#id-registry)
+[Общий линтинг](linting.md) · [Реестр ID](../README.md#id-registry)
 
 Каждый пример изолирует указанное правило.
 

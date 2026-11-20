@@ -4,7 +4,7 @@
 
 Scope: `.cpp`, `.cc`, `.cxx`, `.h`, `.hpp`, and `.hh`; never CMake or standalone data/configuration files. Locate the applicable formatting configuration using the real source path, including for stdin. See [C++ linting](linting.md) for member visibility.
 
-[Shared rules](../formatting.md)
+[Shared rules](../general/formatting.md)
 
 Examples isolate the rule being illustrated.
 
@@ -144,7 +144,7 @@ int count;  // Number of bytes in the payload before compression.
 
 `Stylebrella-formatter-cpp-layout-6`
 
-Allow inline member functions and short unbraced `if` statements without `else` to occupy one line when they fit, subject to the nested-control layout in [SB-F-G-LY-3](../formatting.md#stylebrella-formatter-general-layout-3). Do not force braces around short unbraced `if` or `for` bodies. The shared rule may remove braces from eligible single-statement bodies.
+Allow inline member functions and short unbraced `if` statements without `else` to occupy one line when they fit, subject to the nested-control layout in [SB-F-G-LY-3](../general/formatting.md#stylebrella-formatter-general-layout-3). Do not force braces around short unbraced `if` or `for` bodies. The shared rule may remove braces from eligible single-statement bodies.
 
 **Before**:
 
@@ -231,7 +231,7 @@ void b();
 
 `Stylebrella-formatter-cpp-blank_lines-2`
 
-Start `else if`, `else`, and `catch` on a new line; apply [SB-F-G-BL-7](../formatting.md#stylebrella-formatter-general-blank_lines-7) to the branch boundary.
+Start `else if`, `else`, and `catch` on a new line; apply [SB-F-G-BL-7](../general/formatting.md#stylebrella-formatter-general-blank_lines-7) to the branch boundary.
 
 **Before**:
 
@@ -261,7 +261,7 @@ else {
 
 ## Recommendations (no diagnostic)
 
-**Compatibility:** the reference Google-style configuration keeps at most one consecutive blank line. The Stylebrella preset needs `MaxEmptyLinesToKeep: 2` to preserve the file-scope spacing in [SB-F-G-BL-1](../formatting.md#stylebrella-formatter-general-blank_lines-1) and [SB-F-G-BL-2](../formatting.md#stylebrella-formatter-general-blank_lines-2). This setting alone does not establish compatibility with every rule.
+**Compatibility:** the reference Google-style configuration keeps at most one consecutive blank line. The Stylebrella preset needs `MaxEmptyLinesToKeep: 2` to preserve the file-scope spacing in [SB-F-G-BL-1](../general/formatting.md#stylebrella-formatter-general-blank_lines-1) and [SB-F-G-BL-2](../general/formatting.md#stylebrella-formatter-general-blank_lines-2). This setting alone does not establish compatibility with every rule.
 
 Use standalone headings to keep intentionally distinct include blocks apart. Do not rely on include order to provide another header’s declarations implicitly.
 

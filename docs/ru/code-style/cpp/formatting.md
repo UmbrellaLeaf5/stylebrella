@@ -4,7 +4,7 @@
 
 Область: `.cpp`, `.cc`, `.cxx`, `.h`, `.hpp`, `.hh`; не CMake и не отдельные файлы данных или конфигурации. Применимая конфигурация определяется по реальному пути исходника, включая stdin. Видимость членов задана в [линтинге C++](linting.md).
 
-[Общие правила](../formatting.md)
+[Общие правила](../general/formatting.md)
 
 Каждый пример изолирует указанное правило.
 
@@ -144,7 +144,7 @@ int count;  // Number of bytes in the payload before compression.
 
 `Stylebrella-formatter-cpp-layout-6`
 
-Встроенная функция-член или короткий `if` без скобок и без `else` могут занимать одну строку, если помещаются, с учётом раскладки вложенных конструкций по [SB-F-G-LY-3](../formatting.md#stylebrella-formatter-general-layout-3). Не добавляйте скобки к короткому телу `if` или `for` без скобок. Общее правило разрешает удалять скобки у подходящих блоков с одной инструкцией.
+Встроенная функция-член или короткий `if` без скобок и без `else` могут занимать одну строку, если помещаются, с учётом раскладки вложенных конструкций по [SB-F-G-LY-3](../general/formatting.md#stylebrella-formatter-general-layout-3). Не добавляйте скобки к короткому телу `if` или `for` без скобок. Общее правило разрешает удалять скобки у подходящих блоков с одной инструкцией.
 
 **До**:
 
@@ -231,7 +231,7 @@ void b();
 
 `Stylebrella-formatter-cpp-blank_lines-2`
 
-`else if`, `else` и `catch` начинаются с новой строки; к границе ветвей применяется [SB-F-G-BL-7](../formatting.md#stylebrella-formatter-general-blank_lines-7).
+`else if`, `else` и `catch` начинаются с новой строки; к границе ветвей применяется [SB-F-G-BL-7](../general/formatting.md#stylebrella-formatter-general-blank_lines-7).
 
 **До**:
 
@@ -261,7 +261,7 @@ else {
 
 ## Рекомендации (без диагностики)
 
-**Совместимость:** исходная конфигурация на основе Google сохраняет не более одной пустой строки подряд. Пресету Stylebrella нужна настройка `MaxEmptyLinesToKeep: 2`, чтобы сохранить отступы верхнего уровня по [SB-F-G-BL-1](../formatting.md#stylebrella-formatter-general-blank_lines-1) и [SB-F-G-BL-2](../formatting.md#stylebrella-formatter-general-blank_lines-2). Одна эта настройка не подтверждает совместимость со всеми правилами.
+**Совместимость:** исходная конфигурация на основе Google сохраняет не более одной пустой строки подряд. Пресету Stylebrella нужна настройка `MaxEmptyLinesToKeep: 2`, чтобы сохранить отступы верхнего уровня по [SB-F-G-BL-1](../general/formatting.md#stylebrella-formatter-general-blank_lines-1) и [SB-F-G-BL-2](../general/formatting.md#stylebrella-formatter-general-blank_lines-2). Одна эта настройка не подтверждает совместимость со всеми правилами.
 
 Отмечайте намеренно разные группы включений отдельными комментариями. Не полагайтесь на порядок включений для неявного подключения объявлений другого заголовка.
 

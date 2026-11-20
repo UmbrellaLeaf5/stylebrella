@@ -4,7 +4,7 @@
 
 Область: `.py`; ноутбуки вне области. Как правила Stylebrella включены только проверки, прямо определённые контрактом. Даже одно оставшееся нарушение означает провал линтинга; порядок импортов проверяет форматтер. Для MARK имена ровно с одним начальным подчёркиванием считаются приватными; специальные методы вроде `__init__` не относятся к приватным вспомогательным.
 
-[Общие правила](../linting.md)
+[Общие правила](../general/linting.md)
 
 Каждый пример изолирует указанное правило.
 
@@ -540,7 +540,7 @@ def row_count(table: Table) -> int:
 
 `Stylebrella-linter-python-comments-1`
 
-[SB-L-G-CM-1](../linting.md#stylebrella-linter-general-comments-1) применяется к полям экземпляра dataclass, кроме точных имён `id`, `user_id`, `item_id`.
+[SB-L-G-CM-1](../general/linting.md#stylebrella-linter-general-comments-1) применяется к полям экземпляра dataclass, кроме точных имён `id`, `user_id`, `item_id`.
 
 **Допустимо**:
 
@@ -596,7 +596,7 @@ def __init__(
 
 `Stylebrella-linter-python-constants-1`
 
-Общие константы размещаются в `constants.py` как `Constants.<Category>.<FIELD>` (например, Math, Entity, Validation, Pattern или предметная категория). Диагностируется именованное значение, на которое ссылаются два или более модуля вне контейнера, либо неканоническая ссылка на разрешённую общую константу. `__main__` в точной проверке точки входа, имена в `__all__` и имена параметров/фикстур pytest освобождены от [SB-L-G-C-1](../linting.md#stylebrella-linter-general-constants-1).
+Общие константы размещаются в `constants.py` как `Constants.<Category>.<FIELD>` (например, Math, Entity, Validation, Pattern или предметная категория). Диагностируется именованное значение, на которое ссылаются два или более модуля вне контейнера, либо неканоническая ссылка на разрешённую общую константу. `__main__` в точной проверке точки входа, имена в `__all__` и имена параметров/фикстур pytest освобождены от [SB-L-G-C-1](../general/linting.md#stylebrella-linter-general-constants-1).
 
 **Допустимо**:
 
@@ -643,7 +643,7 @@ class ParserTest(unittest.TestCase): ...
 
 `Stylebrella-linter-python-testing-2`
 
-Тесты, явно классифицированные как зависящие от окружения, помечаются разрешёнными pytest `skip` или `skipif` на тесте, его классе или модуле. К литеральным входным данным тестов и параметризации применяется [SB-L-G-C-1](../linting.md#stylebrella-linter-general-constants-1).
+Тесты, явно классифицированные как зависящие от окружения, помечаются разрешёнными pytest `skip` или `skipif` на тесте, его классе или модуле. К литеральным входным данным тестов и параметризации применяется [SB-L-G-C-1](../general/linting.md#stylebrella-linter-general-constants-1).
 
 **Допустимо**:
 

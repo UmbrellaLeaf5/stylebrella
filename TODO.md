@@ -2,8 +2,8 @@
 
 This roadmap implements the application described in [README.md](README.md).
 All tasks below are planned; none is marked as completed before the code
-exists. The Stylebrella [formatting](docs/en/code-style/formatting.md) and
-[linting](docs/en/code-style/linting.md) contracts define the current target.
+exists. The Stylebrella [formatting](docs/en/code-style/general/formatting.md) and
+[linting](docs/en/code-style/general/linting.md) contracts define the current target.
 The original template and engine configurations are reference material.
 Notebook ideas below are deferred until a notebook contract is defined.
 
@@ -35,7 +35,7 @@ fixtures exist, and the Kotlin formatter choice is supported by evidence.
       `EngineResult`, `ProjectConfig`, `Language`, and the machine-output
       schema version. Specify Unicode coordinate and offset conventions.
 - [ ] Implement canonical IDs and short aliases from the
-      [rule ID registry](docs/en/code-style/linting.md#id-registry). Map
+      [rule ID registry](docs/en/code-style/README.md#id-registry). Map
       engine findings to the documented Stylebrella rules they implement.
 - [ ] Implement project discovery, extension filtering, symlink behavior,
       generated-directory exclusions, deterministic file ordering, and nested

@@ -1,5 +1,12 @@
 # Repository instructions
 
+## CLI command scope
+
+- `format` applies the formatting rules and rewrites source files as needed. Apply the full set of formatting rules, including structural formatting changes explicitly required by the formatting specification.
+- `check` is the read-only counterpart of `format`. Use the same formatting rules to report where source differs from the expected formatting. Do not write changes or run lint rules.
+- `lint` is read-only and reports violations of the separate linting rules only. Do not run formatting checks, apply fixes, or rewrite sources.
+- Keep this separation consistent in CLI behavior, help text, tests, and documentation. In particular, do not describe `check` as a combined formatting and linting command.
+
 ## Bilingual documentation
 
 - Keep the English (`docs/en/`) and Russian (`docs/ru/`) documentation **fully synchronized**. Every page must have a counterpart at the same relative path in the other language, with a reciprocal language switch link.

@@ -4,7 +4,7 @@
 
 Scope: `.kt` and `.kts`. Visibility is as declared, including implicit `public`; `internal` is not `private`.
 
-[Shared rules](../linting.md)
+[Shared rules](../general/linting.md)
 
 Examples isolate the rule being illustrated.
 
@@ -18,7 +18,7 @@ Examples isolate the rule being illustrated.
 
 `Stylebrella-linter-kotlin-naming-1`
 
-Require camelCase for variables, parameters, properties and public callables; PascalCase for class, interface, object, enum and annotation types; and SCREAMING_SNAKE_CASE for `const val`. Private method names use the underscore prefix required by [SB-L-G-N-2](../linting.md#sb-l-g-n-2), followed by a camelCase name.
+Require camelCase for variables, parameters, properties and public callables; PascalCase for class, interface, object, enum and annotation types; and SCREAMING_SNAKE_CASE for `const val`. Private method names use the underscore prefix required by [SB-L-G-N-2](../general/linting.md#sb-l-g-n-2), followed by a camelCase name.
 
 **Allowed**:
 
@@ -204,7 +204,7 @@ val point = input as Point
 
 `Stylebrella-linter-kotlin-idioms-1`
 
-Report blocks passed to resolved standard `run`, `let`, `apply`, `also` or `with` when they exceed five executable body lines counted as in [SB-L-G-M-2](../linting.md#stylebrella-linter-general-mark-2). Exactly five does not trigger this rule.
+Report blocks passed to resolved standard `run`, `let`, `apply`, `also` or `with` when they exceed five executable body lines counted as in [SB-L-G-M-2](../general/linting.md#stylebrella-linter-general-mark-2). Exactly five does not trigger this rule.
 
 **Allowed** (2 lines):
 
@@ -327,7 +327,7 @@ fun startTasks(): Unit = scheduler.enqueueReady()
 
 `Stylebrella-linter-kotlin-comments-1`
 
-Apply [SB-L-G-CM-1](../linting.md#stylebrella-linter-general-comments-1) to data-class properties except exact names `id`, `userId` and `itemId`.
+Apply [SB-L-G-CM-1](../general/linting.md#stylebrella-linter-general-comments-1) to data-class properties except exact names `id`, `userId` and `itemId`.
 
 **Allowed**:
 
@@ -397,7 +397,7 @@ INVALID_EMAIL
 
 `Stylebrella-linter-kotlin-constants-2`
 
-Exempt the schema key in a resolved `@JsonProperty` and the field name in a recognized named null-validation call from [SB-L-G-C-1](../linting.md#stylebrella-linter-general-constants-1). Runtime defaults supplied to such a call remain subject to the rule; test data are not exempt.
+Exempt the schema key in a resolved `@JsonProperty` and the field name in a recognized named null-validation call from [SB-L-G-C-1](../general/linting.md#stylebrella-linter-general-constants-1). Runtime defaults supplied to such a call remain subject to the rule; test data are not exempt.
 
 **Allowed**:
 

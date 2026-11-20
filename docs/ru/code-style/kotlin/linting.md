@@ -4,7 +4,7 @@
 
 Область: `.kt` и `.kts`. Видимость берётся из объявления, включая неявный `public`; `internal` не считается `private`.
 
-[Общие правила](../linting.md)
+[Общие правила](../general/linting.md)
 
 Каждый пример изолирует указанное правило.
 
@@ -18,7 +18,7 @@
 
 `Stylebrella-linter-kotlin-naming-1`
 
-Для переменных, параметров, свойств и публичных функций требуется camelCase, для классов, интерфейсов, объектов, перечислений и аннотаций — PascalCase, для `const val` — SCREAMING_SNAKE_CASE. Приватные методы используют префикс подчёркивания по [SB-L-G-N-2](../linting.md#sb-l-g-n-2), за которым следует имя в camelCase.
+Для переменных, параметров, свойств и публичных функций требуется camelCase, для классов, интерфейсов, объектов, перечислений и аннотаций — PascalCase, для `const val` — SCREAMING_SNAKE_CASE. Приватные методы используют префикс подчёркивания по [SB-L-G-N-2](../general/linting.md#sb-l-g-n-2), за которым следует имя в camelCase.
 
 **Допустимо**:
 
@@ -204,7 +204,7 @@ val point = input as Point
 
 `Stylebrella-linter-kotlin-idioms-1`
 
-Блок стандартной функции `run`, `let`, `apply`, `also` или `with` диагностируется при превышении пяти исполняемых строк тела, подсчитанных по [SB-L-G-M-2](../linting.md#stylebrella-linter-general-mark-2). Ровно пять строк не нарушают правило.
+Блок стандартной функции `run`, `let`, `apply`, `also` или `with` диагностируется при превышении пяти исполняемых строк тела, подсчитанных по [SB-L-G-M-2](../general/linting.md#stylebrella-linter-general-mark-2). Ровно пять строк не нарушают правило.
 
 **Допустимо** (две исполняемые строки):
 
@@ -327,7 +327,7 @@ fun startTasks(): Unit = scheduler.enqueueReady()
 
 `Stylebrella-linter-kotlin-comments-1`
 
-[SB-L-G-CM-1](../linting.md#stylebrella-linter-general-comments-1) применяется к свойствам data class, кроме точных имён `id`, `userId`, `itemId`.
+[SB-L-G-CM-1](../general/linting.md#stylebrella-linter-general-comments-1) применяется к свойствам data class, кроме точных имён `id`, `userId`, `itemId`.
 
 **Допустимо**:
 
@@ -397,7 +397,7 @@ INVALID_EMAIL
 
 `Stylebrella-linter-kotlin-constants-2`
 
-Ключ схемы в разрешённой `@JsonProperty` и имя поля в распознанной именованной проверке null освобождены от [SB-L-G-C-1](../linting.md#stylebrella-linter-general-constants-1). Передаваемые значения по умолчанию и тестовые данные не освобождаются.
+Ключ схемы в разрешённой `@JsonProperty` и имя поля в распознанной именованной проверке null освобождены от [SB-L-G-C-1](../general/linting.md#stylebrella-linter-general-constants-1). Передаваемые значения по умолчанию и тестовые данные не освобождаются.
 
 **Допустимо**:
 

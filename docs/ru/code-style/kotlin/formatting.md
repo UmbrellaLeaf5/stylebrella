@@ -4,7 +4,7 @@
 
 Область: `.kt` и `.kts`, включая скрипты Gradle. Для результата по контракту пресету не нужны специфичные настройки IDE. Видимость методов задана в [линтинге Kotlin](linting.md).
 
-[Общие правила](../formatting.md)
+[Общие правила](../general/formatting.md)
 
 Каждый пример изолирует указанное правило.
 
@@ -192,7 +192,7 @@ fun count() = items.size
 
 `Stylebrella-formatter-kotlin-blank_lines-1`
 
-Применяйте [SB-F-G-BL-7](../formatting.md#stylebrella-formatter-general-blank_lines-7) между всеми соседними ветвями `when`, даже если тело каждой из них — выражение.
+Применяйте [SB-F-G-BL-7](../general/formatting.md#stylebrella-formatter-general-blank_lines-7) между всеми соседними ветвями `when`, даже если тело каждой из них — выражение.
 
 **До**:
 
@@ -244,7 +244,7 @@ val b = 2
 
 `Stylebrella-formatter-kotlin-blank_lines-3`
 
-`else if`, `else`, `catch` и `finally` начинаются с новой строки. К границе ветвей применяется [SB-F-G-BL-7](../formatting.md#stylebrella-formatter-general-blank_lines-7). В `return try` и `return if` ставьте каждую из этих ветвей на строку предшествующей `}`, если она есть, с одним пробелом перед ключевым словом. Перед всей инструкцией `return` применяйте [SB-F-G-BL-8](../formatting.md#stylebrella-formatter-general-blank_lines-8). Скобки только ради форматирования не добавляются.
+`else if`, `else`, `catch` и `finally` начинаются с новой строки. К границе ветвей применяется [SB-F-G-BL-7](../general/formatting.md#stylebrella-formatter-general-blank_lines-7). В `return try` и `return if` ставьте каждую из этих ветвей на строку предшествующей `}`, если она есть, с одним пробелом перед ключевым словом. Перед всей инструкцией `return` применяйте [SB-F-G-BL-8](../general/formatting.md#stylebrella-formatter-general-blank_lines-8). Скобки только ради форматирования не добавляются.
 
 **До**:
 

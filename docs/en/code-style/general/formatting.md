@@ -1,12 +1,12 @@
 # Shared formatting
 
-[Русская версия](../../ru/code-style/formatting.md)
+[Русская версия](../../../ru/code-style/general/formatting.md)
 
 Normative preview contract for `format`, `format --check` (read-only), and the formatting part of `check`. These rules describe intended behavior, not implementation status. Each language uses one canonical formatter, without chaining alternative formatters. After Stylebrella formatting, a second Stylebrella pass and a pass of the language formatter with the same Stylebrella preset must each leave the bytes unchanged. An incompatibility blocks support for the affected rule until its contract or the formatter selection is revised.
 
-[Python](python/formatting.md) · [Kotlin](kotlin/formatting.md) · [C++](cpp/formatting.md)
+[Python](../python/formatting.md) · [Kotlin](../kotlin/formatting.md) · [C++](../cpp/formatting.md)
 
-[ID registry and linting](linting.md#id-registry)
+[Shared linting](linting.md) · [ID registry](../README.md#id-registry)
 
 Examples isolate the rule being illustrated.
 

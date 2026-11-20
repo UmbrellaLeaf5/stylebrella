@@ -4,7 +4,7 @@
 
 Scope: `.kt` and `.kts`, including Gradle scripts. The preset requires no IDE-specific settings to obtain the specified output. For class visibility see [Kotlin linting](linting.md).
 
-[Shared rules](../formatting.md)
+[Shared rules](../general/formatting.md)
 
 Examples isolate the rule being illustrated.
 
@@ -192,7 +192,7 @@ fun count() = items.size
 
 `Stylebrella-formatter-kotlin-blank_lines-1`
 
-Apply [SB-F-G-BL-7](../formatting.md#stylebrella-formatter-general-blank_lines-7) between all adjacent `when` branches, even if both have expression bodies.
+Apply [SB-F-G-BL-7](../general/formatting.md#stylebrella-formatter-general-blank_lines-7) between all adjacent `when` branches, even if both have expression bodies.
 
 **Before**:
 
@@ -244,7 +244,7 @@ val b = 2
 
 `Stylebrella-formatter-kotlin-blank_lines-3`
 
-Start `else if`, `else`, `catch`, and `finally` on a new line. Apply [SB-F-G-BL-7](../formatting.md#stylebrella-formatter-general-blank_lines-7) at the branch boundary. In `return try` and `return if`, put each of these clauses on the same line as the preceding `}` when there is one, with one space before the keyword. Apply [SB-F-G-BL-8](../formatting.md#stylebrella-formatter-general-blank_lines-8) before the whole `return` statement. Do not introduce braces solely for formatting.
+Start `else if`, `else`, `catch`, and `finally` on a new line. Apply [SB-F-G-BL-7](../general/formatting.md#stylebrella-formatter-general-blank_lines-7) at the branch boundary. In `return try` and `return if`, put each of these clauses on the same line as the preceding `}` when there is one, with one space before the keyword. Apply [SB-F-G-BL-8](../general/formatting.md#stylebrella-formatter-general-blank_lines-8) before the whole `return` statement. Do not introduce braces solely for formatting.
 
 **Before**:
 

@@ -4,7 +4,7 @@
 
 Scope: `.cpp`, `.cc`, `.cxx`, `.h`, `.hpp`, `.hh`; CMake is excluded. Use the project compilation database to resolve semantic rules. Without it, report that semantic checks were skipped and still run independent file and syntax rules. Access follows `class`/`struct` defaults and access labels; protected methods are not private.
 
-[Shared rules](../linting.md)
+[Shared rules](../general/linting.md)
 
 Examples isolate the rule being illustrated.
 
@@ -18,7 +18,7 @@ Examples isolate the rule being illustrated.
 
 `Stylebrella-linter-cpp-naming-1`
 
-Use PascalCase for classes, structs and enums; snake_case for functions, variables, fields and parameters; lowercase for namespaces. Private fields have one leading underscore unless that spelling is reserved by C++. Private method names follow [SB-L-G-N-2](../linting.md#sb-l-g-n-2); protected members do not get a private prefix.
+Use PascalCase for classes, structs and enums; snake_case for functions, variables, fields and parameters; lowercase for namespaces. Private fields have one leading underscore unless that spelling is reserved by C++. Private method names follow [SB-L-G-N-2](../general/linting.md#sb-l-g-n-2); protected members do not get a private prefix.
 
 **Allowed** (private field):
 
@@ -367,7 +367,7 @@ void start_tasks();
 
 `Stylebrella-linter-cpp-comments-1`
 
-Apply [SB-L-G-CM-1](../linting.md#stylebrella-linter-general-comments-1) to struct fields except exact names `id` and `name`. Apply MARK and separator rules in both headers and implementation files.
+Apply [SB-L-G-CM-1](../general/linting.md#stylebrella-linter-general-comments-1) to struct fields except exact names `id` and `name`. Apply MARK and separator rules in both headers and implementation files.
 
 **Allowed**:
 
@@ -413,7 +413,7 @@ CENTER_FREQ_HZ
 
 `Stylebrella-linter-cpp-constants-2`
 
-Apply [SB-L-G-C-1](../linting.md#stylebrella-linter-general-constants-1) to C++ shared numbers, patterns, paths and default values at runtime use sites. The text of exception, log or console messages is exempt only in the message position defined by [SB-L-G-C-2](../linting.md#stylebrella-linter-general-constants-2).
+Apply [SB-L-G-C-1](../general/linting.md#stylebrella-linter-general-constants-1) to C++ shared numbers, patterns, paths and default values at runtime use sites. The text of exception, log or console messages is exempt only in the message position defined by [SB-L-G-C-2](../general/linting.md#stylebrella-linter-general-constants-2).
 
 **Allowed**:
 
