@@ -1106,11 +1106,11 @@ Separate `if`, `for`, `try`, and selection statements (Python `match`, Kotlin `w
 
 <a id="sb-f-g-bl-8"></a>
 
-### SB-F-G-BL-8 — Blank line before return
+### SB-F-G-BL-8 — Blank line before return or yield
 
 `Stylebrella-formatter-general-blank_lines-8`
 
-Insert one blank line before `return` following another sibling statement. A sole statement in a block or an inline control body has no such preceding blank line.
+Insert exactly one blank line before a `return` or a standalone yield following another sibling statement. This includes Python `yield` and `yield from`, and C++ `co_return` and standalone `co_yield`. In Kotlin, apply the same rule before the `return` keyword regardless of the returned expression, including `return try`, `return when`, and `return if`. Do not add a blank line before the first statement in a block, inside an inline control body, or before a yield nested inside another expression.
 
 **Python**
 
@@ -1121,12 +1121,26 @@ Insert one blank line before `return` following another sibling statement. A sol
   return result
 ```
 
+```python
+  record(item)
+  yield item
+  yield from remaining_items
+```
+
 **After**:
 
 ```python
   send()
 
   return result
+```
+
+```python
+  record(item)
+
+  yield item
+
+  yield from remaining_items
 ```
 
 **Kotlin**
@@ -1138,12 +1152,77 @@ Insert one blank line before `return` following another sibling statement. A sol
   return result
 ```
 
+```kotlin
+  recordAttempt()
+  return try {
+    load()
+  } catch (error: IOException) {
+    fallback()
+  } finally {
+    release()
+  }
+```
+
+```kotlin
+  recordState(state)
+  return when (state) {
+    State.READY -> current()
+
+    else -> fallback()
+  }
+```
+
+```kotlin
+  recordAttempt()
+  return if (ready) {
+    recordSuccess()
+    current()
+  } else {
+    recordFailure()
+    fallback()
+  }
+```
+
 **After**:
 
 ```kotlin
   send()
 
   return result
+```
+
+```kotlin
+  recordAttempt()
+
+  return try {
+    load()
+  } catch (error: IOException) {
+    fallback()
+  } finally {
+    release()
+  }
+```
+
+```kotlin
+  recordState(state)
+
+  return when (state) {
+    State.READY -> current()
+
+    else -> fallback()
+  }
+```
+
+```kotlin
+  recordAttempt()
+
+  return if (ready) {
+    recordSuccess()
+    current()
+  } else {
+    recordFailure()
+    fallback()
+  }
 ```
 
 **C++**
@@ -1155,12 +1234,26 @@ Insert one blank line before `return` following another sibling statement. A sol
   return result;
 ```
 
+```cpp
+  record(item);
+  co_yield item;
+  co_return;
+```
+
 **After**:
 
 ```cpp
   send();
 
   return result;
+```
+
+```cpp
+  record(item);
+
+  co_yield item;
+
+  co_return;
 ```
 
 <a id="stylebrella-formatter-general-blank_lines-9"></a>
@@ -1274,7 +1367,7 @@ int read();
 
 `Stylebrella-formatter-general-blank_lines-10`
 
-When a MARK and its separator have only blank lines between them, remove all those lines. This rule does not insert a missing separator; see [SB-F-G-M-3](#sb-f-g-m-3).
+When a MARK and its separator have only blank lines between them, remove all those lines. This rule does not insert a missing separator; see [SB-F-G-M-1](#sb-f-g-m-1).
 
 **Python**
 
@@ -1331,11 +1424,11 @@ When a MARK and its separator have only blank lines between them, remove all tho
 
 <a id="sb-f-g-bl-11"></a>
 
-### SB-F-G-BL-11 — Blank line before a leading line-comment block
+### SB-F-G-BL-11 — Blank line before leading comments
 
 `Stylebrella-formatter-general-blank_lines-11`
 
-In a statement list, before a contiguous block of one or more standalone line-comment lines immediately preceding a statement or declaration, insert one blank line when a sibling statement precedes the block. Keep comment lines within the block adjacent to each other and keep the block attached to the following statement or declaration. At the start of a file or statement list, do not add a preceding blank line. This rule does not apply to comments inside headers, parameter lists, or other nested syntax. More specific rules for the boundary take precedence; use their prescribed blank-line count instead of adding this rule's count.
+In a statement list, insert one blank line before a contiguous group of standalone comments that immediately precedes a statement or declaration, when a sibling statement precedes the group. This applies to individual line comments, consecutive line comments, and block comments such as multiline `/* ... */` in Kotlin and C++. Preserve spacing inside block comments and keep the group attached to the following statement or declaration. At the start of a file or statement list, do not add a preceding blank line. This rule does not apply to trailing comments or to comments inside headers, parameter lists, or other nested syntax. More specific rules for the boundary take precedence; use their prescribed blank-line count instead of adding this rule's count.
 
 **Python**
 
@@ -1347,12 +1440,27 @@ In a statement list, before a contiguous block of one or more standalone line-co
   receive()
 ```
 
+```python
+  send()
+  # read the response before
+  # sending the next request
+  receive()
+```
+
 **After**:
 
 ```python
   send()
 
   # explain the next operation
+  receive()
+```
+
+```python
+  send()
+
+  # read the response before
+  # sending the next request
   receive()
 ```
 
@@ -1366,12 +1474,31 @@ In a statement list, before a contiguous block of one or more standalone line-co
   receive()
 ```
 
+```kotlin
+  send()
+  /*
+   * Read the response before
+   * sending the next request.
+   */
+  receive()
+```
+
 **After**:
 
 ```kotlin
   send()
 
   // explain the next operation
+  receive()
+```
+
+```kotlin
+  send()
+
+  /*
+   * Read the response before
+   * sending the next request.
+   */
   receive()
 ```
 
@@ -1385,12 +1512,31 @@ In a statement list, before a contiguous block of one or more standalone line-co
   receive();
 ```
 
+```cpp
+  send();
+  /*
+   * Read the response before
+   * sending the next request.
+   */
+  receive();
+```
+
 **After**:
 
 ```cpp
   send();
 
   // explain the next operation
+  receive();
+```
+
+```cpp
+  send();
+
+  /*
+   * Read the response before
+   * sending the next request.
+   */
   receive();
 ```
 
@@ -1845,13 +1991,13 @@ void run();
 
 ## `mark`
 
-<a id="stylebrella-formatter-general-mark-3"></a>
+<a id="stylebrella-formatter-general-mark-1"></a>
 
-<a id="sb-f-g-m-3"></a>
+<a id="sb-f-g-m-1"></a>
 
-### SB-F-G-M-3 — Required separator after MARK
+### SB-F-G-M-1 — Required separator after MARK
 
-`Stylebrella-formatter-general-mark-3`
+`Stylebrella-formatter-general-mark-1`
 
 Every standalone MARK must be followed by a separator at the same indentation. If the next nonblank line is not its separator, insert one on the next line after the MARK. If the separator already exists, keep it and apply [SB-F-G-BL-10](#sb-f-g-bl-10) to any intervening blank lines. Preserve the title text and group count.
 
@@ -1900,13 +2046,13 @@ Every standalone MARK must be followed by a separator at the same indentation. I
 // --------------------------------------------------
 ```
 
-<a id="stylebrella-formatter-general-mark-5"></a>
+<a id="stylebrella-formatter-general-mark-2"></a>
 
-<a id="sb-f-g-m-5"></a>
+<a id="sb-f-g-m-2"></a>
 
-### SB-F-G-M-5 — Private Helpers section
+### SB-F-G-M-2 — Private Helpers section
 
-`Stylebrella-formatter-general-mark-5`
+`Stylebrella-formatter-general-mark-2`
 
 For a concrete class with at least one public and one private method, put a single `MARK: Private Helpers` and separator before its first private method. Remove duplicate structural blocks and obsolete `(no private methods)` comments. Preserve access labels, member order, and all descriptive MARKs, even when lint reports adjacent MARKs. Do not apply to interfaces or types positively identified as DTO-only.
 
@@ -2023,13 +2169,13 @@ class Reader {
 };
 ```
 
-<a id="stylebrella-formatter-general-mark-6"></a>
+<a id="stylebrella-formatter-general-mark-3"></a>
 
-<a id="sb-f-g-m-6"></a>
+<a id="sb-f-g-m-3"></a>
 
-### SB-F-G-M-6 — Placeholder for classes without private methods
+### SB-F-G-M-3 — Placeholder for classes without private methods
 
-`Stylebrella-formatter-general-mark-6`
+`Stylebrella-formatter-general-mark-3`
 
 In the same eligible class with public but no private methods, retain exactly one `(no private methods)` standalone comment after the last public method, separated by one blank line. Replace stale structural blocks and remove duplicate placeholders.
 
@@ -2038,15 +2184,73 @@ In the same eligible class with public but no private methods, retain exactly on
 **Before**:
 
 ```python
-  def read(self) -> None:
-    load()
+class Counter:
+
+  # --------------------------------------------------
+
+  def __init__(self) -> None:
+    """
+    Создаёт счётчик без зарегистрированных событий.
+    """
+
+    self._count = 0
+
+  # --------------------------------------------------
+
+  def increment(self) -> None:
+    """
+    Учитывает одно новое событие.
+    """
+
+    self._count += 1
+
+  # --------------------------------------------------
+
+  def value(self) -> int:
+    """
+    Возвращает число зарегистрированных событий.
+
+    Returns:
+      Число событий с момента создания счётчика.
+    """
+
+    return self._count
 ```
 
 **After**:
 
 ```python
-  def read(self) -> None:
-    load()
+class Counter:
+
+  # --------------------------------------------------
+
+  def __init__(self) -> None:
+    """
+    Создаёт счётчик без зарегистрированных событий.
+    """
+
+    self._count = 0
+
+  # --------------------------------------------------
+
+  def increment(self) -> None:
+    """
+    Учитывает одно новое событие.
+    """
+
+    self._count += 1
+
+  # --------------------------------------------------
+
+  def value(self) -> int:
+    """
+    Возвращает число зарегистрированных событий.
+
+    Returns:
+      Число событий с момента создания счётчика.
+    """
+
+    return self._count
 
   # (no private methods)
 ```
@@ -2056,15 +2260,58 @@ In the same eligible class with public but no private methods, retain exactly on
 **Before**:
 
 ```kotlin
-  fun read() = Unit
+class Counter {
+  private var count = 0
+
+  // --------------------------------------------------
+
+  /**
+   * Учитывает одно новое событие.
+   */
+  fun increment(): Unit {
+    count += 1
+  }
+
+  // --------------------------------------------------
+
+  /**
+   * Возвращает число зарегистрированных событий.
+   *
+   * @return число событий с момента создания счётчика
+   */
+  fun value(): Int = count
+
+  // MARK: Private Helpers
+  // --------------------------------------------------
+}
 ```
 
 **After**:
 
 ```kotlin
-  fun read() = Unit
+class Counter {
+  private var count = 0
+
+  // --------------------------------------------------
+
+  /**
+   * Учитывает одно новое событие.
+   */
+  fun increment(): Unit {
+    count += 1
+  }
+
+  // --------------------------------------------------
+
+  /**
+   * Возвращает число зарегистрированных событий.
+   *
+   * @return число событий с момента создания счётчика
+   */
+  fun value(): Int = count
 
   // (no private methods)
+}
 ```
 
 **C++**
@@ -2072,24 +2319,71 @@ In the same eligible class with public but no private methods, retain exactly on
 **Before**:
 
 ```cpp
-  void read();
+/**
+ * @brief Считает зарегистрированные события.
+ */
+class Counter {
+  int _count = 0;  // число зарегистрированных событий
+
+ public:
+
+  // --------------------------------------------------
+
+  /**
+   * @brief Учитывает одно новое событие.
+   */
+  void increment() { ++_count; }
+
+  // --------------------------------------------------
+
+  /**
+   * @brief Возвращает число зарегистрированных событий.
+   * @return Число событий с момента создания счётчика.
+   */
+  int value() const { return _count; }
+
+  // (no private methods)
+  // (no private methods)
+};
 ```
 
 **After**:
 
 ```cpp
-  void read();
+/**
+ * @brief Считает зарегистрированные события.
+ */
+class Counter {
+  int _count = 0;  // число зарегистрированных событий
+
+ public:
+
+  // --------------------------------------------------
+
+  /**
+   * @brief Учитывает одно новое событие.
+   */
+  void increment() { ++_count; }
+
+  // --------------------------------------------------
+
+  /**
+   * @brief Возвращает число зарегистрированных событий.
+   * @return Число событий с момента создания счётчика.
+   */
+  int value() const { return _count; }
 
   // (no private methods)
+};
 ```
 
-<a id="stylebrella-formatter-general-mark-7"></a>
+<a id="stylebrella-formatter-general-mark-4"></a>
 
-<a id="sb-f-g-m-7"></a>
+<a id="sb-f-g-m-4"></a>
 
-### SB-F-G-M-7 — One space after `MARK:`
+### SB-F-G-M-4 — One space after `MARK:`
 
-`Stylebrella-formatter-general-mark-7`
+`Stylebrella-formatter-general-mark-4`
 
 When a MARK has a title, use exactly one ASCII space between `MARK:` and the first non-whitespace character of the title. Replace missing spaces, extra spaces, or tabs at that boundary. Do not invent a title for an empty MARK.
 

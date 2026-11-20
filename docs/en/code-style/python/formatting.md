@@ -139,13 +139,13 @@ Put one blank line before sibling `while`, `with`, `raise`, `assert`, and `conti
   assert ready
 ```
 
-<a id="stylebrella-formatter-python-blank_lines-4"></a>
+<a id="stylebrella-formatter-python-blank_lines-3"></a>
 
-<a id="sb-f-p-bl-4"></a>
+<a id="sb-f-p-bl-3"></a>
 
-### SB-F-P-BL-4 — Spacing around constructor category comments
+### SB-F-P-BL-3 — Spacing around constructor category comments
 
-`Stylebrella-formatter-python-blank_lines-4`
+`Stylebrella-formatter-python-blank_lines-3`
 
 Keep constructor parameter category comments in their parameter list and remove blank lines directly before and after them.
 

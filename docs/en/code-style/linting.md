@@ -2,7 +2,7 @@
 
 [Русская версия](../../ru/code-style/linting.md)
 
-Normative preview contract for `lint` and the linting part of `check`. Emit a finding only when the stated predicate is established. Missing resolution or required context is not a violation. These rules describe future behavior. A full ID is canonical; its short ID is an equivalent alias. Numbering starts at 1 per subsection, and assigned numbers are not reused.
+Normative preview contract for `lint` and the linting part of `check`. Emit a finding only when the stated predicate is established. Missing resolution or required context is not a violation. These rules describe future behavior. A full ID is canonical; its short ID is an equivalent alias.
 
 [Python](python/linting.md) · [Kotlin](kotlin/linting.md) · [C++](cpp/linting.md)
 
@@ -11,6 +11,8 @@ Normative preview contract for `lint` and the linting part of `check`. Emit a fi
 ## ID registry
 
 Canonical IDs use `Stylebrella-<kind>-<language>-<subsection>-<number>`; aliases use `SB-<kind>-<language>-<subsection>-<number>` with the tokens below.
+
+For each kind and language, number rules within a subsection consecutively from 1 in document order. When renumbering, update both IDs, their anchors, and all references in both languages.
 
 | Canonical token | Alias token |
 | --- | --- |

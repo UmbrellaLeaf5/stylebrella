@@ -139,13 +139,13 @@ def _read() -> None:
   assert ready
 ```
 
-<a id="stylebrella-formatter-python-blank_lines-4"></a>
+<a id="stylebrella-formatter-python-blank_lines-3"></a>
 
-<a id="sb-f-p-bl-4"></a>
+<a id="sb-f-p-bl-3"></a>
 
-### SB-F-P-BL-4 — Пустые строки возле комментариев категорий конструктора
+### SB-F-P-BL-3 — Пустые строки возле комментариев категорий конструктора
 
-`Stylebrella-formatter-python-blank_lines-4`
+`Stylebrella-formatter-python-blank_lines-3`
 
 Комментарии категорий параметров конструктора сохраняются в списке параметров, пустые строки непосредственно перед ними и после них удаляются.
 

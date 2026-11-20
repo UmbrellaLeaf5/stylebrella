@@ -244,7 +244,7 @@ val b = 2
 
 `Stylebrella-formatter-kotlin-blank_lines-3`
 
-`else if`, `else`, `catch` и `finally` начинаются с новой строки. К границе ветвей применяется [SB-F-G-BL-7](../formatting.md#stylebrella-formatter-general-blank_lines-7). Скобки только ради форматирования не добавляются.
+`else if`, `else`, `catch` и `finally` начинаются с новой строки. К границе ветвей применяется [SB-F-G-BL-7](../formatting.md#stylebrella-formatter-general-blank_lines-7). В `return try` и `return if` ставьте каждую из этих ветвей на строку предшествующей `}`, если она есть, с одним пробелом перед ключевым словом. Перед всей инструкцией `return` применяйте [SB-F-G-BL-8](../formatting.md#stylebrella-formatter-general-blank_lines-8). Скобки только ради форматирования не добавляются.
 
 **До**:
 
@@ -256,6 +256,32 @@ if (x) {
   h()
   i()
 }
+```
+
+```kotlin
+  return try {
+    load()
+  }
+
+  catch (error: IOException) {
+    fallback()
+  }
+
+  finally {
+    release()
+  }
+```
+
+```kotlin
+  return if (ready) {
+    recordSuccess()
+    current()
+  }
+
+  else {
+    recordFailure()
+    fallback()
+  }
 ```
 
 **После**:
@@ -270,6 +296,26 @@ else {
   h()
   i()
 }
+```
+
+```kotlin
+  return try {
+    load()
+  } catch (error: IOException) {
+    fallback()
+  } finally {
+    release()
+  }
+```
+
+```kotlin
+  return if (ready) {
+    recordSuccess()
+    current()
+  } else {
+    recordFailure()
+    fallback()
+  }
 ```
 
 ## Рекомендации (без диагностики)

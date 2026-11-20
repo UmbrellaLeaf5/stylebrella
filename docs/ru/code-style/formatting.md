@@ -1106,11 +1106,11 @@ void build() {
 
 <a id="sb-f-g-bl-8"></a>
 
-### SB-F-G-BL-8 — Пустая строка перед return
+### SB-F-G-BL-8 — Пустая строка перед return или yield
 
 `Stylebrella-formatter-general-blank_lines-8`
 
-Перед `return`, следующим за соседней инструкцией того же уровня, ставится одна пустая строка. Перед единственной инструкцией блока и в однострочном управляющем теле она не добавляется.
+Ставьте ровно одну пустую строку перед `return` или самостоятельной инструкцией выдачи значения, если ей предшествует инструкция того же уровня. Это относится к `yield` и `yield from` в Python, а также к `co_return` и самостоятельному `co_yield` в C++. В Kotlin правило действует перед ключевым словом `return` независимо от возвращаемого выражения, в том числе в `return try`, `return when` и `return if`. Не добавляйте пустую строку перед первой инструкцией блока, внутри однострочного управляющего тела или перед `yield` внутри другого выражения.
 
 **Python**
 
@@ -1121,12 +1121,26 @@ void build() {
   return result
 ```
 
+```python
+  record(item)
+  yield item
+  yield from remaining_items
+```
+
 **После**:
 
 ```python
   send()
 
   return result
+```
+
+```python
+  record(item)
+
+  yield item
+
+  yield from remaining_items
 ```
 
 **Kotlin**
@@ -1138,12 +1152,77 @@ void build() {
   return result
 ```
 
+```kotlin
+  recordAttempt()
+  return try {
+    load()
+  } catch (error: IOException) {
+    fallback()
+  } finally {
+    release()
+  }
+```
+
+```kotlin
+  recordState(state)
+  return when (state) {
+    State.READY -> current()
+
+    else -> fallback()
+  }
+```
+
+```kotlin
+  recordAttempt()
+  return if (ready) {
+    recordSuccess()
+    current()
+  } else {
+    recordFailure()
+    fallback()
+  }
+```
+
 **После**:
 
 ```kotlin
   send()
 
   return result
+```
+
+```kotlin
+  recordAttempt()
+
+  return try {
+    load()
+  } catch (error: IOException) {
+    fallback()
+  } finally {
+    release()
+  }
+```
+
+```kotlin
+  recordState(state)
+
+  return when (state) {
+    State.READY -> current()
+
+    else -> fallback()
+  }
+```
+
+```kotlin
+  recordAttempt()
+
+  return if (ready) {
+    recordSuccess()
+    current()
+  } else {
+    recordFailure()
+    fallback()
+  }
 ```
 
 **C++**
@@ -1155,12 +1234,26 @@ void build() {
   return result;
 ```
 
+```cpp
+  record(item);
+  co_yield item;
+  co_return;
+```
+
 **После**:
 
 ```cpp
   send();
 
   return result;
+```
+
+```cpp
+  record(item);
+
+  co_yield item;
+
+  co_return;
 ```
 
 <a id="stylebrella-formatter-general-blank_lines-9"></a>
@@ -1274,7 +1367,7 @@ int read();
 
 `Stylebrella-formatter-general-blank_lines-10`
 
-Если между MARK и его разделителем есть только пустые строки, все они удаляются. Отсутствующий разделитель вставляется по [SB-F-G-M-3](#sb-f-g-m-3).
+Если между MARK и его разделителем есть только пустые строки, все они удаляются. Отсутствующий разделитель вставляется по [SB-F-G-M-1](#sb-f-g-m-1).
 
 **Python**
 
@@ -1331,11 +1424,11 @@ int read();
 
 <a id="sb-f-g-bl-11"></a>
 
-### SB-F-G-BL-11 — Пустая строка перед ведущим блоком строчных комментариев
+### SB-F-G-BL-11 — Пустая строка перед ведущими комментариями
 
 `Stylebrella-formatter-general-blank_lines-11`
 
-В списке инструкций перед непрерывным блоком из одной или нескольких отдельных строк с комментариями, непосредственно предшествующим инструкции или объявлению, ставится одна пустая строка, если перед блоком есть соседняя инструкция. Строки внутри блока комментариев остаются соседними, сам блок остаётся прикреплённым к следующей инструкции или объявлению. В начале файла или списка инструкций предшествующая пустая строка не добавляется. Правило не применяется к комментариям внутри заголовков, списков параметров и других вложенных конструкций. Если на этой границе более конкретное правило задаёт интервал, применяется указанное им число строк, без сложения с этим правилом.
+В списке инструкций перед непрерывной группой отдельных комментариев, непосредственно предшествующей инструкции или объявлению, ставится одна пустая строка, если перед группой есть соседняя инструкция. Это относится к одиночным строчным комментариям, нескольким строчным комментариям подряд и блочным комментариям, в том числе многострочным `/* ... */` в Kotlin и C++. Сохраняйте интервалы внутри блочных комментариев и оставляйте группу прикреплённой к следующей инструкции или объявлению. В начале файла или списка инструкций предшествующая пустая строка не добавляется. Правило не применяется к комментариям справа от кода или внутри заголовков, списков параметров и других вложенных конструкций. Если на этой границе более конкретное правило задаёт интервал, применяется указанное им число строк, без сложения с этим правилом.
 
 **Python**
 
@@ -1347,12 +1440,27 @@ int read();
   receive()
 ```
 
+```python
+  send()
+  # read the response before
+  # sending the next request
+  receive()
+```
+
 **После**:
 
 ```python
   send()
 
   # explain the next operation
+  receive()
+```
+
+```python
+  send()
+
+  # read the response before
+  # sending the next request
   receive()
 ```
 
@@ -1366,12 +1474,31 @@ int read();
   receive()
 ```
 
+```kotlin
+  send()
+  /*
+   * Read the response before
+   * sending the next request.
+   */
+  receive()
+```
+
 **После**:
 
 ```kotlin
   send()
 
   // explain the next operation
+  receive()
+```
+
+```kotlin
+  send()
+
+  /*
+   * Read the response before
+   * sending the next request.
+   */
   receive()
 ```
 
@@ -1385,12 +1512,31 @@ int read();
   receive();
 ```
 
+```cpp
+  send();
+  /*
+   * Read the response before
+   * sending the next request.
+   */
+  receive();
+```
+
 **После**:
 
 ```cpp
   send();
 
   // explain the next operation
+  receive();
+```
+
+```cpp
+  send();
+
+  /*
+   * Read the response before
+   * sending the next request.
+   */
   receive();
 ```
 
@@ -1846,13 +1992,13 @@ void run();
 
 ## `mark`
 
-<a id="stylebrella-formatter-general-mark-3"></a>
+<a id="stylebrella-formatter-general-mark-1"></a>
 
-<a id="sb-f-g-m-3"></a>
+<a id="sb-f-g-m-1"></a>
 
-### SB-F-G-M-3 — Обязательный разделитель после MARK
+### SB-F-G-M-1 — Обязательный разделитель после MARK
 
-`Stylebrella-formatter-general-mark-3`
+`Stylebrella-formatter-general-mark-1`
 
 После каждого отдельного MARK требуется разделитель с таким же отступом. Если следующая непустая строка не является его разделителем, форматтер вставляет разделитель на следующей строке после MARK. Если он уже есть, форматтер сохраняет его и удаляет промежуточные пустые строки по [SB-F-G-BL-10](#sb-f-g-bl-10). Текст заголовка и счётчик группы сохраняются.
 
@@ -1901,13 +2047,13 @@ void run();
 // --------------------------------------------------
 ```
 
-<a id="stylebrella-formatter-general-mark-5"></a>
+<a id="stylebrella-formatter-general-mark-2"></a>
 
-<a id="sb-f-g-m-5"></a>
+<a id="sb-f-g-m-2"></a>
 
-### SB-F-G-M-5 — Секция Private Helpers
+### SB-F-G-M-2 — Секция Private Helpers
 
-`Stylebrella-formatter-general-mark-5`
+`Stylebrella-formatter-general-mark-2`
 
 В конкретном классе хотя бы с одним публичным и одним приватным методом перед первым приватным ставится один `MARK: Private Helpers` с разделителем. Дубли структурного блока и устаревшие `(no private methods)` удаляются. Видимость, порядок членов и все описательные MARK сохраняются даже при диагностике соседних MARK. Правило не применяется к интерфейсам и типам, подтверждённым как используемые только в роли DTO.
 
@@ -2024,13 +2170,13 @@ class Reader {
 };
 ```
 
-<a id="stylebrella-formatter-general-mark-6"></a>
+<a id="stylebrella-formatter-general-mark-3"></a>
 
-<a id="sb-f-g-m-6"></a>
+<a id="sb-f-g-m-3"></a>
 
-### SB-F-G-M-6 — Заглушка для класса без приватных методов
+### SB-F-G-M-3 — Заглушка для класса без приватных методов
 
-`Stylebrella-formatter-general-mark-6`
+`Stylebrella-formatter-general-mark-3`
 
 В таком же классе с публичными методами, но без приватных, после последнего публичного метода оставляется ровно один отдельный комментарий `(no private methods)` с одной пустой строкой перед ним. Устаревшие структурные блоки заменяются, дубли заглушки удаляются.
 
@@ -2039,15 +2185,73 @@ class Reader {
 **До**:
 
 ```python
-  def read(self) -> None:
-    load()
+class Counter:
+
+  # --------------------------------------------------
+
+  def __init__(self) -> None:
+    """
+    Создаёт счётчик без зарегистрированных событий.
+    """
+
+    self._count = 0
+
+  # --------------------------------------------------
+
+  def increment(self) -> None:
+    """
+    Учитывает одно новое событие.
+    """
+
+    self._count += 1
+
+  # --------------------------------------------------
+
+  def value(self) -> int:
+    """
+    Возвращает число зарегистрированных событий.
+
+    Returns:
+      Число событий с момента создания счётчика.
+    """
+
+    return self._count
 ```
 
 **После**:
 
 ```python
-  def read(self) -> None:
-    load()
+class Counter:
+
+  # --------------------------------------------------
+
+  def __init__(self) -> None:
+    """
+    Создаёт счётчик без зарегистрированных событий.
+    """
+
+    self._count = 0
+
+  # --------------------------------------------------
+
+  def increment(self) -> None:
+    """
+    Учитывает одно новое событие.
+    """
+
+    self._count += 1
+
+  # --------------------------------------------------
+
+  def value(self) -> int:
+    """
+    Возвращает число зарегистрированных событий.
+
+    Returns:
+      Число событий с момента создания счётчика.
+    """
+
+    return self._count
 
   # (no private methods)
 ```
@@ -2057,15 +2261,58 @@ class Reader {
 **До**:
 
 ```kotlin
-  fun read() = Unit
+class Counter {
+  private var count = 0
+
+  // --------------------------------------------------
+
+  /**
+   * Учитывает одно новое событие.
+   */
+  fun increment(): Unit {
+    count += 1
+  }
+
+  // --------------------------------------------------
+
+  /**
+   * Возвращает число зарегистрированных событий.
+   *
+   * @return число событий с момента создания счётчика
+   */
+  fun value(): Int = count
+
+  // MARK: Private Helpers
+  // --------------------------------------------------
+}
 ```
 
 **После**:
 
 ```kotlin
-  fun read() = Unit
+class Counter {
+  private var count = 0
+
+  // --------------------------------------------------
+
+  /**
+   * Учитывает одно новое событие.
+   */
+  fun increment(): Unit {
+    count += 1
+  }
+
+  // --------------------------------------------------
+
+  /**
+   * Возвращает число зарегистрированных событий.
+   *
+   * @return число событий с момента создания счётчика
+   */
+  fun value(): Int = count
 
   // (no private methods)
+}
 ```
 
 **C++**
@@ -2073,24 +2320,71 @@ class Reader {
 **До**:
 
 ```cpp
-  void read();
+/**
+ * @brief Считает зарегистрированные события.
+ */
+class Counter {
+  int _count = 0;  // число зарегистрированных событий
+
+ public:
+
+  // --------------------------------------------------
+
+  /**
+   * @brief Учитывает одно новое событие.
+   */
+  void increment() { ++_count; }
+
+  // --------------------------------------------------
+
+  /**
+   * @brief Возвращает число зарегистрированных событий.
+   * @return Число событий с момента создания счётчика.
+   */
+  int value() const { return _count; }
+
+  // (no private methods)
+  // (no private methods)
+};
 ```
 
 **После**:
 
 ```cpp
-  void read();
+/**
+ * @brief Считает зарегистрированные события.
+ */
+class Counter {
+  int _count = 0;  // число зарегистрированных событий
+
+ public:
+
+  // --------------------------------------------------
+
+  /**
+   * @brief Учитывает одно новое событие.
+   */
+  void increment() { ++_count; }
+
+  // --------------------------------------------------
+
+  /**
+   * @brief Возвращает число зарегистрированных событий.
+   * @return Число событий с момента создания счётчика.
+   */
+  int value() const { return _count; }
 
   // (no private methods)
+};
 ```
 
-<a id="stylebrella-formatter-general-mark-7"></a>
+<a id="stylebrella-formatter-general-mark-4"></a>
 
-<a id="sb-f-g-m-7"></a>
+<a id="sb-f-g-m-4"></a>
 
-### SB-F-G-M-7 — Один пробел после `MARK:`
+### SB-F-G-M-4 — Один пробел после `MARK:`
 
-`Stylebrella-formatter-general-mark-7`
+`Stylebrella-formatter-general-mark-4`
 
 Если у MARK есть заголовок, между `MARK:` и первым непробельным символом заголовка ставится ровно один пробел ASCII. Отсутствующие пробелы, лишние пробелы и табуляции на этой границе исправляются. Для пустого MARK форматтер не придумывает заголовок.
 
