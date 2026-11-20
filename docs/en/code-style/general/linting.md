@@ -16,11 +16,11 @@ Examples isolate the rule being illustrated. Outside documentation rules, functi
 
 <a id="sb-l-g-n-1"></a>
 
-### SB-L-G-N-1 — Naming by declaration kind
+### SB-L-G-N-1 — PascalCase for class-like types
 
 `Stylebrella-linter-general-naming-1`
 
-Require PascalCase for class-like type declarations and SCREAMING_SNAKE_CASE for named constants in Python, Kotlin, and C++. Variables, properties, parameters, and functions follow the language-specific naming rules; this shared rule does not override them. Report at the declared identifier. Never infer a declaration's kind from its name or rename it as a lint action.
+Require PascalCase for class-like type declarations in Python, Kotlin, and C++. Report at the declared identifier. Do not infer that a declaration is a type from its name or rename it as a lint action.
 
 **Python**
 
@@ -66,6 +66,16 @@ class NetworkConfig {};
 class networkConfig {};
 ```
 
+<a id="stylebrella-linter-general-naming-2"></a>
+
+<a id="sb-l-g-n-2"></a>
+
+### SB-L-G-N-2 — SCREAMING_SNAKE_CASE for named constants
+
+`Stylebrella-linter-general-naming-2`
+
+Require SCREAMING_SNAKE_CASE for named constants in Python, Kotlin, and C++. Determine which declarations are constants from the language-specific rules, not from their spelling. Report at the declared identifier; do not rename it. Nonconstant variables, properties, parameters, and functions follow the language-specific naming rules.
+
 **Python**
 
 **Allowed** (constant):
@@ -108,15 +118,17 @@ constexpr int MAX_RETRIES = 3;
 constexpr int max_retries = 3;
 ```
 
-<a id="stylebrella-linter-general-naming-2"></a>
+<a id="stylebrella-linter-general-naming-3"></a>
 
-<a id="sb-l-g-n-2"></a>
+<a id="sb-l-g-n-3"></a>
 
-### SB-L-G-N-2 — Leading underscore on private methods
+### SB-L-G-N-3 — Leading underscore on private methods and C++ fields
 
-`Stylebrella-linter-general-naming-2`
+`Stylebrella-linter-general-naming-3`
 
 Every private method name must begin with exactly one underscore followed by its language-specific name. In Kotlin and C++, private visibility is determined by the declaration. In Python, this rule applies when project metadata or an explicit `MARK: Private Helpers` section identifies the method as private; a name alone cannot establish private intent. Python special methods whose names begin and end with double underscores are excluded. Report at the method name; do not rename it automatically.
+
+In C++, the same prefix is required for private fields unless the resulting identifier would be reserved. Private constants follow [SB-L-C-N-2](../cpp/linting.md#sb-l-c-n-2). Protected members do not take a private prefix. Report a field violation at its name; do not rename it automatically.
 
 **Python** — the project marks `copy` as private.
 
@@ -226,58 +238,113 @@ class Reader {
 };
 ```
 
-## `json`
-
-<a id="stylebrella-linter-general-json-1"></a>
-
-<a id="sb-l-g-j-1"></a>
-
-### SB-L-G-J-1 — snake_case for statically resolved JSON keys
-
-`Stylebrella-linter-general-json-1`
-
-Require `snake_case` for every statically resolved JSON key in Python, Kotlin, and C++, whether it appears at a serialization field or a JSON accessor. Report at the key, not an arbitrary string; unrelated strings are outside the rule. JSON keys are schema metadata and exempt from the inline-literal rule.
-
-**Python**
-
-**Allowed** (resolved JSON accessor):
-
-```python
-record["user_id"]
-```
-
-**Violation** (resolved JSON accessor):
-
-```python
-record["userId"]
-```
-
-**Kotlin**
-
-**Allowed** (resolved serialization field):
-
-```kotlin
-@JsonProperty("user_id") val userId: String
-```
-
-**Violation** (resolved serialization field):
-
-```kotlin
-@JsonProperty("userId") val userId: String
-```
-
-**C++**
-
-**Allowed** (resolved JSON accessor):
+**C++ — Allowed** (private field):
 
 ```cpp
-record["user_id"];
+ private:
+  int _max_retries;
 ```
 
-**Violation** (resolved JSON accessor):
+**C++ — Violation** (private field missing the prefix):
 
 ```cpp
-record["userId"];
+ private:
+  int max_retries;
+```
+
+## `files`
+
+<a id="stylebrella-linter-general-files-1"></a>
+
+<a id="sb-l-g-fi-1"></a>
+
+### SB-L-G-FI-1 — At most one top-level class per file
+
+`Stylebrella-linter-general-files-1`
+
+A source file may define at most one named top-level class. Classes nested in another type or local to a function do not count. In C++, namespace scope counts as top level, even across different namespaces in the same file; forward declarations do not count. Standalone functions are allowed in any number, including alongside the class or in a file without classes. Report at the name of each additional top-level class, regardless of visibility. Language-specific file rules may also constrain other kinds of top-level types.
+
+**Python — Allowed**:
+
+```python
+class Reader:
+  """Группирует типы, используемые при чтении."""
+
+  class Cursor:
+    """Отмечает позицию в потоке."""
+
+
+def input_is_empty(text: str) -> bool:
+  """
+  Проверяет, есть ли данные для чтения.
+
+  Args:
+    text: Входной текст.
+
+  Returns:
+    Истина, если вход пуст.
+  """
+
+  return not text
+```
+
+**Kotlin — Allowed** (`Reader.kt`):
+
+```kotlin
+class Reader {
+  class Cursor
+}
+
+
+/**
+ * Проверяет, есть ли данные для чтения.
+ *
+ * @param text входной текст
+ * @return истина, если вход пуст
+ */
+fun inputIsEmpty(text: String): Boolean = text.isEmpty()
+```
+
+**C++ — Allowed** (`include/Reader.hpp`):
+
+```cpp
+#pragma once
+
+/**
+ * @brief Группирует типы, используемые при чтении.
+ */
+class Reader {
+ public:
+  /**
+   * @brief Отмечает позицию в потоке.
+   */
+  class Cursor {};
+};
+
+/**
+ * @brief Проверяет, есть ли данные для чтения.
+ * @param input Входной поток.
+ * @return Истина, если поток пуст.
+ */
+bool input_is_empty(const Input& input);
+```
+
+**Violation:** append the following class to the corresponding allowed file. Report `Writer`; the nested `Cursor` and standalone function do not count.
+
+```python
+class Writer:
+  """Группирует типы, используемые при записи."""
+```
+
+```kotlin
+class Writer
+```
+
+```cpp
+/**
+ * @brief Группирует типы, используемые при записи.
+ */
+class Writer {};
 ```
 
 ## `mark`
@@ -531,7 +598,7 @@ void rotate_log() {
 
 `Stylebrella-linter-general-mark-3`
 
-A `MARK: <title> [group:N]` covers exactly the next `N` sibling function or method declarations in the current scope. `N` is a decimal integer at least 2. Ignore nested definitions and nonfunction declarations. The formatter removes the redundant `[group:1]` suffix under [SB-F-G-M-5](formatting.md#stylebrella-formatter-general-mark-5). Report other malformed counts, another MARK before the Nth declaration, or scope ending with fewer than N. The N+1th declaration is outside the group. Apply [SB-F-G-SP-2](formatting.md#stylebrella-formatter-general-separators-2) to require separators between group members.
+A `MARK: <title> [group:N]` covers exactly the next `N` sibling function or method declarations in the current scope. `N` is a decimal integer at least 2. Ignore nested definitions and nonfunction declarations. The formatter removes the redundant `[group:1]` suffix under [SB-F-G-M-4](formatting.md#stylebrella-formatter-general-mark-4). Report other malformed counts, another MARK before the Nth declaration, or scope ending with fewer than N. The N+1th declaration is outside the group. Apply [SB-F-G-SP-2](formatting.md#stylebrella-formatter-general-separators-2) to require separators between group members.
 
 **Python**
 
@@ -793,7 +860,7 @@ The structural header covers the first private method only. If that method is bo
 **Allowed** (Kotlin): `_applyBounds` has four parameters and two resolved call sites. Both entry points share the validation and update so an invalid region never reaches the viewport. KDoc satisfies the requirement at the private section boundary.
 
 ```kotlin
-class ViewportController(private val viewport: Viewport) {
+class ViewportController(private val _viewport: Viewport) {
   // MARK: Restore viewport bounds [group:2]
   // --------------------------------------------------
 
@@ -836,7 +903,7 @@ class ViewportController(private val viewport: Viewport) {
     require(left < right)
     require(top < bottom)
 
-    viewport.setBounds(left, top, right, bottom)
+    _viewport.setBounds(left, top, right, bottom)
   }
 }
 ```
@@ -851,7 +918,7 @@ class ViewportController(private val viewport: Viewport) {
     require(left < right)
     require(top < bottom)
 
-    viewport.setBounds(left, top, right, bottom)
+    _viewport.setBounds(left, top, right, bottom)
   }
 ```
 

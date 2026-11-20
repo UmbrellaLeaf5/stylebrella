@@ -18,18 +18,62 @@
 
 `Stylebrella-linter-cpp-naming-1`
 
-Для классов, структур и перечислений требуется PascalCase, для функций, переменных, полей и параметров — snake_case, для пространств имён — строчные буквы. У приватных полей одно начальное подчёркивание, если имя не зарезервировано C++. Имена приватных методов задаёт [SB-L-G-N-2](../general/linting.md#sb-l-g-n-2); у protected-членов приватного префикса нет.
+Требование PascalCase из [SB-L-G-N-1](../general/linting.md#sb-l-g-n-1) применяется к объявлениям `class`, `struct` и `enum`, включая `enum class`. Для функций, переменных, полей и параметров используется snake_case с учётом правила для констант [SB-L-C-N-2](#sb-l-c-n-2). Имена пространств имён пишутся строчными буквами. Префиксы приватных членов задаёт [SB-L-G-N-3](../general/linting.md#sb-l-g-n-3).
 
-**Допустимо** (приватное поле):
+**Допустимо** (имена класса, структуры и `enum class`; каждый фрагмент из отдельного файла):
 
 ```cpp
-int _gain_max_dbi;
+class ConnectionPool {};
 ```
 
-**Нарушение** (приватное поле):
+```cpp
+struct RetryPolicy {
+  int max_attempts;  // maximum number of attempts
+};
+```
 
 ```cpp
-int gain_max_dbi;
+enum class ConnectionState { CONNECTING, CONNECTED, CLOSED };
+```
+
+**Нарушение** (имена типов в snake_case):
+
+```cpp
+class connection_pool {};
+```
+
+```cpp
+struct retry_policy {
+  int max_attempts;  // maximum number of attempts
+};
+```
+
+```cpp
+enum class connection_state { CONNECTING, CONNECTED, CLOSED };
+```
+
+**Допустимо** (имена пространства имён, функции, параметра и локальной переменной):
+
+```cpp
+namespace network {
+int count_free_slots(int pool_size, int reserved_slots) {
+  int available_slots = pool_size;
+  available_slots -= reserved_slots;
+  return available_slots;
+}
+}
+```
+
+**Нарушение** (заглавная буква в имени пространства имён и имена в camelCase):
+
+```cpp
+namespace Network {
+int countFreeSlots(int poolSize, int reservedSlots) {
+  int availableSlots = poolSize;
+  availableSlots -= reservedSlots;
+  return availableSlots;
+}
+}
 ```
 
 <a id="stylebrella-linter-cpp-naming-2"></a>
@@ -117,7 +161,7 @@ class Antenna;
 
 `Stylebrella-linter-cpp-files-2`
 
-Файл типа содержит один основной именованный класс, структуру или перечисление; имя без расширения совпадает с ним и пишется в PascalCase. Файл вспомогательных функций имеет имя в snake_case. Каталог разрешённого пространства имён следует его пути относительно настроенного корня; объявления и реализации проекта находятся в `include/` и `src/` соответственно, а inline- и шаблонные определения допустимы в заголовках.
+Имя файла типа без расширения совпадает с именем его основного класса, структуры или перечисления и пишется в PascalCase. К классам применяется [SB-L-G-FI-1](../general/linting.md#sb-l-g-fi-1). В ограничение одного типа также входят именованные структуры и перечисления верхнего уровня; диагностика общего правила не дублируется. Вложенные типы и отдельные функции не учитываются. При нескольких типах имя файла проверяется по первому подходящему типу. Если есть только предварительные объявления, для проверки имени используется основное объявление. Файл вспомогательных функций имеет имя в snake_case. Каталог разрешённого пространства имён следует его пути относительно настроенного корня; объявления и реализации проекта находятся в `include/` и `src/` соответственно, а inline- и шаблонные определения допустимы в заголовках.
 
 **Допустимо** (`include/app/core/Antenna.hpp`):
 

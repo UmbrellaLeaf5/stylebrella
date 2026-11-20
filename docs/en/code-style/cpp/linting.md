@@ -18,18 +18,62 @@ Examples isolate the rule being illustrated. Function examples are focused excer
 
 `Stylebrella-linter-cpp-naming-1`
 
-Use PascalCase for classes, structs and enums; snake_case for functions, variables, fields and parameters; lowercase for namespaces. Private fields have one leading underscore unless that spelling is reserved by C++. Private method names follow [SB-L-G-N-2](../general/linting.md#sb-l-g-n-2); protected members do not get a private prefix.
+The PascalCase requirement in [SB-L-G-N-1](../general/linting.md#sb-l-g-n-1) applies to `class`, `struct`, and `enum` declarations, including scoped enums. Use snake_case for functions, variables, fields, and parameters, subject to the constant rule [SB-L-C-N-2](#sb-l-c-n-2). Use lowercase for namespaces. For private-member prefixes, see [SB-L-G-N-3](../general/linting.md#sb-l-g-n-3).
 
-**Allowed** (private field):
+**Allowed** (class, struct, and scoped enum names; each snippet is from a separate file):
 
 ```cpp
-int _gain_max_dbi;
+class ConnectionPool {};
 ```
 
-**Violation** (private field):
+```cpp
+struct RetryPolicy {
+  int max_attempts;  // maximum number of attempts
+};
+```
 
 ```cpp
-int gain_max_dbi;
+enum class ConnectionState { CONNECTING, CONNECTED, CLOSED };
+```
+
+**Violation** (type names in snake_case):
+
+```cpp
+class connection_pool {};
+```
+
+```cpp
+struct retry_policy {
+  int max_attempts;  // maximum number of attempts
+};
+```
+
+```cpp
+enum class connection_state { CONNECTING, CONNECTED, CLOSED };
+```
+
+**Allowed** (namespace, function, parameter, and local variable names):
+
+```cpp
+namespace network {
+int count_free_slots(int pool_size, int reserved_slots) {
+  int available_slots = pool_size;
+  available_slots -= reserved_slots;
+  return available_slots;
+}
+}
+```
+
+**Violation** (namespace capitalization and camelCase names):
+
+```cpp
+namespace Network {
+int countFreeSlots(int poolSize, int reservedSlots) {
+  int availableSlots = poolSize;
+  availableSlots -= reservedSlots;
+  return availableSlots;
+}
+}
 ```
 
 <a id="stylebrella-linter-cpp-naming-2"></a>
@@ -40,7 +84,7 @@ int gain_max_dbi;
 
 `Stylebrella-linter-cpp-naming-2`
 
-A constant declared `const` or `constexpr`, including a local one, uses SCREAMING_SNAKE_CASE. A private constant member retains its leading underscore if the resulting identifier is legal; if reserved, use the non-prefixed constant spelling. Method cv-qualifiers, pointed-to/referred-to constness, and read-only parameters are not constant declarations.
+A constant declared `const` or `constexpr`, including a local one or a private member, uses SCREAMING_SNAKE_CASE without a private-field underscore prefix. Method cv-qualifiers, pointed-to/referred-to constness, and read-only parameters are not constant declarations.
 
 **Allowed**:
 
@@ -117,7 +161,7 @@ class Antenna;
 
 `Stylebrella-linter-cpp-files-2`
 
-A type file contains one primary named class, struct or enum and has the same PascalCase stem. Files classified as function helpers use snake_case. A resolved namespace directory follows the namespace path relative to the configured source root; project declarations and implementations belong to `include/` and `src/`, respectively, with inline/template definitions allowed in headers.
+A type file has the same PascalCase stem as its primary named class, struct or enum. Apply [SB-L-G-FI-1](../general/linting.md#sb-l-g-fi-1) to classes. The one-type limit also covers named top-level structs and enums; do not duplicate a diagnostic from the shared rule. Nested types and standalone functions do not count. Use the first eligible type for the filename check if the file contains multiple types. If only forward declarations are present, use the primary declaration for the filename check. Files classified as function helpers use snake_case. A resolved namespace directory follows the namespace path relative to the configured source root; project declarations and implementations belong to `include/` and `src/`, respectively, with inline/template definitions allowed in headers.
 
 **Allowed** (`include/app/core/Antenna.hpp`):
 

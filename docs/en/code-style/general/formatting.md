@@ -2170,8 +2170,12 @@ class Reader:
   def read(self, value: str) -> str:
     return self._copy(value)
 
+  # --------------------------------------------------
+
   def write(self, value: str) -> int:
     return len(value)
+
+  # --------------------------------------------------
 
   def _copy(self, value: str) -> str:
     return value
@@ -2186,6 +2190,8 @@ class Reader:
 
   def read(self, value: str) -> str:
     return self._copy(value)
+
+  # --------------------------------------------------
 
   def write(self, value: str) -> int:
     return len(value)
@@ -2208,7 +2214,11 @@ class Reader {
 
   fun read(value: String): String = _copy(value)
 
+  // --------------------------------------------------
+
   fun write(value: String): Int = value.length
+
+  // --------------------------------------------------
 
   private fun _copy(value: String): String = value
 }
@@ -2222,6 +2232,8 @@ class Reader {
   // --------------------------------------------------
 
   fun read(value: String): String = _copy(value)
+
+  // --------------------------------------------------
 
   fun write(value: String): Int = value.length
 
@@ -2244,9 +2256,14 @@ class Reader {
 
   int read(int value) const { return _copy(value); }
 
+  // --------------------------------------------------
+
   int write(int value) const { return value; }
 
  private:
+
+  // --------------------------------------------------
+
   int _copy(int value) const { return value; }
 };
 ```
@@ -2260,6 +2277,8 @@ class Reader {
   // --------------------------------------------------
 
   int read(int value) const { return _copy(value); }
+
+  // --------------------------------------------------
 
   int write(int value) const { return value; }
 
@@ -2275,217 +2294,9 @@ class Reader {
 
 <a id="sb-f-g-m-3"></a>
 
-### SB-F-G-M-3 — Placeholder for classes without private methods
+### SB-F-G-M-3 — One space after `MARK:`
 
 `Stylebrella-formatter-general-mark-3`
-
-In the same eligible class with public but no private methods, retain exactly one `(no private methods)` standalone comment after the last public method, separated by one blank line. Replace stale structural blocks and remove duplicate placeholders.
-
-**Python**
-
-**Before**:
-
-```python
-class Counter:
-
-  # --------------------------------------------------
-
-  def __init__(self) -> None:
-    """
-    Создаёт счётчик без зарегистрированных событий.
-    """
-
-    self._count = 0
-
-  # --------------------------------------------------
-
-  def increment(self) -> None:
-    """
-    Учитывает одно новое событие.
-    """
-
-    self._count += 1
-
-  # --------------------------------------------------
-
-  def value(self) -> int:
-    """
-    Возвращает число зарегистрированных событий.
-
-    Returns:
-      Число событий с момента создания счётчика.
-    """
-
-    return self._count
-```
-
-**After**:
-
-```python
-class Counter:
-
-  # --------------------------------------------------
-
-  def __init__(self) -> None:
-    """
-    Создаёт счётчик без зарегистрированных событий.
-    """
-
-    self._count = 0
-
-  # --------------------------------------------------
-
-  def increment(self) -> None:
-    """
-    Учитывает одно новое событие.
-    """
-
-    self._count += 1
-
-  # --------------------------------------------------
-
-  def value(self) -> int:
-    """
-    Возвращает число зарегистрированных событий.
-
-    Returns:
-      Число событий с момента создания счётчика.
-    """
-
-    return self._count
-
-  # (no private methods)
-```
-
-**Kotlin**
-
-**Before**:
-
-```kotlin
-class Counter {
-  private var count = 0
-
-  // --------------------------------------------------
-
-  /**
-   * Учитывает одно новое событие.
-   */
-  fun increment(): Unit {
-    count += 1
-  }
-
-  // --------------------------------------------------
-
-  /**
-   * Возвращает число зарегистрированных событий.
-   *
-   * @return число событий с момента создания счётчика
-   */
-  fun value(): Int = count
-
-  // MARK: Private Helpers
-  // --------------------------------------------------
-}
-```
-
-**After**:
-
-```kotlin
-class Counter {
-  private var count = 0
-
-  // --------------------------------------------------
-
-  /**
-   * Учитывает одно новое событие.
-   */
-  fun increment(): Unit {
-    count += 1
-  }
-
-  // --------------------------------------------------
-
-  /**
-   * Возвращает число зарегистрированных событий.
-   *
-   * @return число событий с момента создания счётчика
-   */
-  fun value(): Int = count
-
-  // (no private methods)
-}
-```
-
-**C++**
-
-**Before**:
-
-```cpp
-/**
- * @brief Считает зарегистрированные события.
- */
-class Counter {
-  int _count = 0;  // число зарегистрированных событий
-
- public:
-
-  // --------------------------------------------------
-
-  /**
-   * @brief Учитывает одно новое событие.
-   */
-  void increment() { ++_count; }
-
-  // --------------------------------------------------
-
-  /**
-   * @brief Возвращает число зарегистрированных событий.
-   * @return Число событий с момента создания счётчика.
-   */
-  int value() const { return _count; }
-
-  // (no private methods)
-  // (no private methods)
-};
-```
-
-**After**:
-
-```cpp
-/**
- * @brief Считает зарегистрированные события.
- */
-class Counter {
-  int _count = 0;  // число зарегистрированных событий
-
- public:
-
-  // --------------------------------------------------
-
-  /**
-   * @brief Учитывает одно новое событие.
-   */
-  void increment() { ++_count; }
-
-  // --------------------------------------------------
-
-  /**
-   * @brief Возвращает число зарегистрированных событий.
-   * @return Число событий с момента создания счётчика.
-   */
-  int value() const { return _count; }
-
-  // (no private methods)
-};
-```
-
-<a id="stylebrella-formatter-general-mark-4"></a>
-
-<a id="sb-f-g-m-4"></a>
-
-### SB-F-G-M-4 — One space after `MARK:`
-
-`Stylebrella-formatter-general-mark-4`
 
 When a MARK has a title, use exactly one ASCII space between `MARK:` and the first non-whitespace character of the title. Replace missing spaces, extra spaces, or tabs at that boundary. Do not invent a title for an empty MARK.
 
@@ -2537,13 +2348,13 @@ When a MARK has a title, use exactly one ASCII space between `MARK:` and the fir
 // --------------------------------------------------
 ```
 
-<a id="stylebrella-formatter-general-mark-5"></a>
+<a id="stylebrella-formatter-general-mark-4"></a>
 
-<a id="sb-f-g-m-5"></a>
+<a id="sb-f-g-m-4"></a>
 
-### SB-F-G-M-5 — Remove the singleton group suffix
+### SB-F-G-M-4 — Remove the singleton group suffix
 
-`Stylebrella-formatter-general-mark-5`
+`Stylebrella-formatter-general-mark-4`
 
 When a MARK title ends with the exact suffix ` [group:1]`, remove the suffix and its preceding space. Leave all other title text and MARK structure unchanged. Group counts of two or more are preserved.
 
@@ -2756,6 +2567,214 @@ int value; // key feature of this configuration and its required behavior for ev
 ```cpp
 int value; // key feature of this configuration and its required behavior for every request,
            // including retries and recovery
+```
+
+<a id="stylebrella-formatter-general-comments-4"></a>
+
+<a id="sb-f-g-cm-4"></a>
+
+### SB-F-G-CM-4 — Placeholder for classes without private methods
+
+`Stylebrella-formatter-general-comments-4`
+
+For a concrete class with public but no private methods, ensure exactly one `(no private methods)` standalone comment after the last public method, separated by one blank line. Replace stale `Private Helpers` blocks and remove duplicate placeholders. As in [SB-F-G-M-2](#sb-f-g-m-2), interfaces and confirmed DTO-only types are exempt.
+
+**Python**
+
+**Before**:
+
+```python
+class Counter:
+
+  # --------------------------------------------------
+
+  def __init__(self) -> None:
+    """
+    Создаёт счётчик без зарегистрированных событий.
+    """
+
+    self._count = 0
+
+  # --------------------------------------------------
+
+  def increment(self) -> None:
+    """
+    Учитывает одно новое событие.
+    """
+
+    self._count += 1
+
+  # --------------------------------------------------
+
+  def value(self) -> int:
+    """
+    Возвращает число зарегистрированных событий.
+
+    Returns:
+      Число событий с момента создания счётчика.
+    """
+
+    return self._count
+```
+
+**After**:
+
+```python
+class Counter:
+
+  # --------------------------------------------------
+
+  def __init__(self) -> None:
+    """
+    Создаёт счётчик без зарегистрированных событий.
+    """
+
+    self._count = 0
+
+  # --------------------------------------------------
+
+  def increment(self) -> None:
+    """
+    Учитывает одно новое событие.
+    """
+
+    self._count += 1
+
+  # --------------------------------------------------
+
+  def value(self) -> int:
+    """
+    Возвращает число зарегистрированных событий.
+
+    Returns:
+      Число событий с момента создания счётчика.
+    """
+
+    return self._count
+
+  # (no private methods)
+```
+
+**Kotlin**
+
+**Before**:
+
+```kotlin
+class Counter {
+  private var _count = 0
+
+  // --------------------------------------------------
+
+  /**
+   * Учитывает одно новое событие.
+   */
+  fun increment(): Unit {
+    _count += 1
+  }
+
+  // --------------------------------------------------
+
+  /**
+   * Возвращает число зарегистрированных событий.
+   *
+   * @return число событий с момента создания счётчика
+   */
+  fun value(): Int = _count
+
+  // MARK: Private Helpers
+  // --------------------------------------------------
+}
+```
+
+**After**:
+
+```kotlin
+class Counter {
+  private var _count = 0
+
+  // --------------------------------------------------
+
+  /**
+   * Учитывает одно новое событие.
+   */
+  fun increment(): Unit {
+    _count += 1
+  }
+
+  // --------------------------------------------------
+
+  /**
+   * Возвращает число зарегистрированных событий.
+   *
+   * @return число событий с момента создания счётчика
+   */
+  fun value(): Int = _count
+
+  // (no private methods)
+}
+```
+
+**C++**
+
+**Before**:
+
+```cpp
+/**
+ * @brief Считает зарегистрированные события.
+ */
+class Counter {
+  int _count = 0;  // число зарегистрированных событий
+
+ public:
+
+  // --------------------------------------------------
+
+  /**
+   * @brief Учитывает одно новое событие.
+   */
+  void increment() { ++_count; }
+
+  // --------------------------------------------------
+
+  /**
+   * @brief Возвращает число зарегистрированных событий.
+   * @return Число событий с момента создания счётчика.
+   */
+  int value() const { return _count; }
+
+  // (no private methods)
+  // (no private methods)
+};
+```
+
+**After**:
+
+```cpp
+/**
+ * @brief Считает зарегистрированные события.
+ */
+class Counter {
+  int _count = 0;  // число зарегистрированных событий
+
+ public:
+
+  // --------------------------------------------------
+
+  /**
+   * @brief Учитывает одно новое событие.
+   */
+  void increment() { ++_count; }
+
+  // --------------------------------------------------
+
+  /**
+   * @brief Возвращает число зарегистрированных событий.
+   * @return Число событий с момента создания счётчика.
+   */
+  int value() const { return _count; }
+
+  // (no private methods)
+};
 ```
 
 ## Recommendations (no diagnostic)

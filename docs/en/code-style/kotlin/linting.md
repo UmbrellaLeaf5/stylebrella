@@ -18,7 +18,7 @@ Examples isolate the rule being illustrated. Function examples are focused excer
 
 `Stylebrella-linter-kotlin-naming-1`
 
-Require camelCase for variables, parameters, properties and public callables; PascalCase for class, interface, object, enum and annotation types; and SCREAMING_SNAKE_CASE for `const val`. Private method names use the underscore prefix required by [SB-L-G-N-2](../general/linting.md#sb-l-g-n-2), followed by a camelCase name.
+Require camelCase for variables, parameters, properties and public callables; PascalCase for class, interface, object, enum and annotation types; and SCREAMING_SNAKE_CASE for `const val`. Private method names use the underscore prefix required by [SB-L-G-N-3](../general/linting.md#sb-l-g-n-3), followed by a camelCase name.
 
 **Allowed**:
 
@@ -64,7 +64,7 @@ data class CalculationRequest(val count: Int)
 
 `Stylebrella-linter-kotlin-files-1`
 
-A `.kt` filename is PascalCase and matches its sole primary type. Report a second independent class, interface, object, enum or annotation, including independent nested ones. Exempt companion objects, an application `main`, and nested constant categories allowed by [SB-L-K-C-1](#stylebrella-linter-kotlin-constants-1). A functions-only file has a PascalCase descriptive filename; only its casing is checked.
+A `.kt` filename is PascalCase and matches its primary top-level type, if present. Apply [SB-L-G-FI-1](../general/linting.md#sb-l-g-fi-1) to classes. The one-type limit also covers top-level interfaces, named objects, enums and annotation classes; do not duplicate a diagnostic from the shared rule. Nested types and standalone functions do not count. Use the first eligible type for the filename check if the file contains multiple types. A functions-only file has a PascalCase descriptive filename; only its casing is checked.
 
 **Allowed** (`FilterConfig.kt`):
 
