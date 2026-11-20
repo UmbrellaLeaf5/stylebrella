@@ -251,8 +251,10 @@ Start `else if`, `else`, and `catch` on a new line. When the preceding branch en
 ```kotlin
 if (x) {
   f()
-} else {
   g()
+} else {
+  h()
+  i()
 }
 ```
 
@@ -261,10 +263,12 @@ if (x) {
 ```kotlin
 if (x) {
   f()
+  g()
 }
 
 else {
-  g()
+  h()
+  i()
 }
 ```
 

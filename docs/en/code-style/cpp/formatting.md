@@ -144,7 +144,7 @@ int count;  // Number of bytes in the payload before compression.
 
 `Stylebrella-formatter-cpp-layout-6`
 
-Allow inline member functions and short unbraced `if` statements without `else` to occupy one line when they fit. Do not force braces around short unbraced `if` or `for` bodies; never change the control-flow structure in formatting.
+Allow inline member functions and short unbraced `if` statements without `else` to occupy one line when they fit. Do not force braces around short unbraced `if` or `for` bodies. The shared [SB-F-G-LY-3](../formatting.md#stylebrella-formatter-general-layout-3) exception may remove braces from eligible single-statement bodies.
 
 **Before**:
 
@@ -238,8 +238,10 @@ Start `else if`, `else`, and `catch` on a new line; apply [SB-F-G-BL-7](../forma
 ```cpp
 if (x) {
   f();
-} else {
   g();
+} else {
+  h();
+  i();
 }
 ```
 
@@ -248,10 +250,12 @@ if (x) {
 ```cpp
 if (x) {
   f();
+  g();
 }
 
 else {
-  g();
+  h();
+  i();
 }
 ```
 

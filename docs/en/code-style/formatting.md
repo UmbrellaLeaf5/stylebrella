@@ -20,7 +20,7 @@ Examples isolate the rule being illustrated.
 
 `Stylebrella-formatter-general-blank_lines-1`
 
-At file scope, put exactly two blank lines before and after the separator required by [SB-F-G-SP-1](#stylebrella-formatter-general-separators-1). If the separator belongs to a MARK, the two lines before it go before the MARK itself; [SB-F-G-BL-9](#stylebrella-formatter-general-blank_lines-9) governs the spacing after it where applicable.
+At file scope, put exactly two blank lines before and after the separator required by [SB-F-G-SP-3](#stylebrella-formatter-general-separators-3). If the separator belongs to a MARK, the two lines before it go before the MARK itself; [SB-F-G-BL-9](#stylebrella-formatter-general-blank_lines-9) governs the spacing after it where applicable.
 
 **Python**
 
@@ -174,47 +174,56 @@ void b();
 
 <a id="sb-f-g-bl-3"></a>
 
-### SB-F-G-BL-3 — Consecutive blank lines inside classes and functions
+### SB-F-G-BL-3 — Consecutive blank lines inside function and method bodies
 
 `Stylebrella-formatter-general-blank_lines-3`
 
-Inside a class or function, collapse runs of two or more blank lines to one. Do not add blank lines between a documentation block, attached annotations or decorators, and its declaration. At a boundary with a specified count, use that count once, not the sum of matching rules.
+Inside function and method bodies, collapse each run of two or more blank lines between statements to one. This applies equally to standalone functions and class methods. It does not set spacing between method declarations; use [SB-F-G-SP-2](#stylebrella-formatter-general-separators-2) for that spacing and for the separator before the first method. Do not add blank lines between a documentation block, attached annotations or decorators, and its declaration. At a boundary with a specified count, use that count once, not the sum of matching rules.
 
 **Python**
 
 **Before**:
 
 ```python
-# MARK: Run tasks
-# --------------------------------------------------
+class C:
+
+  # --------------------------------------------------
+
+  def run(self) -> None:
+    send()
+
+
+    log()
+
+  # (no private methods)
 
 
 def f() -> None:
-  """
-  Запускает задачи.
-  """
-
-  a()
+  start()
 
 
-  b()
+  finish()
 ```
 
 **After**:
 
 ```python
-# MARK: Run tasks
-# --------------------------------------------------
+class C:
+
+  # --------------------------------------------------
+
+  def run(self) -> None:
+    send()
+
+    log()
+
+  # (no private methods)
 
 
 def f() -> None:
-  """
-  Запускает задачи.
-  """
+  start()
 
-  a()
-
-  b()
+  finish()
 ```
 
 **Kotlin**
@@ -222,33 +231,50 @@ def f() -> None:
 **Before**:
 
 ```kotlin
-// MARK: Run tasks
-// --------------------------------------------------
+class C {
 
-/**
- * Запускает задачи.
- */
+  // --------------------------------------------------
+
+  fun run() {
+    send()
+
+
+    log()
+  }
+
+  // (no private methods)
+}
+
+
 fun f() {
-  a()
+  start()
 
 
-  b()
+  finish()
 }
 ```
 
 **After**:
 
 ```kotlin
-// MARK: Run tasks
-// --------------------------------------------------
+class C {
 
-/**
- * Запускает задачи.
- */
+  // --------------------------------------------------
+
+  fun run() {
+    send()
+
+    log()
+  }
+
+  // (no private methods)
+}
+
+
 fun f() {
-  a()
+  start()
 
-  b()
+  finish()
 }
 ```
 
@@ -257,33 +283,52 @@ fun f() {
 **Before**:
 
 ```cpp
-// MARK: Run tasks
-// --------------------------------------------------
+class C {
+ public:
 
-/**
- * @brief Запускает задачи.
- */
+  // --------------------------------------------------
+
+  void run() {
+    send();
+
+
+    log();
+  }
+
+  // (no private methods)
+};
+
+
 void f() {
-  a();
+  start();
 
 
-  b();
+  finish();
 }
 ```
 
 **After**:
 
 ```cpp
-// MARK: Run tasks
-// --------------------------------------------------
+class C {
+ public:
 
-/**
- * @brief Запускает задачи.
- */
+  // --------------------------------------------------
+
+  void run() {
+    send();
+
+    log();
+  }
+
+  // (no private methods)
+};
+
+
 void f() {
-  a();
+  start();
 
-  b();
+  finish();
 }
 ```
 
@@ -497,7 +542,7 @@ After a statement spanning multiple code lines, insert one blank line before the
 
 `Stylebrella-formatter-general-blank_lines-7`
 
-Separate an `if` or `for` from adjacent sibling statements by one blank line, including after an unbraced single-statement body. Separate successive conditional and exception-handler branches by one blank line. Do not put a blank line just inside a closing delimiter or between a control header and its single-line body.
+Separate an `if` or `for` from adjacent sibling statements by one blank line, including after an unbraced single-statement body. Separate successive conditional and exception-handler branches that begin on distinct lines by one blank line. When a language-specific rule moves a branch clause off the preceding branch's line, apply this spacing at the new boundary; same-line branch syntax is governed by that language-specific newline rule. Do not put a blank line just inside a closing delimiter or between a control header and its single-line body.
 
 **Python**
 
@@ -810,6 +855,7 @@ if ready:
 ```kotlin
 if (ready) {
     send()
+    log()
 }
 ```
 
@@ -818,6 +864,7 @@ if (ready) {
 ```kotlin
 if (ready) {
   send()
+  log()
 }
 ```
 
@@ -828,6 +875,7 @@ if (ready) {
 ```cpp
 if (ready) {
     send();
+    log();
 }
 ```
 
@@ -836,6 +884,7 @@ if (ready) {
 ```cpp
 if (ready) {
   send();
+  log();
 }
 ```
 
@@ -902,17 +951,65 @@ run_request_processing_pipeline(
   transaction_logging_context);
 ```
 
+<a id="stylebrella-formatter-general-layout-3"></a>
+
+<a id="sb-f-g-ly-3"></a>
+
+### SB-F-G-LY-3 — Collapse eligible single-statement control blocks
+
+`Stylebrella-formatter-general-layout-3`
+
+In Kotlin and C++, remove braces from an `if` or `for` block whose body consists of exactly one statement when the language permits an unbraced body and the resulting complete statement fits within 100 columns. Apply this recursively to nested `for` blocks. Preserve braces when required for syntax or scope, when there are comments or multiple statements in the body, or when removing them could change control-flow binding. Python is not applicable: its suites are defined by indentation, not braces.
+
+**Kotlin**
+
+**Before**:
+
+```kotlin
+if (ready) {
+  for (item in items) {
+    send(item)
+  }
+}
+```
+
+**After**:
+
+```kotlin
+if (ready) for (item in items) send(item)
+```
+
+**C++**
+
+**Before**:
+
+```cpp
+if (ready) {
+  for (const auto& item : items) {
+    send(item);
+  }
+}
+```
+
+**After**:
+
+```cpp
+if (ready) for (const auto& item : items) send(item);
+```
+
+**Python:** Not applicable; Python does not use braces to delimit control-flow suites.
+
 ## `separators`
 
-The existing `SB-F-G-M-1` and `SB-F-G-M-2` identifiers are retained after moving the two rules into this section.
+Rules in this section use the `separators` token in canonical IDs and `SP` in their short aliases.
 
-<a id="stylebrella-formatter-general-mark-1"></a>
+<a id="stylebrella-formatter-general-separators-1"></a>
 
-<a id="sb-f-g-m-1"></a>
+<a id="sb-f-g-sp-1"></a>
 
-### SB-F-G-M-1 — Separator syntax and length
+### SB-F-G-SP-1 — Separator syntax and length
 
-`Stylebrella-formatter-general-mark-1`
+`Stylebrella-formatter-general-separators-1`
 
 A separator is a standalone comment consisting of the language prefix (`#` or `//`), one space, and exactly 50 ASCII hyphens. Normalize a standalone dash-only comment of at least two hyphens at a separator position; preserve other comments.
 
@@ -958,13 +1055,13 @@ A separator is a standalone comment consisting of the language prefix (`#` or `/
 // --------------------------------------------------
 ```
 
-<a id="stylebrella-formatter-general-mark-2"></a>
+<a id="stylebrella-formatter-general-separators-2"></a>
 
-<a id="sb-f-g-m-2"></a>
+<a id="sb-f-g-sp-2"></a>
 
-### SB-F-G-M-2 — Separators between functions and before the first method
+### SB-F-G-SP-2 — Separators between functions and before the first method
 
-`Stylebrella-formatter-general-mark-2`
+`Stylebrella-formatter-general-separators-2`
 
 Insert a separator between adjacent same-scope functions or methods and before the first method of a class. Place it before attached documentation or annotations and, in C++, after any access label opening that method's section. An already present MARK-block separator satisfies the requirement. Inside the class, put one blank line on each side that has a neighboring line of content, except between a MARK and its separator.
 
@@ -1045,13 +1142,13 @@ class C {
 };
 ```
 
-<a id="stylebrella-formatter-general-separators-1"></a>
+<a id="stylebrella-formatter-general-separators-3"></a>
 
-<a id="sb-f-g-sp-1"></a>
+<a id="sb-f-g-sp-3"></a>
 
-### SB-F-G-SP-1 — Separator after imports and includes
+### SB-F-G-SP-3 — Separator after imports and includes
 
-`Stylebrella-formatter-general-separators-1`
+`Stylebrella-formatter-general-separators-3`
 
 When a file has leading imports or includes followed by a file-scope declaration, require exactly one separator at that boundary. Insert it before the first declaration and its attached documentation, decorators, or annotations. If a MARK already belongs to the declaration, use its separator instead; do not insert a second one. Apply the spacing in [SB-F-G-BL-1](#stylebrella-formatter-general-blank_lines-1).
 
