@@ -25,9 +25,9 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
-    /// Check formatting and lint rules (stub).
+    /// Report formatting differences without writing files (stub).
     Check(Report),
-    /// Check lint rules (stub).
+    /// Report lint violations without writing files (stub).
     Lint(Report),
     /// Format sources (stub).
     Format {

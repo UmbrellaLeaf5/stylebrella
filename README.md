@@ -185,7 +185,7 @@ The [rule ID registry](docs/en/code-style/README.md#id-registry) defines the
 canonical ID format and its short aliases. For example:
 
 - [`SB-L-C-FI-1`](docs/en/code-style/cpp/linting.md#stylebrella-linter-cpp-files-1): require `#pragma once` in project-owned headers.
-- [`SB-L-C-D-1`](docs/en/code-style/cpp/linting.md#stylebrella-linter-cpp-documentation-1): require Doxygen for every function.
+- [`SB-L-C-D-1`](docs/en/code-style/cpp/linting.md#stylebrella-linter-cpp-documentation-1): require detailed Doxygen in headers and a summary for source-only functions; report duplicates at source definitions that resolve to a header declaration.
 - [`SB-L-K-NU-1`](docs/en/code-style/kotlin/linting.md#stylebrella-linter-kotlin-nulls-1): forbid `!!`.
 - [`SB-F-G-SP-1`](docs/en/code-style/general/formatting.md#stylebrella-formatter-general-separators-1): normalize separators to exactly 50 hyphens.
 

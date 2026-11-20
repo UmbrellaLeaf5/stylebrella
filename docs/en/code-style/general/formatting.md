@@ -394,7 +394,7 @@ void f() {
 
 `Stylebrella-formatter-general-blank_lines-4`
 
-In a statement list, keep adjacent local declarations together when neither starts a receiver-operation group. Keep a local declaration with consecutive direct method calls, field assignments, reassignments that target that same local, and direct calls whose sole argument is that local (for example, `use(f)`). Separate each such group from unrelated adjacent statements by one blank line. A call with additional arguments, such as `use(f, g)`, or a call through another receiver, such as `g.func(f, a)`, starts an unrelated group. Preserve explicit comment boundaries. For leading and trailing comments on declarations, apply [SB-F-G-BL-5](#stylebrella-formatter-general-blank_lines-5).
+In a statement list, group adjacent local declarations that do not start receiver-operation groups. Group consecutive operations on the same variable even without an adjacent declaration, for example when the variable is a parameter. A receiver-operation group consists of at least two operations, or a local declaration immediately followed by one or more operations on that variable. Operations include direct method calls on the variable, assignments to its fields, reassignments to the variable itself, and direct calls whose sole argument is that variable (for example, `use(f)`). A bare call with additional arguments, such as `use(f, g)`, or a call through another receiver, such as `g.func(f, a)`, does not join the group for `f`. Separate a group from unrelated adjacent statements by one blank line, including when the next statement operates on a different variable. Within groups, omit blank lines except where [SB-F-G-BL-6](#stylebrella-formatter-general-blank_lines-6) requires one after a multiline operation. Do not reorder or group across intervening statements or explicit comment boundaries. Apply [SB-F-G-BL-5](#stylebrella-formatter-general-blank_lines-5) to comments on declarations.
 
 **Python**
 
@@ -441,6 +441,14 @@ In a statement list, keep adjacent local declarations together when neither star
   f.init()
   f.x = x
   g.func(f, a)
+```
+
+```python
+  target.reset()
+
+  target.activate()
+  use(target)
+  cancel(other)
 ```
 
 **After**:
@@ -492,6 +500,14 @@ In a statement list, keep adjacent local declarations together when neither star
   f.x = x
 
   g.func(f, a)
+```
+
+```python
+  target.reset()
+  target.activate()
+  use(target)
+
+  cancel(other)
 ```
 
 **Kotlin**
@@ -541,6 +557,14 @@ In a statement list, keep adjacent local declarations together when neither star
   g.func(f, a)
 ```
 
+```kotlin
+  target.reset()
+
+  target.activate()
+  use(target)
+  cancel(other)
+```
+
 **After**:
 
 ```kotlin
@@ -592,6 +616,14 @@ In a statement list, keep adjacent local declarations together when neither star
   g.func(f, a)
 ```
 
+```kotlin
+  target.reset()
+  target.activate()
+  use(target)
+
+  cancel(other)
+```
+
 **C++**
 
 **Before**:
@@ -637,6 +669,14 @@ In a statement list, keep adjacent local declarations together when neither star
   f.init();
   f.x = x;
   g.func(f, a);
+```
+
+```cpp
+  target.reset();
+
+  target.activate();
+  use(target);
+  cancel(other);
 ```
 
 **After**:
@@ -688,6 +728,14 @@ In a statement list, keep adjacent local declarations together when neither star
   f.x = x;
 
   g.func(f, a);
+```
+
+```cpp
+  target.reset();
+  target.activate();
+  use(target);
+
+  cancel(other);
 ```
 
 <a id="stylebrella-formatter-general-blank_lines-5"></a>

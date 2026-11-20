@@ -132,7 +132,7 @@ rules run from an offline package without a system JVM.
       Explicitly report skipped semantic checks if it is missing; still run
       independent file and syntax checks.
 - [ ] Implement enforceable gaps: `#pragma once`, type/file matching,
-      header structure, required multiline Doxygen in `.hpp`,
+      header structure, detailed Doxygen in headers and duplicate Doxygen at source definitions,
       `MARK`/separators, and applicable naming rules.
 - [ ] Leave exception-class choice, meaningful Doxygen text, and
       ownership decisions to humans where static analysis is insufficient.

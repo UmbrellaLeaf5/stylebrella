@@ -344,71 +344,183 @@ A descriptive MARK title must be nonempty, begin with an uppercase ASCII letter,
 
 <a id="sb-l-g-m-2"></a>
 
-### SB-L-G-M-2 — MARK for nontrivial public and important functions
+### SB-L-G-M-2 — MARK for nontrivial functions that are public or important
 
 `Stylebrella-linter-general-mark-2`
 
-A function is nontrivial if its canonical body spans at least two executable lines, contains at least two executable statements, or contains nested control flow. It is important if at least two distinct project references resolve to it other than self-recursion; multiple references in one caller count. Require a descriptive MARK for a public nontrivial function or an important function, unless covered by a valid group or [SB-L-G-M-5](#stylebrella-linter-general-mark-5). Otherwise a separator suffices. Count body lines in the canonical format, excluding blank, comment-only, documentation-only and delimiter-only lines.
+A function is nontrivial if it declares more than three parameters or its canonical body spans more than 15 executable lines. Exclude type parameters and the receiver, including Python's `self` or `cls` when it serves as the receiver. Count each variadic or defaulted parameter once. Count body lines in the canonical format, excluding blank, comment-only, documentation-only and delimiter-only lines.
+
+A function is important if at least two distinct project references resolve to it other than self-recursion; multiple references in one caller count separately. This rule requires a descriptive MARK only for a nontrivial function that is public or important, unless covered by a [valid group](#stylebrella-linter-general-mark-3) or [SB-L-G-M-5](#stylebrella-linter-general-mark-5). A trivial function does not need its own descriptive MARK or group under this rule, even if important. Keep `MARK: Private Helpers` where [SB-L-G-M-6](#stylebrella-linter-general-mark-6) requires it; do not insert a second MARK between that header and the first private method ([SB-L-G-M-4](#stylebrella-linter-general-mark-4)).
 
 **Python**
 
-**Allowed**:
+**Allowed** (not important, exactly three parameters and 15 executable lines):
 
 ```python
-# MARK: Read data
 # --------------------------------------------------
 
-def read():
-  load()
-  validate()
+def run_backup(source: Source, target: Target, journal: Journal) -> None:
+  """
+  Сохраняет проверенную копию и фиксирует завершение в журнале.
+
+  Args:
+    source: Источник данных.
+    target: Хранилище резервной копии.
+    journal: Журнал операций копирования.
+  """
+
+  journal.begin()
+
+  source.open()
+  source.verify_manifest()
+  source.read_metadata()
+  source.read_index()
+
+  target.prepare()
+  target.check_capacity()
+  target.write_metadata()
+  target.write_index()
+
+  source.copy_to(target)
+  source.close()
+
+  target.verify_checksum()
+  target.flush()
+  target.commit()
+
+  journal.finish()
 ```
 
-**Violation**:
+**Violation** (16 executable lines, no descriptive MARK):
 
 ```python
 # --------------------------------------------------
 
-def read():
-  load()
-  validate()
+def run_backup(source: Source, target: Target, journal: Journal) -> None:
+  """
+  Сохраняет проверенную копию и фиксирует завершение в журнале.
+
+  Args:
+    source: Источник данных.
+    target: Хранилище резервной копии.
+    journal: Журнал операций копирования.
+  """
+
+  journal.begin()
+
+  source.open()
+  source.verify_manifest()
+  source.read_metadata()
+  source.read_index()
+
+  target.prepare()
+  target.check_capacity()
+  target.write_metadata()
+  target.write_index()
+
+  source.copy_to(target)
+  source.close()
+
+  target.verify_checksum()
+  target.flush()
+  target.commit()
+  target.sync_directory()
+
+  journal.finish()
 ```
 
 **Kotlin**
 
-**Allowed**:
+**Allowed** (four parameters, one executable line, with a descriptive MARK):
 
 ```kotlin
-// MARK: Read data
+// MARK: Update viewport bounds
 // --------------------------------------------------
 
-fun read() { load(); validate() }
+/**
+ * Передаёт новые границы видимой области.
+ *
+ * @param left левая граница
+ * @param top верхняя граница
+ * @param right правая граница
+ * @param bottom нижняя граница
+ */
+fun setBounds(left: Int, top: Int, right: Int, bottom: Int): Unit =
+  view.set(left, top, right, bottom)
 ```
 
-**Violation**:
+**Violation** (four parameters, one executable line, no descriptive MARK):
 
 ```kotlin
 // --------------------------------------------------
 
-fun read() { load(); validate() }
+/**
+ * Передаёт новые границы видимой области.
+ *
+ * @param left левая граница
+ * @param top верхняя граница
+ * @param right правая граница
+ * @param bottom нижняя граница
+ */
+fun setBounds(left: Int, top: Int, right: Int, bottom: Int): Unit =
+  view.set(left, top, right, bottom)
+```
+
+**Allowed** (the first private method has four parameters; the structural MARK and KDoc suffice):
+
+```kotlin
+class BoundsUpdater {
+  // MARK: Restore default viewport
+  // --------------------------------------------------
+
+  /**
+   * Восстанавливает границы видимой области по умолчанию.
+   */
+  fun resetBounds(): Unit = _setBounds(defaults.left, defaults.top, defaults.right, defaults.bottom)
+
+
+  // MARK: Private Helpers
+  // --------------------------------------------------
+
+  /**
+   * Передаёт новые границы видимой области.
+   *
+   * @param left левая граница
+   * @param top верхняя граница
+   * @param right правая граница
+   * @param bottom нижняя граница
+   */
+  private fun _setBounds(left: Int, top: Int, right: Int, bottom: Int): Unit =
+    view.set(left, top, right, bottom)
+}
 ```
 
 **C++**
 
-**Allowed**:
-
-```cpp
-// MARK: Read data
-// --------------------------------------------------
-
-void read() { load(); validate(); }
-```
-
-**Violation**:
+**Allowed** (both calls count, but `flush_log` is trivial and needs no descriptive MARK or group):
 
 ```cpp
 // --------------------------------------------------
 
-void read() { load(); validate(); }
+/**
+ * @brief Сохраняет накопленные записи на диск.
+ */
+static void flush_log() {
+  log.flush();
+}
+
+
+// --------------------------------------------------
+
+
+/**
+ * @brief Меняет файл журнала после сохранения записей.
+ */
+void rotate_log() {
+  flush_log();
+  log.rotate();
+  flush_log();
+}
 ```
 
 <a id="stylebrella-linter-general-mark-3"></a>
@@ -672,82 +784,117 @@ void read();
 
 <a id="sb-l-g-m-5"></a>
 
-### SB-L-G-M-5 — Documentation for the first important private method
+### SB-L-G-M-5 — Documentation for a nontrivial, important first private method
 
 `Stylebrella-linter-general-mark-5`
 
-The structural header covers the first private method only. If that method is important, its required language documentation takes the place of an additional MARK. A documented C++ declaration satisfies the requirement for its definition. Report missing documentation under this rule instead of the language presence rule at this boundary; report malformed documentation under the language format rule.
+The structural header covers the first private method only. If that method is both important and nontrivial under [SB-L-G-M-2](#stylebrella-linter-general-mark-2), its required language documentation takes the place of an additional MARK. In C++, document a method declared in a header there, not again at its source definition. Report missing documentation under this rule instead of the language presence rule at this boundary; report malformed documentation under the language format rule.
 
-**Python**
+**Allowed** (Kotlin): `_applyBounds` has four parameters and two resolved call sites. Both entry points share the validation and update so an invalid region never reaches the viewport. KDoc satisfies the requirement at the private section boundary.
 
-**Allowed**:
+```kotlin
+class ViewportController(private val viewport: Viewport) {
+  // MARK: Restore viewport bounds [group:2]
+  // --------------------------------------------------
 
-```python
-  # MARK: Private Helpers
-  # --------------------------------------------------
+  /**
+   * Восстанавливает границы, сохранённые в профиле пользователя.
+   *
+   * @param profile профиль с сохранёнными границами
+   * @throws IllegalArgumentException если сохранённые границы некорректны
+   */
+  fun restoreProfile(profile: ViewportProfile): Unit =
+    _applyBounds(profile.left, profile.top, profile.right, profile.bottom)
 
-  def _read(self) -> None:
-    """
-    Заполняет кэш из последнего сохранённого снимка.
-    """
 
-    self._cache.reload_snapshot()
+  // --------------------------------------------------
+
+
+  /**
+   * Возвращает видимую область к границам рабочего пространства.
+   *
+   * @param limits границы рабочего пространства
+   * @throws IllegalArgumentException если границы рабочего пространства некорректны
+   */
+  fun resetToWorkspace(limits: WorkspaceBounds): Unit =
+    _applyBounds(limits.left, limits.top, limits.right, limits.bottom)
+
+
+  // MARK: Private Helpers
+  // --------------------------------------------------
+
+  /**
+   * Проверяет обе оси перед изменением видимой области.
+   *
+   * @param left левая граница
+   * @param top верхняя граница
+   * @param right правая граница
+   * @param bottom нижняя граница
+   * @throws IllegalArgumentException если одна из осей имеет неположительный размер
+   */
+  private fun _applyBounds(left: Int, top: Int, right: Int, bottom: Int) {
+    require(left < right)
+    require(top < bottom)
+
+    viewport.setBounds(left, top, right, bottom)
+  }
+}
 ```
 
-**Violation**:
-
-```python
-  # MARK: Private Helpers
-  # --------------------------------------------------
-
-  def _read(self) -> None:
-    self._cache.reload_snapshot()
-```
-
-**Kotlin**
-
-**Allowed**:
+**Violation** (replace only the private section of `ViewportController` with this version):
 
 ```kotlin
   // MARK: Private Helpers
   // --------------------------------------------------
 
-  /**
-   * Заполняет кэш из последнего сохранённого снимка.
-   */
-  private fun _read(): Unit = cache.reloadSnapshot()
+  private fun _applyBounds(left: Int, top: Int, right: Int, bottom: Int) {
+    require(left < right)
+    require(top < bottom)
+
+    viewport.setBounds(left, top, right, bottom)
+  }
 ```
 
-**Violation**:
+**Allowed** (Python and C++ forms of the same private section): assume the same two public methods call the helper with all four bounds. In each case, removing only the shown documentation is a **violation**. The C++ example is the declaration in `viewport_controller.hpp`.
 
-```kotlin
-  // MARK: Private Helpers
-  // --------------------------------------------------
+```python
+  # MARK: Private Helpers
+  # --------------------------------------------------
 
-  private fun _read(): Unit = cache.reloadSnapshot()
+  def _apply_bounds(self, left: int, top: int, right: int, bottom: int) -> None:
+    """
+    Проверяет обе оси перед изменением видимой области.
+
+    Args:
+      left: Левая граница.
+      top: Верхняя граница.
+      right: Правая граница.
+      bottom: Нижняя граница.
+
+    Raises:
+      ValueError: Одна из осей имеет неположительный размер.
+    """
+
+    if left >= right or top >= bottom:
+      raise ValueError("Viewport bounds must have positive width and height")
+
+    self._viewport.set_bounds(left, top, right, bottom)
 ```
-
-**C++**
-
-**Allowed**:
 
 ```cpp
+ private:
   // MARK: Private Helpers
   // --------------------------------------------------
 
   /**
-   * @brief Заполняет кэш из последнего сохранённого снимка.
+   * @brief Проверяет обе оси перед изменением видимой области.
+   * @param left Левая граница.
+   * @param top Верхняя граница.
+   * @param right Правая граница.
+   * @param bottom Нижняя граница.
+   * @throws std::invalid_argument Одна из осей имеет неположительный размер.
    */
-  void _read();
-```
-
-**Violation**:
-
-```cpp
-  // MARK: Private Helpers
-  // --------------------------------------------------
-
-  void _read();
+  void _apply_bounds(int left, int top, int right, int bottom);
 ```
 
 <a id="stylebrella-linter-general-mark-6"></a>
@@ -758,102 +905,84 @@ The structural header covers the first private method only. If that method is im
 
 `Stylebrella-linter-general-mark-6`
 
-A concrete class with both public and private methods needs a MARK attached to a public method and the separate structural MARK. A counted group cannot replace both. When no public method is important, any public method may carry the required public MARK. Exempt interfaces and confirmed DTO-only types; a class without private methods does not need the structural MARK.
+A concrete class with public methods must have either a valid counted MARK group of public methods or a descriptive MARK attached to a public method the author selected as important. Do not second-guess that choice based on reference counts or body size. Apply [SB-L-G-M-2](#stylebrella-linter-general-mark-2) independently to methods not covered by the group or a descriptive MARK.
 
-**Python**
+The class also needs a separate `MARK: Private Helpers` before its first private method, or the standalone `(no private methods)` comment after its last public method if it has no private methods. A public MARK or group does not replace either structural marker. Exempt interfaces and confirmed DTO-only types.
 
-**Allowed**:
-
-```python
-  # MARK: Read records
-  # --------------------------------------------------
-
-  def read(self): ...
-
-
-  # MARK: Private Helpers
-  # --------------------------------------------------
-
-  def _read(self): ...
-```
-
-**Violation**:
+**Allowed** (Python, a single MARK chosen by the author and no private methods):
 
 ```python
-  def read(self): ...
-
-
-  # MARK: Private Helpers
+class ExportQueue:
+  # MARK: Dispatch next export
   # --------------------------------------------------
 
-  def _read(self): ...
+  def dispatch(self, pending: ExportStore, worker: ExportWorker) -> None:
+    """
+    Передаёт старейшее ожидающее задание свободному обработчику.
+
+    Args:
+      pending: Хранилище ожидающих заданий.
+      worker: Свободный обработчик экспорта.
+    """
+
+    job = pending.take_oldest()
+
+    worker.submit(job)
+
+
+  # --------------------------------------------------
+
+
+  def requeue(self, pending: ExportStore, job: ExportJob) -> None:
+    """
+    Возвращает прерванный экспорт в очередь.
+
+    Args:
+      pending: Хранилище ожидающих заданий.
+      job: Прерванное задание экспорта.
+    """
+
+    pending.append(job)
+
+  # (no private methods)
 ```
 
-**Kotlin**
+**Allowed** (Kotlin, a counted group): [`ViewportController` above](#stylebrella-linter-general-mark-5) groups `restoreProfile` and `resetToWorkspace` under one `[group:2]` MARK. The group's scope ends before the separate `MARK: Private Helpers`.
 
-**Allowed**:
-
-```kotlin
-  // MARK: Read records
-  // --------------------------------------------------
-
-  fun read() = Unit
-
-
-  // MARK: Private Helpers
-  // --------------------------------------------------
-
-  private fun _helper() = Unit
-```
-
-**Violation**:
-
-```kotlin
-  fun read() = Unit
-
-
-  // MARK: Private Helpers
-  // --------------------------------------------------
-
-  private fun _helper() = Unit
-```
-
-**C++**
-
-**Allowed**:
+**Violation** (C++, the public MARK is present, but the class has no `(no private methods)` marker):
 
 ```cpp
+/**
+ * @brief Управляет сохранением результатов экспорта в журнале.
+ */
+class ExportJournal {
  public:
-
-  // MARK: Read records
+  // MARK: Persist export results
   // --------------------------------------------------
 
-  void read();
+  /**
+   * @brief Сохраняет результаты экспорта перед завершением работы.
+   * @param journal Открытый журнал экспорта.
+   */
+  void flush(Journal& journal) const {
+    journal.flush();
+  }
 
 
- private:
-
-  // MARK: Private Helpers
   // --------------------------------------------------
 
-  void _read();
+
+  /**
+   * @brief Закрывает журнал после передачи всех результатов.
+   * @param journal Открытый журнал экспорта.
+   */
+  void close(Journal& journal) const {
+    journal.close();
+  }
+};
 ```
 
-**Violation**:
-
-```cpp
- public:
-
-  void read();
-
-
- private:
-
-  // MARK: Private Helpers
-  // --------------------------------------------------
-
-  void _read();
-```
+The Python class would also violate this rule if its public MARK were removed, and the Kotlin class would violate it if its separate `Private Helpers` MARK were removed.
 
 <a id="stylebrella-linter-general-mark-7"></a>
 
@@ -863,107 +992,110 @@ A concrete class with both public and private methods needs a MARK attached to a
 
 `Stylebrella-linter-general-mark-7`
 
-In an eligible class under [SB-L-G-M-6](#stylebrella-linter-general-mark-6), a private method must not precede any public method. Report the early private declaration; do not reorder declarations. Visibility is defined by the language, not by observed use.
+In a class with both public and private methods covered by [SB-L-G-M-6](#stylebrella-linter-general-mark-6), a private method must not precede any public method. Report the early private declaration; do not reorder declarations. Use declaration visibility, including the explicit Python private-section convention, rather than observed use.
 
-**Python**
-
-**Allowed**:
+**Allowed** (Python, public operations first and the private writer last):
 
 ```python
-  # MARK: Read records
+class AuditTrail:
+  # MARK: Record export outcomes [group:2]
   # --------------------------------------------------
 
-  def read(self): ...
+  def record_success(self, audit_log: AuditLog, job: ExportJob) -> None:
+    """
+    Фиксирует успешную передачу результата экспорта.
+
+    Args:
+      audit_log: Журнал аудита.
+      job: Выполненное задание экспорта.
+    """
+
+    self._append(audit_log, job.completed_event())
+
+
+  # --------------------------------------------------
+
+
+  def record_failure(self, audit_log: AuditLog, job: ExportJob) -> None:
+    """
+    Фиксирует сбой, чтобы его можно было расследовать по журналу.
+
+    Args:
+      audit_log: Журнал аудита.
+      job: Задание, завершившееся со сбоем.
+    """
+
+    self._append(audit_log, job.failed_event())
 
 
   # MARK: Private Helpers
   # --------------------------------------------------
 
-  def _read(self): ...
+  def _append(self, audit_log: AuditLog, event: AuditEvent) -> None:
+    """
+    Дописывает событие и сбрасывает буфер журнала.
+
+    Args:
+      audit_log: Журнал аудита.
+      event: Событие для сохранения.
+    """
+
+    audit_log.append(event)
+    audit_log.flush()
 ```
 
-**Violation**:
+**Allowed** (Kotlin): both public methods of [`ViewportController`](#stylebrella-linter-general-mark-5) precede `_applyBounds`. In either class, moving the private method and its structural MARK before the public group would violate this rule.
 
-```python
-  # MARK: Private Helpers
-  # --------------------------------------------------
-
-  def _read(self): ...
-
-
-  # MARK: Read records
-  # --------------------------------------------------
-
-  def read(self): ...
-```
-
-**Kotlin**
-
-**Allowed**:
-
-```kotlin
-  // MARK: Read records
-  // --------------------------------------------------
-
-  fun read() = Unit
-
-
-  // MARK: Private Helpers
-  // --------------------------------------------------
-
-  private fun _helper() = Unit
-```
-
-**Violation**:
-
-```kotlin
-  // MARK: Private Helpers
-  // --------------------------------------------------
-
-  private fun _helper() = Unit
-
-
-  // MARK: Read records
-  // --------------------------------------------------
-
-  fun read() = Unit
-```
-
-**C++**
-
-**Allowed**:
+**Violation** (C++, `_append` is private and appears before `record_success` and `record_failure`):
 
 ```cpp
- public:
-  // MARK: Read records
-  // --------------------------------------------------
-
-  void read();
-
-
+/**
+ * @brief Фиксирует результаты экспорта в журнале аудита.
+ */
+class AuditTrail {
  private:
   // MARK: Private Helpers
   // --------------------------------------------------
 
-  void _read();
-```
-
-**Violation**:
-
-```cpp
- private:
-  // MARK: Private Helpers
-  // --------------------------------------------------
-
-  void _read();
-
+  /**
+   * @brief Дописывает событие и сбрасывает буфер журнала.
+   * @param audit_log Журнал аудита.
+   * @param event Событие для сохранения.
+   */
+  void _append(AuditLog& audit_log, const AuditEvent& event) const {
+    audit_log.append(event);
+    audit_log.flush();
+  }
 
  public:
-  // MARK: Read records
+  // MARK: Record export outcomes [group:2]
   // --------------------------------------------------
 
-  void read();
+  /**
+   * @brief Фиксирует успешную передачу результата экспорта.
+   * @param audit_log Журнал аудита.
+   * @param job Выполненное задание экспорта.
+   */
+  void record_success(AuditLog& audit_log, const ExportJob& job) const {
+    _append(audit_log, job.completed_event());
+  }
+
+
+  // --------------------------------------------------
+
+
+  /**
+   * @brief Фиксирует сбой, чтобы его можно было расследовать по журналу.
+   * @param audit_log Журнал аудита.
+   * @param job Задание, завершившееся со сбоем.
+   */
+  void record_failure(AuditLog& audit_log, const ExportJob& job) const {
+    _append(audit_log, job.failed_event());
+  }
+};
 ```
+
+The C++ class satisfies the order rule when the `private:` section and its MARK follow both public methods.
 
 ## `documentation`
 
@@ -975,9 +1107,11 @@ In an eligible class under [SB-L-G-M-6](#stylebrella-linter-general-mark-6), a p
 
 `Stylebrella-linter-general-documentation-1`
 
-Require documentation for every named function and method, including private, local, and trivial ones. Check both presence and format: [Python docstrings](../python/linting.md#stylebrella-linter-python-documentation-1), [KDoc](../kotlin/linting.md#stylebrella-linter-kotlin-documentation-1), and [Doxygen](../cpp/linting.md#stylebrella-linter-cpp-documentation-1). A summary is always required and must explain the purpose, effect, or guarantee, not merely restate the function name. Require parameter and result descriptions only when applicable; never require empty sections. Report missing documentation at the declaration and malformed documentation at its block, rather than reporting a present but malformed block as missing.
+Require documentation for every named function and method, including private, local, and trivial ones. Check both presence and format: [Python docstrings](../python/linting.md#stylebrella-linter-python-documentation-1), [KDoc](../kotlin/linting.md#stylebrella-linter-kotlin-documentation-1), and [Doxygen](../cpp/linting.md#stylebrella-linter-cpp-documentation-1). A summary is always required and must explain the purpose, effect, or guarantee, not merely restate the function name. Require parameter and result descriptions where the language rule calls for them; never require empty sections. Report missing documentation at the declaration and malformed documentation at its block, rather than reporting a present but malformed block as missing.
 
-Report any ordinary comment attached above a function, even when valid documentation is also present. A comment is attached if it is in the contiguous leading group at the function's indentation, without a blank line before its declaration or attached annotations/decorators; annotations and decorators do not break the group. Allow structural MARKs, separators, and recognized tool directives in their own positions. Python has no external function documentation: the docstring belongs inside the body. Detached comments about surrounding code are outside this rule.
+Report any ordinary comment attached above a function, even when valid documentation is also present. If an ordinary comment is the only documentation, report the invalid substitute here rather than also reporting missing documentation under the language presence rule. A comment is attached if it is in the contiguous leading group at the function's indentation, without a blank line before its declaration or attached annotations/decorators; annotations and decorators do not break the group. Allow structural MARKs, separators, and recognized tool directives in their own positions. Python has no external function documentation: the docstring belongs inside the body. Detached comments about surrounding code are outside this rule.
+
+**C++ note:** Put the detailed Doxygen documentation on the declaration in the header. Repeating it at the corresponding `.cpp` definition is a violation of [SB-L-C-D-1](../cpp/linting.md#stylebrella-linter-cpp-documentation-1).
 
 **Python — violation** (the docstring does not make the leading comment valid):
 
@@ -999,6 +1133,24 @@ def start_tasks() -> None:
  * Передаёт планировщику только задачи, готовые к выполнению.
  */
 fun startTasks(): Unit = scheduler.enqueueReady()
+```
+
+**Violation** (an ordinary one-line comment cannot replace formal documentation):
+
+```python
+# Передаёт планировщику только готовые задачи.
+def start_tasks() -> None:
+  scheduler.enqueue_ready()
+```
+
+```kotlin
+// Передаёт планировщику только готовые задачи.
+fun startTasks(): Unit = scheduler.enqueueReady()
+```
+
+```cpp
+// Передаёт планировщику только готовые задачи.
+void start_tasks();
 ```
 
 **C++ — violation** (ordinary comment before Doxygen):
@@ -1181,14 +1333,15 @@ throw std::runtime_error("[Network::connect] Disconnected: port=" + std::to_stri
 
 `Stylebrella-linter-general-loops-1`
 
-Report a `while` at its header when its counter is initialized to zero immediately before it, tests `<` against the size of an unchanged collection, increments once by one at the end of every iteration, and has no other counter use except indexing that collection or preserving the final counter. If the final counter is used after the loop, any update, early exit, or side effect may change equivalence, or resolution is missing, do not report. Do not rewrite the loop.
+Report a `while` at its header when its counter is initialized to zero immediately before it, tests `<` against the size of an unchanged collection, increments once by one after processing each element, and has no other counter use except indexing that collection or preserving the final counter. This includes a C++ loop with an empty body when its condition performs the same bound check, visit, and increment in that order and cannot terminate early. If the final counter is used after the loop, any update, early exit, or side effect may change equivalence, or resolution is missing, do not report. Do not rewrite the loop.
 
 **Python**
 
 **Allowed**:
 
 ```python
-for item in items: visit(item)
+for item in items:
+  visit(item)
 ```
 
 **Violation**:
@@ -1205,29 +1358,35 @@ while i < len(items):
 **Allowed**:
 
 ```kotlin
-for (item in items) visit(item)
+for (item in items)
+  visit(item)
 ```
 
 **Violation**:
 
 ```kotlin
 var i = 0
-while (i < items.size) { visit(items[i]); i++ }
+while (i < items.size) {
+  visit(items[i])
+  i++
+}
 ```
 
-**C++**
+**C++** (both examples traverse a resolved standard vector; `visit` returns `void` and does not change the vector)
 
 **Allowed**:
 
 ```cpp
-for (const auto& item : items) visit(item);
+for (const auto& item : items)
+  visit(item);
 ```
 
 **Violation**:
 
 ```cpp
-int i = 0;
-while (i < items.size()) { visit(items[i]); ++i; }
+std::size_t i = 0;
+while (i < items.size() && (visit(items[i]), ++i, true))
+  ;
 ```
 
 ## `imports`
@@ -1254,6 +1413,10 @@ import sys
 
 
 def run() -> None:
+  """
+  Завершает процесс с кодом успешного выполнения.
+  """
+
   sys.exit()
 ```
 
@@ -1261,10 +1424,13 @@ def run() -> None:
 
 ```python
 def run() -> None:
+  """
+  Завершает процесс с кодом успешного выполнения.
+  """
+
+  import sys
+
   sys.exit()
-
-
-import sys
 ```
 
 **Kotlin**
