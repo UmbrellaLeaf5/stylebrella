@@ -20,13 +20,15 @@ Examples isolate the rule being illustrated. Function examples are focused excer
 
 Require camelCase for variables, parameters, properties and public callables; PascalCase for class, interface, object, enum and annotation types; and SCREAMING_SNAKE_CASE for `const val`. Private method names use the underscore prefix required by [SB-L-G-N-3](../general/linting.md#sb-l-g-n-3), followed by a camelCase name. Report forbidden leading underscores on public methods and standalone functions under [SB-L-G-N-4](../general/linting.md#sb-l-g-n-4).
 
-**Allowed**:
+**Kotlin**
+
+**Allowed:**
 
 ```kotlin
 const val MAX_RETRIES = 3
 ```
 
-**Violation**:
+**Violation:**
 
 ```kotlin
 const val maxRetries = 3
@@ -42,13 +44,19 @@ const val maxRetries = 3
 
 A DTO named `*Request` or `*Response` must appear directly in a resolved controller signature or explicit HTTP serialization metadata for the matching direction. Report misuse only if classified as non-HTTP or mismatched; unresolved external use is not evidence. A DTO confirmed to be internal must end in `Input`, `State`, or `Plan`.
 
-**Allowed** (internal DTO):
+This DTO is confirmed to be internal.
+
+**Kotlin**
+
+**Allowed:**
 
 ```kotlin
 data class CalculationInput(val count: Int)
 ```
 
-**Violation** (internal DTO):
+This DTO is confirmed to be internal.
+
+**Violation:**
 
 ```kotlin
 data class CalculationRequest(val count: Int)
@@ -66,13 +74,19 @@ data class CalculationRequest(val count: Int)
 
 A `.kt` filename is PascalCase and matches its primary top-level type, if present. Apply [SB-L-G-FI-1](../general/linting.md#sb-l-g-fi-1) to classes. The one-type limit also covers top-level interfaces, named objects, enums and annotation classes; do not duplicate a diagnostic from the shared rule. Nested types and standalone functions do not count. Use the first eligible type for the filename check if the file contains multiple types. A functions-only file has a PascalCase descriptive filename; only its casing is checked.
 
-**Allowed** (`FilterConfig.kt`):
+The allowed example is in `FilterConfig.kt`.
+
+**Kotlin**
+
+**Allowed:**
 
 ```kotlin
 data class FilterConfig(val size: Int)
 ```
 
-**Violation** (`filter_config.kt`):
+The violating example is in `filter_config.kt`.
+
+**Violation:**
 
 ```kotlin
 data class FilterConfig(val size: Int)
@@ -188,7 +202,9 @@ Report an unsafe `as` when analysis proves the source may be incompatible and no
 val point = input as? Point ?: return
 ```
 
-**Violation** (input can be a String):
+The input may be a `String`.
+
+**Violation:**
 
 ```kotlin
 val point = input as Point
@@ -206,7 +222,11 @@ val point = input as Point
 
 Report blocks passed to resolved standard `run`, `let`, `apply`, `also` or `with` when they exceed five executable body lines counted as in [SB-L-G-M-2](../general/linting.md#stylebrella-linter-general-mark-2). Exactly five does not trigger this rule.
 
-**Allowed** (2 lines):
+The function body has two executable lines.
+
+**Kotlin**
+
+**Allowed:**
 
 ```kotlin
 item.let {
@@ -244,7 +264,9 @@ Report resolved standard `run` or `with` if the result is unused `Unit` and the 
 obj.apply { clear() }
 ```
 
-**Violation** (unused Unit, no receiver use):
+The explicit `Unit` result is unused, and the receiver is not used.
+
+**Violation:**
 
 ```kotlin
 with(obj) { logStart(); logEnd() }
@@ -383,7 +405,9 @@ Put shared constants in `Constants.kt`, under `object Constants` and a nested ca
 Constants.Validation.INVALID_EMAIL
 ```
 
-**Violation** (shared declaration outside Constants):
+This shared declaration is outside `Constants`.
+
+**Violation:**
 
 ```kotlin
 INVALID_EMAIL
@@ -405,7 +429,9 @@ Exempt the schema key in a resolved `@JsonProperty` and the field name in a reco
 request.itemId.requireFieldNotNullByName { "itemId" }
 ```
 
-**Violation** (runtime argument):
+The argument is computed at runtime.
+
+**Violation:**
 
 ```kotlin
 connect(8080)

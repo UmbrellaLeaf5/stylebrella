@@ -20,13 +20,17 @@ Examples isolate the rule being illustrated.
 
 Normalize file line endings to LF without changing literal contents.
 
-**Before** (CRLF):
+**Python**
+
+The source file uses CRLF line endings.
+
+**Before:**
 
 ```python
 x = 1
 ```
 
-**After** (LF):
+**After:**
 
 ```python
 x = 1
@@ -42,13 +46,15 @@ x = 1
 
 Use double quotes for string literals when doing so preserves the value and does not introduce additional escapes.
 
-**Before**:
+**Python**
+
+**Before:**
 
 ```python
 x = 'hello'
 ```
 
-**After**:
+**After:**
 
 ```python
 x = "hello"
@@ -66,14 +72,16 @@ x = "hello"
 
 In the leading import block order groups as future imports, standard library, third-party, and local; use one blank line between present groups. Order imports within a group by module and imported name, and retain attached comments with their imports. Do not skip sorting because of import-time effects. Do not relocate imports into the block.
 
-**Before**:
+**Python**
+
+**Before:**
 
 ```python
 import requests
 import sys
 ```
 
-**After**:
+**After:**
 
 ```python
 import sys
@@ -93,7 +101,9 @@ import requests
 
 Put one blank line between a function or class docstring and the next body statement; add none when the docstring is the only statement.
 
-**Before**:
+**Python**
+
+**Before:**
 
 ```python
 def read_data() -> None:
@@ -103,7 +113,7 @@ def read_data() -> None:
   read()
 ```
 
-**After**:
+**After:**
 
 ```python
 def read_data() -> None:
@@ -124,14 +134,16 @@ def read_data() -> None:
 
 Put one blank line before sibling `while`, `with`, `raise`, `assert`, and `continue` statements, and before loop `else` clause headers following a suite. For spacing around `if`, `for`, `try`, and `match` and between their branches, apply [SB-F-G-BL-7](../general/formatting.md#stylebrella-formatter-general-blank_lines-7). Do not split a same-line suite to insert a blank line.
 
-**Before**:
+**Python**
+
+**Before:**
 
 ```python
   log()
   assert ready
 ```
 
-**After**:
+**After:**
 
 ```python
   log()
@@ -149,7 +161,9 @@ Put one blank line before sibling `while`, `with`, `raise`, `assert`, and `conti
 
 Keep constructor parameter category comments in their parameter list and remove blank lines directly before and after them.
 
-**Before**:
+**Python**
+
+**Before:**
 
 ```python
 def __init__(
@@ -160,7 +174,7 @@ def __init__(
 ): ...
 ```
 
-**After**:
+**After:**
 
 ```python
 def __init__(
@@ -182,13 +196,15 @@ def __init__(
 
 Keep an inline comment on the same line as its code. Apply [SB-F-G-CM-1](../general/formatting.md#sb-f-g-cm-1) to spacing after `#`. Preserve interpreter directives, encoding declarations, and tool-marker text.
 
-**Before**:
+**Python**
+
+**Before:**
 
 ```python
 x = load()  #note
 ```
 
-**After**:
+**After:**
 
 ```python
 x = load()  # note

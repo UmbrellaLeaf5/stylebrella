@@ -20,7 +20,9 @@ Examples isolate the rule being illustrated.
 
 Use Google C++ layout as the baseline, with the exceptions on this page and in the shared contract. Opening braces for function definitions stay on the declaration line. Continuation indentation is governed by the shared layout rules.
 
-**Before**:
+**C++**
+
+**Before:**
 
 ```cpp
 void process()
@@ -30,7 +32,7 @@ void process()
 }
 ```
 
-**After**:
+**After:**
 
 ```cpp
 void process() {
@@ -49,7 +51,9 @@ void process() {
 
 Align columns of a multiline array-of-structs initializer to the left when each row has the same number of elements.
 
-**Before**:
+**C++**
+
+**Before:**
 
 ```cpp
 Pair pairs[] = {
@@ -58,7 +62,7 @@ Pair pairs[] = {
 };
 ```
 
-**After**:
+**After:**
 
 ```cpp
 Pair pairs[] = {
@@ -77,14 +81,16 @@ Pair pairs[] = {
 
 When wrapping a binary expression, put the operator at the start of its continuation line, except assignment operators, which stay on the previous line.
 
-**Before**:
+**C++**
+
+**Before:**
 
 ```cpp
 const int total = left +
   right;
 ```
 
-**After**:
+**After:**
 
 ```cpp
 const int total = left
@@ -101,14 +107,16 @@ const int total = left
 
 When a constructor initializer list wraps, break before the colon.
 
-**Before**:
+**C++**
+
+**Before:**
 
 ```cpp
 C::C() :
   x_(x) {}
 ```
 
-**After**:
+**After:**
 
 ```cpp
 C::C()
@@ -125,7 +133,9 @@ C::C()
 
 Collapse an inline member function whose body contains one statement to a single line when it fits within 100 columns. The shared rule governs unbraced `if` and `for` bodies.
 
-**Before**:
+**C++**
+
+**Before:**
 
 ```cpp
 class Sender {
@@ -136,7 +146,7 @@ class Sender {
 };
 ```
 
-**After**:
+**After:**
 
 ```cpp
 class Sender {
@@ -157,7 +167,9 @@ class Sender {
 
 Regroup contiguous leading includes and order them by category, then case-sensitively by header spelling: matching main header (including `-test`, `_test`, `-unittest`, `_unittest` source suffixes), angle-bracket `.h` except `ext/`, remaining angle-bracket headers, then quoted headers. Use one blank line between nonempty categories. Standalone grouping comments and preprocessor branch boundaries split sortable runs; do not move late includes.
 
-**Before**:
+**C++**
+
+**Before:**
 
 ```cpp
 #include "other.hpp"
@@ -165,7 +177,7 @@ Regroup contiguous leading includes and order them by category, then case-sensit
 #include <stdio.h>
 ```
 
-**After**:
+**After:**
 
 ```cpp
 #include <stdio.h>
@@ -189,7 +201,9 @@ Use exactly one blank line immediately after the opening `{` and immediately bef
 
 Use one blank line between declaration blocks inside a namespace, including around separators; keep attached Doxygen with its declaration. Consecutive assignments to different fields of the same newly declared object stay in its declaration group.
 
-**Before**:
+**C++**
+
+**Before:**
 
 ```cpp
 namespace n {
@@ -224,7 +238,7 @@ namespace empty {
 }
 ```
 
-**After**:
+**After:**
 
 ```cpp
 namespace n {
@@ -282,7 +296,9 @@ namespace empty {
 
 Start `else if`, `else`, and `catch` on a new line; apply [SB-F-G-BL-7](../general/formatting.md#stylebrella-formatter-general-blank_lines-7) to the branch boundary.
 
-**Before**:
+**C++**
+
+**Before:**
 
 ```cpp
 if (x) {
@@ -294,7 +310,7 @@ if (x) {
 }
 ```
 
-**After**:
+**After:**
 
 ```cpp
 if (x) {

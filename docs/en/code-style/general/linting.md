@@ -78,13 +78,17 @@ Require SCREAMING_SNAKE_CASE for named constants in Python, Kotlin, and C++. Det
 
 **Python**
 
-**Allowed** (constant):
+The example is a constant.
+
+**Allowed:**
 
 ```python
 MAX_RETRIES = 3
 ```
 
-**Violation** (constant):
+The example is a constant.
+
+**Violation:**
 
 ```python
 max_retries = 3
@@ -92,13 +96,17 @@ max_retries = 3
 
 **Kotlin**
 
-**Allowed** (constant):
+The example is a constant.
+
+**Allowed:**
 
 ```kotlin
 const val MAX_RETRIES = 3
 ```
 
-**Violation** (constant):
+The example is a constant.
+
+**Violation:**
 
 ```kotlin
 const val maxRetries = 3
@@ -106,13 +114,17 @@ const val maxRetries = 3
 
 **C++**
 
-**Allowed** (constant):
+The example is a constant.
+
+**Allowed:**
 
 ```cpp
 constexpr int MAX_RETRIES = 3;
 ```
 
-**Violation** (constant):
+The example is a constant.
+
+**Violation:**
 
 ```cpp
 constexpr int max_retries = 3;
@@ -238,14 +250,16 @@ class Reader {
 };
 ```
 
-**C++ — Allowed** (private field):
+**C++**
+
+**Allowed:**
 
 ```cpp
  private:
   int _max_retries;
 ```
 
-**C++ — Violation** (private field missing the prefix):
+**Violation:**
 
 ```cpp
  private:
@@ -262,7 +276,11 @@ class Reader {
 
 In Kotlin and C++, reject a leading underscore on public methods, using effective declaration visibility (including implicit `public`). Do not apply the public-method check in Python. In all three languages, reject a leading underscore on named non-member functions, including top-level, namespace-scope, and local functions where supported, regardless of their visibility. Python special names remain exempt. Report at the declared name; do not rename it automatically.
 
-**Python — Allowed / Violation** (module-level and local functions; the public-method check is not applicable):
+The public-method check is not applicable in Python. These examples cover module-level and local functions.
+
+**Python**
+
+**Allowed:**
 
 ```python
 def read_value(value: str) -> str:
@@ -292,6 +310,8 @@ def read_value(value: str) -> str:
   return normalize(value)
 ```
 
+**Violation:**
+
 ```python
 def _read_value(value: str) -> str:
   """
@@ -320,7 +340,9 @@ def _read_value(value: str) -> str:
   return _normalize(value)
 ```
 
-**Kotlin — Allowed / Violation** (implicitly public method, private top-level function, and local function):
+**Kotlin**
+
+**Allowed:**
 
 ```kotlin
 class Reader {
@@ -357,6 +379,8 @@ private fun readValue(value: String): String {
 }
 ```
 
+**Violation:**
+
 ```kotlin
 class Reader {
   // MARK: Read value
@@ -392,7 +416,9 @@ private fun _readValue(value: String): String {
 }
 ```
 
-**C++ — Allowed / Violation** (public method and namespace-scope function):
+**C++**
+
+**Allowed:**
 
 ```cpp
 namespace input {
@@ -424,6 +450,8 @@ int read_value(int value) { return value; }
 
 }  // namespace input
 ```
+
+**Violation:**
 
 ```cpp
 namespace input {
@@ -468,7 +496,9 @@ int _read_value(int value) { return value; }
 
 A source file may define at most one named top-level class. Classes nested in another type or local to a function do not count. In C++, namespace scope counts as top level, even across different namespaces in the same file; forward declarations do not count. Standalone functions are allowed in any number, including alongside the class or in a file without classes. Report at the name of each additional top-level class, regardless of visibility. Language-specific file rules may also constrain other kinds of top-level types.
 
-**Python — Allowed**:
+**Python**
+
+**Allowed:**
 
 ```python
 class Reader:
@@ -492,7 +522,11 @@ def input_is_empty(text: str) -> bool:
   return not text
 ```
 
-**Kotlin — Allowed** (`Reader.kt`):
+**Kotlin**
+
+The example is from `Reader.kt`.
+
+**Allowed:**
 
 ```kotlin
 class Reader {
@@ -509,7 +543,11 @@ class Reader {
 fun inputIsEmpty(text: String): Boolean = text.isEmpty()
 ```
 
-**C++ — Allowed** (`include/Reader.hpp`):
+**C++**
+
+The example is from `include/Reader.hpp`.
+
+**Allowed:**
 
 ```cpp
 #pragma once
@@ -625,7 +663,9 @@ A function is important if at least two distinct project references resolve to i
 
 **Python**
 
-**Allowed** (not important, exactly three parameters and 15 executable lines):
+The function is not important, has exactly three parameters, and has 15 executable lines.
+
+**Allowed:**
 
 ```python
 # --------------------------------------------------
@@ -662,7 +702,9 @@ def run_backup(source: Source, target: Target, journal: Journal) -> None:
   journal.finish()
 ```
 
-**Violation** (16 executable lines, no descriptive MARK):
+The function has 16 executable lines and no descriptive MARK.
+
+**Violation:**
 
 ```python
 # --------------------------------------------------
@@ -702,7 +744,9 @@ def run_backup(source: Source, target: Target, journal: Journal) -> None:
 
 **Kotlin**
 
-**Allowed** (four parameters, one executable line, with a descriptive MARK):
+The function has four parameters, one executable line, and a descriptive MARK.
+
+**Allowed:**
 
 ```kotlin
 // MARK: Update viewport bounds
@@ -720,7 +764,9 @@ fun setBounds(left: Int, top: Int, right: Int, bottom: Int): Unit =
   view.set(left, top, right, bottom)
 ```
 
-**Violation** (four parameters, one executable line, no descriptive MARK):
+The function has four parameters, one executable line, and no descriptive MARK.
+
+**Violation:**
 
 ```kotlin
 // --------------------------------------------------
@@ -737,7 +783,9 @@ fun setBounds(left: Int, top: Int, right: Int, bottom: Int): Unit =
   view.set(left, top, right, bottom)
 ```
 
-**Allowed** (the first private method has four parameters; the structural MARK and KDoc suffice):
+The first private method has four parameters; the structural MARK and KDoc suffice.
+
+**Allowed:**
 
 ```kotlin
 class BoundsUpdater {
@@ -768,7 +816,9 @@ class BoundsUpdater {
 
 **C++**
 
-**Allowed** (both calls count, but `flush_log` is trivial and needs no descriptive MARK or group):
+Both calls count, but `flush_log` is trivial and needs no descriptive MARK or group.
+
+**Allowed:**
 
 ```cpp
 // --------------------------------------------------
@@ -821,7 +871,9 @@ def a(): ...
 def b(): ...
 ```
 
-**Violation** (fewer than two members at EOF):
+Fewer than two members remain at EOF.
+
+**Violation:**
 
 ```python
 # MARK: Load adapters [group:2]
@@ -830,7 +882,9 @@ def b(): ...
 def a(): ...
 ```
 
-**Violation** (another MARK interrupts the three-member group):
+Another MARK interrupts the three-member group.
+
+**Violation:**
 
 ```python
 # MARK: Load adapters [group:3]
@@ -871,7 +925,9 @@ fun a() = Unit
 fun b() = Unit
 ```
 
-**Violation** (fewer than two members at EOF):
+Fewer than two members remain at EOF.
+
+**Violation:**
 
 ```kotlin
 // MARK: Load adapters [group:2]
@@ -880,7 +936,9 @@ fun b() = Unit
 fun a() = Unit
 ```
 
-**Violation** (another MARK interrupts the three-member group):
+Another MARK interrupts the three-member group.
+
+**Violation:**
 
 ```kotlin
 // MARK: Load adapters [group:3]
@@ -921,7 +979,9 @@ void a();
 void b();
 ```
 
-**Violation** (fewer than two members at EOF):
+Fewer than two members remain at EOF.
+
+**Violation:**
 
 ```cpp
 // MARK: Load adapters [group:2]
@@ -930,7 +990,9 @@ void b();
 void a();
 ```
 
-**Violation** (another MARK interrupts the three-member group):
+Another MARK interrupts the three-member group.
+
+**Violation:**
 
 ```cpp
 // MARK: Load adapters [group:3]
@@ -1061,7 +1123,11 @@ void read();
 
 The structural header covers the first private method only. If that method is both important and nontrivial under [SB-L-G-M-2](#stylebrella-linter-general-mark-2), its required language documentation takes the place of an additional MARK. Identify the first private method by visibility and declaration order, even if the header is missing; [SB-F-G-M-2](formatting.md#sb-f-g-m-2) owns that edit. In C++, document a method declared in a header there, not again at its source definition. Report missing documentation under this rule instead of the language presence rule at this boundary; report malformed documentation under the language format rule.
 
-**Allowed** (Kotlin): `_applyBounds` has four parameters and two resolved call sites. Both entry points share the validation and update so an invalid region never reaches the viewport. KDoc satisfies the requirement at the private section boundary.
+In Kotlin, `_applyBounds` has four parameters and two resolved call sites. Both entry points share the validation and update so an invalid region never reaches the viewport. KDoc satisfies the requirement at the private section boundary.
+
+**Kotlin**
+
+**Allowed:**
 
 ```kotlin
 class ViewportController(private val _viewport: Viewport) {
@@ -1112,7 +1178,11 @@ class ViewportController(private val _viewport: Viewport) {
 }
 ```
 
-**Violation** (replace only the private section of `ViewportController` with this version):
+Replace only the private section of `ViewportController` with this version.
+
+**Kotlin**
+
+**Violation:**
 
 ```kotlin
   // MARK: Private Helpers
@@ -1126,7 +1196,11 @@ class ViewportController(private val _viewport: Viewport) {
   }
 ```
 
-**Allowed** (Python and C++ forms of the same private section): assume the same two public methods call the helper with all four bounds. In each case, removing only the shown documentation is a **violation**. The C++ example is the declaration in `viewport_controller.hpp`.
+These Python and C++ examples show the same private section. Assume the same two public methods call the helper with all four bounds. Removing only the shown documentation is a violation. The C++ example is the declaration in `viewport_controller.hpp`.
+
+**Python**
+
+**Allowed:**
 
 ```python
   # MARK: Private Helpers
@@ -1151,6 +1225,10 @@ class ViewportController(private val _viewport: Viewport) {
 
     self._viewport.set_bounds(left, top, right, bottom)
 ```
+
+**C++**
+
+**Allowed:**
 
 ```cpp
  private:
@@ -1180,7 +1258,11 @@ A concrete class with public methods must have either a valid counted MARK group
 
 Exempt interfaces and confirmed DTO-only types. This lint rule checks only the author-written public MARK or group. The formatter's read-only `check` owns the presence and placement of the [Private Helpers section (SB-F-G-M-2)](formatting.md#sb-f-g-m-2) or [the `(no private methods)` placeholder (SB-F-G-CM-4)](formatting.md#sb-f-g-cm-4). `format` corrects those markers; a public MARK or group does not replace either one.
 
-**Allowed** (Python, a single MARK chosen by the author and no private methods):
+The Python example has one MARK chosen by the author and no private methods.
+
+**Python**
+
+**Allowed:**
 
 ```python
 class ExportQueue:
@@ -1218,9 +1300,17 @@ class ExportQueue:
   # (no private methods)
 ```
 
-**Allowed** (Kotlin, a counted group): [`ViewportController` above](#stylebrella-linter-general-mark-5) groups `restoreProfile` and `resetToWorkspace` under one `[group:2]` MARK. The group's scope ends before the separate `MARK: Private Helpers`.
+In Kotlin, [`ViewportController` above](#stylebrella-linter-general-mark-5) groups `restoreProfile` and `resetToWorkspace` under one `[group:2]` MARK. The group's scope ends before the separate `MARK: Private Helpers`.
 
-**Violation** (C++, no descriptive public MARK or counted public group):
+**Kotlin**
+
+**Allowed:**
+
+The C++ class has no descriptive public MARK or counted public group.
+
+**C++**
+
+**Violation:**
 
 ```cpp
 /**
@@ -1266,7 +1356,11 @@ Removing the Python class's public MARK would also violate this rule. Removing o
 
 In a concrete class with both public and private methods, a private method must not precede any public method. Exempt interfaces and confirmed DTO-only types. Report the early private declaration; do not reorder declarations. Use declaration visibility, including the explicit Python private-section convention, rather than observed use. On this violation, [SB-F-G-M-2](formatting.md#sb-f-g-m-2) skips structural marker edits for the class.
 
-**Allowed** (Python, public operations first and the private writer last):
+The Python example places public operations first and the private writer last.
+
+**Python**
+
+**Allowed:**
 
 ```python
 class AuditTrail:
@@ -1316,9 +1410,17 @@ class AuditTrail:
     audit_log.flush()
 ```
 
-**Allowed** (Kotlin): both public methods of [`ViewportController`](#stylebrella-linter-general-mark-5) precede `_applyBounds`. In either class, moving the private method and its structural MARK before the public group would violate this rule.
+In Kotlin, both public methods of [`ViewportController`](#stylebrella-linter-general-mark-5) precede `_applyBounds`. In either class, moving the private method and its structural MARK before the public group would violate this rule.
 
-**Violation** (C++, `_append` is private and appears before `record_success` and `record_failure`):
+**Kotlin**
+
+**Allowed:**
+
+In C++, `_append` is private and appears before `record_success` and `record_failure`.
+
+**C++**
+
+**Violation:**
 
 ```cpp
 /**
@@ -1407,7 +1509,11 @@ def start_tasks() -> None:
 fun startTasks(): Unit = scheduler.enqueueReady()
 ```
 
-**Violation** (an ordinary one-line comment cannot replace formal documentation):
+An ordinary one-line comment cannot replace formal documentation.
+
+**C++**
+
+**Violation:**
 
 ```python
 # Передаёт планировщику только готовые задачи.

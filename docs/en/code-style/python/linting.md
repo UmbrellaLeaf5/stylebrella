@@ -20,14 +20,16 @@ Examples isolate the rule being illustrated. Function examples are focused excer
 
 Require snake_case for functions, methods, variables, parameters and fields; PascalCase for classes, dataclasses and exception types; and SCREAMING_SNAKE_CASE for constants. Use `T` or a PascalCase name starting with `T` for a resolved type variable. Exempt Python special names.
 
-**Allowed**:
+**Python**
+
+**Allowed:**
 
 ```python
 def load_config() -> Config:
   return read_config()
 ```
 
-**Violation**:
+**Violation:**
 
 ```python
 def loadConfig() -> Config:
@@ -44,14 +46,20 @@ def loadConfig() -> Config:
 
 Require one leading underscore for symbols declared internal by project metadata or an explicit visibility convention, except non-member functions, which follow [SB-L-G-N-4](../general/linting.md#sb-l-g-n-4). Lack of use or omission from an unrelated export list is not evidence.
 
-**Allowed** (internal type):
+For an internal type:
+
+**Python**
+
+**Allowed:**
 
 ```python
 class _InternalType:
   pass
 ```
 
-**Violation** (internal type):
+For an internal type:
+
+**Violation:**
 
 ```python
 class InternalType:
@@ -70,13 +78,17 @@ class InternalType:
 
 Require `snake_case` for every statically resolved JSON key. JSON keys are schema metadata and are exempt from the inline-literal rule; do not diagnose unrelated strings without an established JSON role.
 
-**Allowed** (`record` is a resolved JSON object):
+Assume `record` is a resolved JSON object.
+
+**Python**
+
+**Allowed:**
 
 ```python
 record["user_id"]
 ```
 
-**Violation** (`record` is a resolved JSON object):
+**Violation:**
 
 ```python
 record["userId"]
@@ -94,14 +106,16 @@ record["userId"]
 
 Require annotations on every function parameter and result; exempt only the actual first instance/class receiver `self` or `cls`. A no-value result is annotated `-> None`. Report missing annotations on the parameter or function name.
 
-**Allowed**:
+**Python**
+
+**Allowed:**
 
 ```python
 def clear(self, cache: Cache) -> None:
   cache.clear()
 ```
 
-**Violation**:
+**Violation:**
 
 ```python
 def clear(self, cache) -> None:
@@ -118,14 +132,16 @@ def clear(self, cache) -> None:
 
 For Python targets at least 3.10, report annotations resolved to `typing.Optional[T]`; use `T | None`.
 
-**Allowed**:
+**Python**
+
+**Allowed:**
 
 ```python
 def find() -> User | None:
   return lookup_user()
 ```
 
-**Violation**:
+**Violation:**
 
 ```python
 def find() -> Optional[User]:
@@ -142,14 +158,16 @@ def find() -> Optional[User]:
 
 Report explicit annotation references resolved to `typing.Any`. An unrelated symbol named `Any` does not match.
 
-**Allowed**:
+**Python**
+
+**Allowed:**
 
 ```python
 def load(data: object) -> Config:
   return parse_config(data)
 ```
 
-**Violation**:
+**Violation:**
 
 ```python
 def load(data: Any) -> Config:
@@ -166,14 +184,18 @@ def load(data: Any) -> Config:
 
 For an argument or result identified as a filesystem path by explicit metadata or resolved path APIs, report an annotation of `str`; the expected annotation is `pathlib.Path`. Do not infer a path from its name alone.
 
-**Allowed**:
+**Python**
+
+**Allowed:**
 
 ```python
 def load(path: Path) -> Config:
   return parse_config(path)
 ```
 
-**Violation** (confirmed path):
+For a path confirmed by metadata or resolution:
+
+**Violation:**
 
 ```python
 def load(path: str) -> Config:
@@ -189,6 +211,8 @@ def load(path: str) -> Config:
 `Stylebrella-linter-python-types-5`
 
 Treat any type error produced by basic-mode analysis of in-scope Python as a blocking diagnostic. The reference in an unresolved context is checked only as defined by basic-mode type analysis.
+
+**Python**
 
 **Allowed**:
 
@@ -214,6 +238,8 @@ value: int = "wrong"
 
 Require f-strings for resolved interpolation using string `%` formatting or `str.format`; arithmetic modulo is excluded. In a resolved logger call with interpolation, require the deferred `%` template and separate arguments instead of an f-string or a precomputed formatted string.
 
+**Python**
+
 **Allowed**:
 
 ```python
@@ -235,6 +261,8 @@ logger.debug(f"Loaded {config!r}")
 `Stylebrella-linter-python-idioms-2`
 
 Report a resolved `open` or `Path.open` acquisition when the acquired file is used locally, is not used as a `with` manager, and does not escape the scope or enter another resolved resource manager. Apply the same condition to recognized connection, lock and user resource APIs with context-manager support.
+
+**Python**
 
 **Allowed**:
 
@@ -258,6 +286,8 @@ stream = path.open(); stream.read()
 
 Allow at most two nested comprehension generator levels. Sum the enclosing comprehension generator clauses on a path and the clauses of the innermost comprehension; report at the clause that crosses the limit.
 
+**Python**
+
 **Allowed**:
 
 ```python
@@ -279,6 +309,8 @@ Allow at most two nested comprehension generator levels. Sum the enclosing compr
 `Stylebrella-linter-python-idioms-4`
 
 Report calls resolved to `os.path` functions for filesystem path operations; use `pathlib.Path` instead.
+
+**Python**
 
 **Allowed**:
 
@@ -319,7 +351,9 @@ if __name__ == "__main__":
   main()
 ```
 
-**Violation** (executable script; an entry guard alone does not define `main`):
+This executable script has an entry guard but does not define `main`.
+
+**Violation:**
 
 ```python
 #!/usr/bin/env python3
@@ -344,7 +378,9 @@ Report calls resolved to built-in `print` in files explicitly classified as prod
 logger.info("Loaded")
 ```
 
-**Violation** (production):
+This example is production code.
+
+**Violation:**
 
 ```python
 print("Loaded")
@@ -360,7 +396,11 @@ print("Loaded")
 
 Report executable work outside a function or method, including bare calls, runtime assignments, loops, and control flow in module or class bodies. Allow declarations and their syntax (including decorators, annotations and defaults), imports and import-only preamble guards, docstrings, declarative module constants, exports such as `__all__`, and declarative class fields. These exceptions do not allow standalone calls or script work to run at import time; put initialization requiring runtime work in a function. Allow the top-level entry guard governed by [SB-L-P-ID-5](#stylebrella-linter-python-idioms-5); validate the guard and its body there. Report at the offending statement: “Move executable code into a function. For a script, define `main()` and call it under `if __name__ == "__main__":`.”
 
-**Allowed** (library module):
+This example is a library module.
+
+**Python**
+
+**Allowed:**
 
 ```python
 def refresh_cache() -> None:
@@ -371,7 +411,9 @@ def refresh_cache() -> None:
   cache.reload_snapshot()
 ```
 
-**Violation** (library module):
+This example is a library module.
+
+**Violation:**
 
 ```python
 cache.reload_snapshot()
@@ -396,7 +438,9 @@ from .service import UserService
 __all__ = ["UserService"]
 ```
 
-**Violation** (outside __init__.py):
+This example is outside `__init__.py`.
+
+**Violation:**
 
 ```python
 from .service import *
@@ -513,7 +557,9 @@ def row_count(table: Table) -> int:
   return table.snapshot_size()
 ```
 
-**Violation** (section entry not indented):
+The section entry is not indented.
+
+**Violation:**
 
 ```python
 def row_count(table: Table) -> int:
@@ -604,7 +650,9 @@ Shared constants live in `constants.py` as `Constants.<Category>.<FIELD>` (e.g. 
 Constants.Math.DEG_TO_RAD
 ```
 
-**Violation** (module-level constant used by two modules):
+This module-level constant is used by two modules.
+
+**Violation:**
 
 ```python
 DEG_TO_RAD
@@ -622,14 +670,20 @@ DEG_TO_RAD
 
 Files classified as module tests must use `test_<module>.py`; tests in them use pytest, not `unittest.TestCase`. Place fixtures referenced by tests in multiple files in the nearest common `conftest.py`.
 
-**Allowed** (`test_parser.py`):
+The example is from `test_parser.py`.
+
+**Python**
+
+**Allowed:**
 
 ```python
 def test_parse() -> None:
   assert parse(DEFAULT_INPUT) == EXPECTED_RESULT
 ```
 
-**Violation** (`parser_test.py`):
+The example is from `parser_test.py`.
+
+**Violation:**
 
 ```python
 class ParserTest(unittest.TestCase): ...
@@ -653,7 +707,9 @@ def test_service() -> None:
   assert service.is_available()
 ```
 
-**Violation** (environment-dependent):
+This test is environment-dependent.
+
+**Violation:**
 
 ```python
 def test_service() -> None:

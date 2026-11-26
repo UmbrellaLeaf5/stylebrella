@@ -20,13 +20,15 @@ Examples isolate the rule being illustrated.
 
 Emit UTF-8 with LF, remove trailing spaces and tabs outside literals, and end a nonempty file with exactly one LF. In the example, `·` represents a trailing ASCII space, `<CRLF>` and `<LF>` the line endings, and `<EOF>` the immediate end of file.
 
-**Before**:
+**Kotlin**
+
+**Before:**
 
 ```text
 val label = "данные"··<CRLF><EOF>
 ```
 
-**After**:
+**After:**
 
 ```text
 val label = "данные"<LF><EOF>
@@ -42,7 +44,9 @@ val label = "данные"<LF><EOF>
 
 Do not change bytes in a range from a standalone `// @formatter:off` to the next standalone `// @formatter:on`, inclusive, or to EOF if unmatched. This also exempts the range from file-level whitespace normalization.
 
-**Before**:
+**Kotlin**
+
+**Before:**
 
 ```kotlin
 // @formatter:off
@@ -50,7 +54,7 @@ val n=1
 // @formatter:on
 ```
 
-**After**:
+**After:**
 
 ```kotlin
 // @formatter:off
@@ -70,14 +74,16 @@ val n=1
 
 A wrapped call or signature has one argument or parameter per line and a closing parenthesis on a separate line aligned with the start of the construct. Use a trailing comma where Kotlin allows one.
 
-**Before**:
+**Kotlin**
+
+**Before:**
 
 ```kotlin
 call(
   x, y)
 ```
 
-**After**:
+**After:**
 
 ```kotlin
 call(
@@ -96,13 +102,15 @@ call(
 
 Add one space after a comma when another token follows on the same line, and on both sides of binary arithmetic, equality, and comparison operators. Do not treat unary operators or generic delimiters as binary operators.
 
-**Before**:
+**Kotlin**
+
+**Before:**
 
 ```kotlin
 f(x,y+1==z)
 ```
 
-**After**:
+**After:**
 
 ```kotlin
 f(x, y + 1 == z)
@@ -120,14 +128,16 @@ f(x, y + 1 == z)
 
 Order leading imports lexicographically within groups in this order: ordinary, `java`, `javax`, `kotlin`, then aliases. Move attached comments with their imports. Do not relocate late imports.
 
-**Before**:
+**Kotlin**
+
+**Before:**
 
 ```kotlin
 import kotlin.math.PI
 import app.run
 ```
 
-**After**:
+**After:**
 
 ```kotlin
 import app.run
@@ -144,7 +154,9 @@ import kotlin.math.PI
 
 Replace imports of at least five distinct nonaliased names from one package, or three distinct nonaliased members from one type, with one star import when that replacement preserves the identity of every resolved reference and creates no new ambiguity. Do not count aliases toward either threshold.
 
-**Before**:
+**Kotlin**
+
+**Before:**
 
 ```kotlin
 import app.Tools.a
@@ -152,7 +164,7 @@ import app.Tools.b
 import app.Tools.c
 ```
 
-**After**:
+**After:**
 
 ```kotlin
 import app.Tools.*
@@ -170,13 +182,15 @@ import app.Tools.*
 
 Rewrite a block consisting only of an unlabelled `return expression` into `= expression` if there is no contract and the rewrite preserves behavior. Omit the explicit return type only if the inferred type is the same and the public and override signatures and `Unit` semantics are unchanged. Leave early, labelled, and unresolved returns unchanged.
 
-**Before**:
+**Kotlin**
+
+**Before:**
 
 ```kotlin
 fun count(): Int { return items.size }
 ```
 
-**After**:
+**After:**
 
 ```kotlin
 fun count() = items.size
@@ -194,14 +208,16 @@ fun count() = items.size
 
 Apply [SB-F-G-BL-7](../general/formatting.md#stylebrella-formatter-general-blank_lines-7) between all adjacent `when` branches, even if both have expression bodies.
 
-**Before**:
+**Kotlin**
+
+**Before:**
 
 ```kotlin
   A -> { f() }
   B -> g()
 ```
 
-**After**:
+**After:**
 
 ```kotlin
   A -> { f() }
@@ -219,7 +235,9 @@ Apply [SB-F-G-BL-7](../general/formatting.md#stylebrella-formatter-general-blank
 
 Use one blank line between constructor parameter categories, before the next category comment, and before a declaration with an attached leading comment or annotation when preceded by a sibling. The attached comment or annotation stays with its declaration.
 
-**Before**:
+**Kotlin**
+
+**Before:**
 
 ```kotlin
 val a = 1
@@ -227,7 +245,7 @@ val a = 1
 val b = 2
 ```
 
-**After**:
+**After:**
 
 ```kotlin
 val a = 1
@@ -246,7 +264,9 @@ val b = 2
 
 Start `else if`, `else`, `catch`, and `finally` on a new line, including inside `return if` and `return try`. Apply [SB-F-G-BL-7](../general/formatting.md#stylebrella-formatter-general-blank_lines-7) at the branch boundary and [SB-F-G-BL-8](../general/formatting.md#stylebrella-formatter-general-blank_lines-8) before the whole `return` statement. Do not introduce braces solely for formatting.
 
-**Before**:
+**Kotlin**
+
+**Before:**
 
 ```kotlin
 if (x) {
@@ -278,7 +298,7 @@ if (x) {
   }
 ```
 
-**After**:
+**After:**
 
 ```kotlin
 if (x) {
